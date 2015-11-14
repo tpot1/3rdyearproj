@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lecture Logger</title>
+
+    <link href="/css/bootstrap.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/home">Lecture Logger</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="/history">Attendance History</a></li>
+                    <li><a href="#">Attendance vs Results</a></li>
+                    <li class="active"><a href="/challenges">Challenges</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="/">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+    	<table class="table">
+            <thread>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Description</th>
+                    <th>Time left</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="success">
+                    <td>Early Bird</td>
+                    <td>Make it to a 9am lecture</td>
+                    <td>1 Day</td>
+                </tr>
+                <tr>
+                    <td>First Blood</td>
+                    <td>Be the first in your class to check in to a lecture</td>
+                    <td>2 Days</td>
+                </tr>
+                <tr class="warning">
+                    <td>Log Streak</td>
+                    <td>Check in to a lecture every day. How many days can you last?
+                        <p>Current streak: 4 days</p>
+                    </td>
+                    <td>5 Days</td>
+                </tr>
+                <tr class="success">
+                    <td>I can go all day</td>
+                    <td>Attend every lecture in a day</td>
+                    <td>3 Days</td>
+                </tr>
+                <tr>
+                    <td>On it like a car bonit</td>
+                    <td>Attend every lecture in a week</td>
+                    <td>4 Days</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+{% endautoescape %}
