@@ -16,15 +16,17 @@
     	<div class="jumotron">
     		<h1>Lecture Logger</h1>
     		<p>Welcome to lecture logger! Log in here with your university credentials!</p>
-            <div class="form-group">
-                <label for="usr">Username:</label>
-                <input type="text" class="form-control" id="usr">
-            </div>
-            <div class="form-group">
-                <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="pwd">
-            </div>
-    		<a href="/home" class="btn btn-primary" role="button">Log In</a>
+            <form method="post">
+                <div class="form-group">
+                    <label for="usr">Username:</label>
+                    <input type="text" class="form-control" id="usr" name="username">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="pwd">
+                </div>
+        		<input class="btn btn-primary" role="button" type="submit"></input>
+            </form>
     	</div>
     </div>
 
