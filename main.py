@@ -90,6 +90,11 @@ class HistoryPage(webapp2.RequestHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 		self.response.write(template.render())
+
+class CodePage(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/assets/codegenerator.html')
+		self.response.write(template.render())
 		
 
 app = webapp2.WSGIApplication([
@@ -97,5 +102,6 @@ app = webapp2.WSGIApplication([
 	('/home', MainPage),
 	('/checkin', CheckInPage),
 	('/challenges', ChallengesPage),
-	('/history', HistoryPage)
+	('/history', HistoryPage),
+	('/code', CodePage)
 ], debug=True)
