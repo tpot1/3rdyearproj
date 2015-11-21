@@ -98,14 +98,14 @@ class CodePage(webapp2.RequestHandler):
 		self.response.write(template.render())
 
 	def post(self):
-		usock = urllib2.urlopen("lecturelogger.appspot.com/code")
+		usock = urllib2.urlopen("http://lecturelogger.appspot.com")
 		data = usock.read()
 		usock.close()
 		soup = BS(data)
 
 		lecturecode = LectureCode()
 		lecturecode.lecture = self.request.get('lecture')
-		lecturecode.code = soup.find('h4', {'id':'code'}).text
+		lecturecode.code = soup.find('h4')
 		lecturecode.put()
 		self.redirect('/home')
 		
