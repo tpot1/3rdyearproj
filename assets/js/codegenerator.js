@@ -3,6 +3,7 @@ button = document.getElementById('generate');
 button.onclick = function () {
 	code = document.getElementById('code');
 	code.innerText = generate(6);
+	document.getElementById('submit').disabled = false;
 }
 
 function generate(codelength){
@@ -15,4 +16,6 @@ function generate(codelength){
 
 	return code;
 }
+
+
 

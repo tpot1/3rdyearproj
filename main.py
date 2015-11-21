@@ -1,10 +1,11 @@
 import os
-import urllib
+import urllib2
 
 import webapp2
 import jinja2
 
 from google.appengine.ext import ndb
+from bs4 import BeautifulSoup as BS
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -95,6 +96,18 @@ class CodePage(webapp2.RequestHandler):
 	def get(self):
 		template = JINJA_ENVIRONMENT.get_template('/assets/codegenerator.html')
 		self.response.write(template.render())
+
+	def post(self):
+		usock = urllib2.urlopen("lecturelogger.appspot.com/code")
+		data = usock.read()
+		usock.close()
+		soup = BS(data)
+
+		lecturecode = LectureCode()
+		lecturecode.lecture = self.request.get('lecture')
+		lecturecode.code = soup.find('h4', {'id':'code'}).text
+		lecturecode.put()
+		self.redirect('/home')
 		
 
 app = webapp2.WSGIApplication([
