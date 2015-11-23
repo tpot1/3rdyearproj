@@ -24,37 +24,25 @@
     		</div>
     		<div class="collapse navbar-collapse" id="myNavbar">
     			<ul class="nav navbar-nav">
-    				<li><a href="/history">Attendance History</a></li>
+    				<li><a href="#">Attendance</a></li>
     				<li><a href="#">Attendance vs Results</a></li>
-    				<li><a href="/challenges">Challenges</a></li>
-    				<li><a href="#">Settings</a></li>
                     <li><a href="/">Log Out</a></li>
     			</ul>
     		</div>
     	</div>
     </nav>
 
-    <div class="container-fluid">
-        <p> Select the module of the lecture you are generating a code for</p>
-        <form method="post">
-            <select name="lecture">
-                <option value="LECT1111">LECT1111</option>
-                <option value="LECT1112">LECT1112</option>
-                <option value="LECT1113">LECT1113</option>
-                <option value="LECT1114">LECT1114</option>
-            </select>
-            <button id="generate" type="button" class="btn btn-primary">Generate</button>
-            <div class="form-group">
-                <label for="code">Code:</label>
-                <input type="text" class="form-control" id="code" name="code">
-            </div>
-            <input class="btn btn-primary" role="button" type="submit" id="submit" disabled></input>
-        </form>
+    <p>Logged in as: {{username}}</p>
+
+    <div class="container">
+    	<div class="jumotron">
+    		<h1>Lecture Logger</h1>
+    		<p>Welcome to lecture logger!</p>
+            <p>Generate a code here, for your students to check in with!
+                <a href="/code" class="btn btn-primary" role="button">Generate Code</a>
+            </p>
+    	</div>
     </div>
-
-
-
-    
 
 
 
@@ -62,7 +50,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/codegenerator.js"></script>
   </body>
 </html>
 {% endautoescape %}

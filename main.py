@@ -22,6 +22,8 @@ class User(ndb.Model):
 class LectureCode(ndb.Model):
 	lecture=ndb.StringProperty()
 	code=ndb.StringProperty()
+	creator=ndb.StringProperty()
+	date = ndb.DateTimeProperty(auto_now_add=True)
 
 class CheckIn(ndb.Model):
 	student=ndb.StringProperty()
@@ -34,7 +36,6 @@ template_values = {
 
 class LoginPage(webapp2.RequestHandler):
 	def get(self):
-
 		template = JINJA_ENVIRONMENT.get_template('/assets/login.html')
 		self.response.write(template.render())
 
@@ -45,17 +46,16 @@ class LoginPage(webapp2.RequestHandler):
 
 		template_values['username'] = user.username
 
-		user.put()
-		self.redirect('/home')
+		if(user.username == 'lecturer'):
+			self.redirect('/lhome')
+		
+		else:
+			user.put()
+			self.redirect('/home')
 
 
 class MainPage(webapp2.RequestHandler):
 	def get(self):
-
-		userQuery = User.query(User.username == "example1")
-		for user in userQuery:
-			template_values['example'] = user.username
-
 		template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
 		self.response.write(template.render(template_values))
 
@@ -66,15 +66,23 @@ class CheckInPage(webapp2.RequestHandler):
 		self.response.write(template.render())
 
 	def post(self):
-		code = self.request.get('checkincode')		
-		if(code == "test"):
-			checkin = CheckIn()
-			checkin.student=template_values['username']
-			checkin.lecture=self.request.get('checkinlecture')
-			checkin.put()
-			self.redirect('/home')
-		else:
-			self.response.write("invalid code")
+		code = " " + self.request.get('checkincode')
+		lecture = self.request.get('checkinlecture')
+		invalidcode=True;
+
+		lectureCodeQuery = LectureCode.query(LectureCode.lecture == lecture)
+		for lectureCode in lectureCodeQuery:
+			if(lectureCode.code == code):
+				checkin = CheckIn()
+				checkin.student=template_values['username']
+				checkin.lecture=lecture
+				checkin.put()
+				invalidcode=False;
+				self.redirect('/home')
+		
+		if(invalidcode):
+			self.response.write("Invalid Code")
+		
 
 
 class ChallengesPage(webapp2.RequestHandler):
@@ -98,17 +106,22 @@ class CodePage(webapp2.RequestHandler):
 		self.response.write(template.render())
 
 	def post(self):
-		usock = urllib2.urlopen("http://lecturelogger.appspot.com")
-		data = usock.read()
-		usock.close()
-		soup = BS(data)
-
 		lecturecode = LectureCode()
 		lecturecode.lecture = self.request.get('lecture')
-		lecturecode.code = soup.find('h4')
+		lecturecode.code = self.request.get('code')
+		lecturecode.creator = template_values['username']
+
+		codeQuery = LectureCode.query(LectureCode.lecture == self.request.get('lecture'))
+		for code in codeQuery:
+			code.key.delete()
+
 		lecturecode.put()
-		self.redirect('/home')
+		self.redirect('/lhome')
 		
+class LecturerHome(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/assets/lecturerhome.html')
+		self.response.write(template.render())
 
 app = webapp2.WSGIApplication([
 	('/', LoginPage),
@@ -116,5 +129,6 @@ app = webapp2.WSGIApplication([
 	('/checkin', CheckInPage),
 	('/challenges', ChallengesPage),
 	('/history', HistoryPage),
-	('/code', CodePage)
+	('/code', CodePage),
+	('/lhome', LecturerHome)
 ], debug=True)
