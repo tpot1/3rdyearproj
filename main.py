@@ -18,6 +18,8 @@ def user_key(user_name="Test"):
 
 class User(ndb.Model):
 	username=ndb.StringProperty()
+	challenges=ndb.IntegerProperty()
+	history=ndb.IntegerProperty()
 
 class LectureCode(ndb.Model):
 	lecture=ndb.StringProperty()
@@ -28,11 +30,9 @@ class LectureCode(ndb.Model):
 class CheckIn(ndb.Model):
 	student=ndb.StringProperty()
 	lecture=ndb.StringProperty()
+	date = ndb.DateTimeProperty(auto_now_add=True)
 
 
-template_values = {
-			
-}
 
 class LoginPage(webapp2.RequestHandler):
 	def get(self):
@@ -40,24 +40,34 @@ class LoginPage(webapp2.RequestHandler):
 		self.response.write(template.render())
 
 	def post(self):
-		user = User(parent=user_key('User'))
+		exists=False;
 
-		user.username=self.request.get('username')
+		userQuery = User.query(User.username == self.request.get('username'))
+		for user in userQuery:
+			exists=True;
+			if(user.username == 'lecturer'):
+				self.redirect('/lhome?user='+user.username)
+			
+			else:
+				self.redirect('/home?user='+user.username)
 
-		template_values['username'] = user.username
-
-		if(user.username == 'lecturer'):
-			self.redirect('/lhome')
-		
-		else:
+		if(exists==False):
+			user = User(parent=user_key('User'))
+			user.username=self.request.get('username')
 			user.put()
-			self.redirect('/home')
+			self.redirect('/home?user='+user.username)
+
+		
+		
 
 
-class MainPage(webapp2.RequestHandler):
+class StudentHome(webapp2.RequestHandler):
 	def get(self):
+		template_values = {
+			'username' : self.request.get('user')
+		}
 		template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
-		self.response.write(template.render(template_values))
+		self.response.write(template.render())
 
 
 class CheckInPage(webapp2.RequestHandler):
@@ -125,7 +135,7 @@ class LecturerHome(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
 	('/', LoginPage),
-	('/home', MainPage),
+	('/home', StudentHome),
 	('/checkin', CheckInPage),
 	('/challenges', ChallengesPage),
 	('/history', HistoryPage),
