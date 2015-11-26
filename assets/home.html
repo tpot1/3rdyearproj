@@ -36,12 +36,15 @@
 
     <p>Logged in as: {{username}}</p>
 
+    <p id="time"></p>
+
     <div class="container">
     	<div class="jumotron">
     		<h1>Lecture Logger</h1>
     		<p>Welcome to lecture logger!</p>
             <p> Check in to lectures here!
-                <a href="/checkin" class="btn btn-primary" role="button">Check In</a>
+                <button class="btn btn-primary" role="button" id="checkinbtn">Check In</button>
+                <h4 id="msg"></h4>
             </p>
     	</div>
     </div>
@@ -52,6 +55,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/checkpos.js"></script>
+
   </body>
 </html>
 {% endautoescape %}
