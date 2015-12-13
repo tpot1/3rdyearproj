@@ -5,14 +5,16 @@ var resultmessage = document.getElementById('msg');
 var result;
 
 function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
+    if(geo_position_js.init()){
+      geo_position_js.getCurrentPosition(showPosition,error);
+    }
+    else {
     	resultmessage.style.color="red";
-        resultmessage.innerHTML = "Geolocation is not supported by this browser.";
+      resultmessage.innerHTML = "Geolocation is not supported by this browser.";
     }
 }
 function showPosition(position) {
+  alert(position.coords.latitude);
     $.ajax({
   		url:"/home",
   		type:"POST",
@@ -23,15 +25,18 @@ function showPosition(position) {
 			resultmessage.style.color="green";
 			resultmessage.innerHTML = "You are now checked in!";
 		}
-        else if(result == 2) {
-        	resultmessage.style.color="red";
-        	resultmessage.innerHTML = "You must be in the lecture to check in.";
-        }
-        else if(result == 3) {
-        	resultmessage.style.color="red";
-        	resultmessage.innerHTML = "You do not currently have a lecture to check in to";
-        }
-    });
+    else if(result == 2) {
+    	resultmessage.style.color="red";
+    	resultmessage.innerHTML = "You must be in the lecture to check in.";
+    }
+    else if(result == 3) {
+    	resultmessage.style.color="red";
+    	resultmessage.innerHTML = "You do not currently have a lecture to check in to";
+    }
+  });
+}
+function error(err){
+  resultmessage.innerHTML = 'Error(' + err.code + '):' + err.message;
 }
 
 button.onclick = function () {
