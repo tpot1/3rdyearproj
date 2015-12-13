@@ -15,6 +15,7 @@ function getLocation() {
 }
 function showPosition(position) {
   alert(position.coords.latitude);
+  alert(position.coords.longitude);
     $.ajax({
   		url:"/home",
   		type:"POST",
