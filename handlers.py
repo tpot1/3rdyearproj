@@ -4,7 +4,7 @@ import jinja2
 import webapp2
 from google.appengine.api import users
 
-from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Day 
+from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module 
 
 from datetime import datetime
 from google.appengine.ext import ndb
@@ -41,44 +41,44 @@ def point_in_poly(x,y,poly):
 
 	return inside
 
+class Modules():
+	LECT1111 = Module(
+			code='LECT1111',
+			lectures=[
+				Lecture(module='LECT1111', location=1, day='MONDAY', time=13),
+				Lecture(module='LECT1111', location=2, day='TUESDAY', time=14),
+				Lecture(module='LECT1111', location=3, day='WEDNESDAY', time=15),
+				Lecture(module='LECT1111', location=4, day='THURSDAY', time=16)])
 
-#class LoginPage(webapp2.RequestHandler):
-	#def get(self):
-		#template = JINJA_ENVIRONMENT.get_template('/assets/login.html')
-		#self.response.write(template.render())
-#	def get(self):
-#		user = users.get_current_user()
-#
-#		if user:
-#			self.redirect('/home')
-#		else:
-#			self.redirect(users.create_login_url(self.request.uri))
-#
-#	def post(self):
-#		exists=False;
-#		ThisUser.username=self.request.get('username')
-#		userQuery = User.query(User.username == self.request.get('username'))
-#		for user in userQuery:
-#			exists=True;
-#			self.redirect('/home')
-#
-#		if(exists==False):
-#			user = User(username=self.request.get('username'),
-#				challenges=[Challenge(challengeid=1, complete=False),
-#							Challenge(challengeid=2, complete=False),
-#							Challenge(challengeid=3, complete=False),
-#							Challenge(challengeid=4, complete=False),
-#							Challenge(challengeid=5, complete=False),
-#							Challenge(challengeid=6, complete=False),
-#							Challenge(challengeid=7, complete=False),
-#							Challenge(challengeid=8, complete=False),
-#							Challenge(challengeid=9, complete=False)],
-#				lectures=[],
-#				score=0,
-#				streak=0)
-#			user.put()
-#			self.redirect('/modules')
+	LECT1112 = Module(
+			code='LECT1112',
+			lectures=[
+				Lecture(module='LECT1112', location=1, day='MONDAY', time=13),
+				Lecture(module='LECT1112', location=2, day='TUESDAY', time=14),
+				Lecture(module='LECT1112', location=3, day='WEDNESDAY', time=15),
+				Lecture(module='LECT1112', location=4, day='THURSDAY', time=16)])
 
+
+	LECT1113 = Module(
+			code='LECT1113',
+			lectures=[
+				Lecture(module='LECT1113', location=1, day='MONDAY', time=13),
+				Lecture(module='LECT1113', location=2, day='TUESDAY', time=14),
+				Lecture(module='LECT1113', location=3, day='WEDNESDAY', time=15),
+				Lecture(module='LECT1113', location=4, day='THURSDAY', time=16)])
+
+
+	LECT1114 = Module(
+			code='LECT1114',
+			lectures=[
+				Lecture(module='LECT1114', location=1, day='MONDAY', time=13),
+				Lecture(module='LECT1114', location=2, day='TUESDAY', time=14),
+				Lecture(module='LECT1114', location=3, day='WEDNESDAY', time=15),
+				Lecture(module='LECT1114', location=4, day='THURSDAY', time=16)])
+	#LECT1111.put()
+	#LECT1112.put()
+	#LECT1113.put()
+	#LECT1114.put()
 
 class HomePage(webapp2.RequestHandler):
 	def get(self):
@@ -169,10 +169,36 @@ class ModuleSelectPage(webapp2.RequestHandler):
 			self.redirect('/')
 
 	def post(self):
-		self.response.write(self.request.get('module1'));
-		self.response.write(self.request.get('module2'));
-		self.response.write(self.request.get('module3'));
-		self.response.write(self.request.get('module4'));
+		module1 = self.request.get('module1');
+		module2 = self.request.get('module2');
+		module3 = self.request.get('module3');
+		module4 = self.request.get('module4');
+
+		self.response.write(module1 + "<br />")
+		moduleQuery1 = Module.query(Module.code == module1)
+		for module in moduleQuery1:
+			for lecture in module.lectures:
+				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+
+		self.response.write(module2 + "<br />")
+		moduleQuery2 = Module.query(Module.code == module2)
+		for module in moduleQuery2:
+			for lecture in module.lectures:
+				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+
+		self.response.write(module3 + "<br />")
+		moduleQuery3 = Module.query(Module.code == module3)
+		for module in moduleQuery3:
+			for lecture in module.lectures:
+				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+
+		self.response.write(module4 + "<br />")
+		moduleQuery4 = Module.query(Module.code == module4)
+		for module in moduleQuery4:
+			for lecture in module.lectures:
+				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+
+
 		
 
 class ChallengesPage(webapp2.RequestHandler):

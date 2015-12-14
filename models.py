@@ -1,9 +1,7 @@
 import os
 
-import jinja2
 import webapp2
 
-from google.appengine.api import users
 from google.appengine.ext import ndb
 
 def user_key(user_name="Test"):
@@ -13,10 +11,6 @@ class Badge(ndb.Model):
 	name=ndb.StringProperty()
 	#icon=?
 
-class Day(ndb.Model):
-	day=ndb.StringProperty()
-	#day = Monday or Tuesday or Wednesday --- look for how to do this
-
 class Challenge(ndb.Model):
 	challengeid=ndb.IntegerProperty()
 	complete=ndb.BooleanProperty()
@@ -25,11 +19,15 @@ class Challenge(ndb.Model):
 
 class Lecture(ndb.Model):
 	module=ndb.StringProperty()
-	location=ndb.StringProperty()
-	day=ndb.StructuredProperty(Day)
+	location=ndb.IntegerProperty()
+	day=ndb.StringProperty()
 	time=ndb.IntegerProperty()
-	attended=ndb.StringProperty()	# can add these two attributes after the lecture
+	attended=ndb.BooleanProperty()	# can add these two attributes after the lecture
 	week=ndb.IntegerProperty()
+
+class Module(ndb.Model):
+	code=ndb.StringProperty()
+	lectures=ndb.StructuredProperty(Lecture, repeated=True)
 
 class User(ndb.Model):
 	userid=ndb.StringProperty()
