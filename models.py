@@ -32,7 +32,8 @@ class Lecture(ndb.Model):
 	week=ndb.IntegerProperty()
 
 class User(ndb.Model):
-	username=ndb.StringProperty()
+	userid=ndb.StringProperty()
+	email=ndb.StringProperty()
 	challenges=ndb.StructuredProperty(Challenge, repeated=True)
 	lectures=ndb.StructuredProperty(Lecture, repeated=True)
 	score=ndb.IntegerProperty()

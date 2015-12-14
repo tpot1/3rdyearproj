@@ -24,62 +24,98 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 #			challenge.put
 
 def point_in_poly(x,y,poly):
-    n = len(poly)
-    inside = False
+	n = len(poly)
+	inside = False
 
-    p1x,p1y = poly[0]
-    for i in range(n+1):
-        p2x,p2y = poly[i % n]
-        if y > min(p1y,p2y):
-            if y <= max(p1y,p2y):
-                if x <= max(p1x,p2x):
-                    if p1y != p2y:
-                        xints = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
-                    if p1x == p2x or x <= xints:
-                        inside = not inside
-        p1x,p1y = p2x,p2y
+	p1x,p1y = poly[0]
+	for i in range(n+1):
+		p2x,p2y = poly[i % n]
+		if y > min(p1y,p2y):
+			if y <= max(p1y,p2y):
+				if x <= max(p1x,p2x):
+					if p1y != p2y:
+						xints = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+					if p1x == p2x or x <= xints:
+						inside = not inside
+		p1x,p1y = p2x,p2y
 
-    return inside
+	return inside
 
 
-class LoginPage(webapp2.RequestHandler):
-	def get(self):
-		template = JINJA_ENVIRONMENT.get_template('/assets/login.html')
-		self.response.write(template.render())
-
-	def post(self):
-		exists=False;
-		ThisUser.username=self.request.get('username')
-		userQuery = User.query(User.username == self.request.get('username'))
-		for user in userQuery:
-			exists=True;
-			self.redirect('/home')
-
-		if(exists==False):
-			user = User(username=self.request.get('username'),
-				challenges=[Challenge(challengeid=1, complete=False),
-							Challenge(challengeid=2, complete=False),
-							Challenge(challengeid=3, complete=False),
-							Challenge(challengeid=4, complete=False),
-							Challenge(challengeid=5, complete=False),
-							Challenge(challengeid=6, complete=False),
-							Challenge(challengeid=7, complete=False),
-							Challenge(challengeid=8, complete=False),
-							Challenge(challengeid=9, complete=False)],
-				lectures=[],
-				score=0,
-				streak=0)
-			user.put()
-			self.redirect('/modules')
+#class LoginPage(webapp2.RequestHandler):
+	#def get(self):
+		#template = JINJA_ENVIRONMENT.get_template('/assets/login.html')
+		#self.response.write(template.render())
+#	def get(self):
+#		user = users.get_current_user()
+#
+#		if user:
+#			self.redirect('/home')
+#		else:
+#			self.redirect(users.create_login_url(self.request.uri))
+#
+#	def post(self):
+#		exists=False;
+#		ThisUser.username=self.request.get('username')
+#		userQuery = User.query(User.username == self.request.get('username'))
+#		for user in userQuery:
+#			exists=True;
+#			self.redirect('/home')
+#
+#		if(exists==False):
+#			user = User(username=self.request.get('username'),
+#				challenges=[Challenge(challengeid=1, complete=False),
+#							Challenge(challengeid=2, complete=False),
+#							Challenge(challengeid=3, complete=False),
+#							Challenge(challengeid=4, complete=False),
+#							Challenge(challengeid=5, complete=False),
+#							Challenge(challengeid=6, complete=False),
+#							Challenge(challengeid=7, complete=False),
+#							Challenge(challengeid=8, complete=False),
+#							Challenge(challengeid=9, complete=False)],
+#				lectures=[],
+#				score=0,
+#				streak=0)
+#			user.put()
+#			self.redirect('/modules')
 
 
 class HomePage(webapp2.RequestHandler):
 	def get(self):
-		template_values = {
-			'username' : ThisUser.username
-		}
-		template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
-		self.response.write(template.render(template_values))
+		user = users.get_current_user()
+		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			exists=False
+			for existingUser in userQuery:
+				exists=True
+
+			if(exists==False):
+				newUser = User(
+					userid=user.user_id(),
+					email=user.email(),
+					challenges=[Challenge(challengeid=1, complete=False),
+								Challenge(challengeid=2, complete=False),
+								Challenge(challengeid=3, complete=False),
+								Challenge(challengeid=4, complete=False),
+								Challenge(challengeid=5, complete=False),
+								Challenge(challengeid=6, complete=False),
+								Challenge(challengeid=7, complete=False),
+								Challenge(challengeid=8, complete=False),
+								Challenge(challengeid=9, complete=False)],
+					lectures=[],
+					score=0,
+					streak=0)
+				newUser.put()
+				self.redirect('/modules')
+
+			template_values = {
+				'username' : user.nickname(),
+				'logout' : users.create_logout_url(self.request.uri)
+			}
+			template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
+			self.response.write(template.render(template_values))
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
 
 	def post(self):
 		#logging.info(self.request.body)
@@ -122,11 +158,17 @@ class HomePage(webapp2.RequestHandler):
 
 class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
-		template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
-		self.response.write(template.render())
+		user = users.get_current_user()
+		if(user):
+			template_values = {
+				'logout' : users.create_logout_url(self.request.uri)
+			}
+			template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
+			self.response.write(template.render(template_values))
+		else:
+			self.redirect('/')
 
 	def post(self):
-		#logging.info(self.request.body);
 		self.response.write(self.request.get('module1'));
 		self.response.write(self.request.get('module2'));
 		self.response.write(self.request.get('module3'));
@@ -135,24 +177,33 @@ class ModuleSelectPage(webapp2.RequestHandler):
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
+		user = users.get_current_user()
+		if(user):
+			template_values = {
+				'logout' : users.create_logout_url(self.request.uri)
+			}
+			query = User.query(User.userid == user.user_id())
+			for thisUser in query:
+				for challenge in thisUser.challenges:
+					if(challenge.complete):
+						template_values['status'+str(challenge.challengeid)] = "success"
+					else:
+						template_values['status'+str(challenge.challengeid)] = "null"
 
-		template_values = {
-
-		}
-
-		query = User.query(User.username == ThisUser.username)
-		for user in query:
-			for challenge in user.challenges:
-				if(challenge.complete):
-					template_values['status'+str(challenge.challengeid)] = "success"
-				else:
-					template_values['status'+str(challenge.challengeid)] = "null"
-
-		template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
-		self.response.write(template.render(template_values))
+			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
+			self.response.write(template.render(template_values))
+		else:
+			self.redirect('/')
 
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
-		self.response.write(template.render())
+		user = users.get_current_user()
+		if(user):
+			template_values = {
+				'logout' : users.create_logout_url(self.request.uri)
+			}
+			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
+			self.response.write(template.render(template_values))
+		else:
+			self.redirect('/')
