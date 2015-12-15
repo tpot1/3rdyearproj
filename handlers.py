@@ -53,43 +53,38 @@ class Modules():
 	LECT1112 = Module(
 			code='LECT1112',
 			lectures=[
-				Lecture(module='LECT1112', location=1, day='MONDAY', time=13),
-				Lecture(module='LECT1112', location=2, day='TUESDAY', time=14),
-				Lecture(module='LECT1112', location=3, day='WEDNESDAY', time=15),
-				Lecture(module='LECT1112', location=4, day='THURSDAY', time=16)])
-
+				Lecture(module='LECT1112', location=1, day='MONDAY', time=9),
+				Lecture(module='LECT1112', location=2, day='TUESDAY', time=9),
+				Lecture(module='LECT1112', location=3, day='WEDNESDAY', time=18),
+				Lecture(module='LECT1112', location=4, day='FRIDAY', time=20)])
 
 	LECT1113 = Module(
 			code='LECT1113',
 			lectures=[
-				Lecture(module='LECT1113', location=1, day='MONDAY', time=13),
-				Lecture(module='LECT1113', location=2, day='TUESDAY', time=14),
-				Lecture(module='LECT1113', location=3, day='WEDNESDAY', time=15),
-				Lecture(module='LECT1113', location=4, day='THURSDAY', time=16)])
-
+				Lecture(module='LECT1113', location=1, day='MONDAY', time=10),
+				Lecture(module='LECT1113', location=3, day='WEDNESDAY', time=12),
+				Lecture(module='LECT1113', location=4, day='THURSDAY', time=9),
+				Lecture(module='LECT1113', location=2, day='FRIDAY', time=18)])
 
 	LECT1114 = Module(
 			code='LECT1114',
 			lectures=[
-				Lecture(module='LECT1114', location=1, day='MONDAY', time=13),
-				Lecture(module='LECT1114', location=2, day='TUESDAY', time=14),
-				Lecture(module='LECT1114', location=3, day='WEDNESDAY', time=15),
-				Lecture(module='LECT1114', location=4, day='THURSDAY', time=16)])
-	#LECT1111.put()
-	#LECT1112.put()
-	#LECT1113.put()
-	#LECT1114.put()
+				Lecture(module='LECT1114', location=1, day='MONDAY', time=12),
+				Lecture(module='LECT1114', location=2, day='TUESDAY', time=15),
+				Lecture(module='LECT1114', location=3, day='WEDNESDAY', time=10),
+				Lecture(module='LECT1114', location=4, day='THURSDAY', time=14)])
+
+	LECT1111.put()
+	LECT1112.put()
+	LECT1113.put()
+	LECT1114.put()
 
 class HomePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
-			exists=False
-			for existingUser in userQuery:
-				exists=True
-
-			if(exists==False):
+			if userQuery.count() == 0:
 				newUser = User(
 					userid=user.user_id(),
 					email=user.email(),
@@ -169,44 +164,48 @@ class ModuleSelectPage(webapp2.RequestHandler):
 			self.redirect('/')
 
 	def post(self):
-		module1 = self.request.get('module1');
-		module2 = self.request.get('module2');
-		module3 = self.request.get('module3');
-		module4 = self.request.get('module4');
+		user = users.get_current_user()
 
-		self.response.write(module1 + "<br />")
-		moduleQuery1 = Module.query(Module.code == module1)
-		for module in moduleQuery1:
-			for lecture in module.lectures:
-				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+		userQuery = User.query(User.userid == user.user_id())
+		for thisUser in userQuery:
 
-		self.response.write(module2 + "<br />")
-		moduleQuery2 = Module.query(Module.code == module2)
-		for module in moduleQuery2:
-			for lecture in module.lectures:
-				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+			module1 = self.request.get('module1');
+			module2 = self.request.get('module2');
+			module3 = self.request.get('module3');
+			module4 = self.request.get('module4');
 
-		self.response.write(module3 + "<br />")
-		moduleQuery3 = Module.query(Module.code == module3)
-		for module in moduleQuery3:
-			for lecture in module.lectures:
-				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+			moduleQuery1 = Module.query(Module.code == module1)
+			for module in moduleQuery1:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
 
-		self.response.write(module4 + "<br />")
-		moduleQuery4 = Module.query(Module.code == module4)
-		for module in moduleQuery4:
-			for lecture in module.lectures:
-				self.response.write(str(lecture.location) + " " + lecture.day + " " + str(lecture.time) + "<br />")
+			moduleQuery2 = Module.query(Module.code == module2)
+			for module in moduleQuery2:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
 
+			moduleQuery3 = Module.query(Module.code == module3)
+			for module in moduleQuery3:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
 
-		
+			moduleQuery4 = Module.query(Module.code == module4)
+			for module in moduleQuery4:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
+
+			thisUser.put()
+
+		self.redirect('/')
+
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
 			template_values = {
-				'logout' : users.create_logout_url(self.request.uri)
+				'logout' : users.create_logout_url(self.request.uri),
+				'challenges' : 'class=active'
 			}
 			query = User.query(User.userid == user.user_id())
 			for thisUser in query:
@@ -226,9 +225,18 @@ class HistoryPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+
 			template_values = {
-				'logout' : users.create_logout_url(self.request.uri)
+				'logout' : users.create_logout_url(self.request.uri),
+				'history' : 'class=active',
+
 			}
+
+			userQuery = User.query(User.userid == user.user_id())
+			for thisUser in userQuery:
+				for lecture in thisUser.lectures:
+					template_values[lecture.day+str(lecture.time)] = lecture.module
+
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
 		else:

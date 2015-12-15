@@ -1,52 +1,40 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lecture Logger</title>
+{%include 'assets/header.html' %}
+<body>
+    {% include 'assets/navbar.html' %}
 
-    <link href="/css/bootstrap.css" rel="stylesheet">
-
-    <style type="text/css">
-        div.row {
-            border: 1px solid;
+     <style type="text/css">
+        table {
+            margin-left: 0px;
+            white-space: nowrap;
         }
 
-        div.col-sm-2 {
-            background-color: lavender;
+        tr {
+           line-height: 35px;
+           min-height: 35px;
+           height: 35px;
+           border: 1px solid #dddddd;
+        }
+
+        .table-bordered > thead > tr > th,
+        .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > th,
+        .table-bordered > thead > tr > td,
+        .table-bordered > tbody > tr > td,
+        .table-bordered > tfoot > tr > td {
+          border: 1px solid #dddddd;
+          border-right-width:1px;
+          border-left-width:1px;
         }
     </style>
-  </head>
-  <body>
-
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                 <a class="navbar-brand" href="/">Lecture Logger</a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/history">Attendance History</a></li>
-                    <li><a href="/challenges">Challenges</a></li>
-                    <li><a href='#'>Leaderboards</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href={{logout}}>Log Out</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
     <div class="container">
-        <table class="table">
-            <thread>
+        <table class="table table-condensed table-bordered">
+            <thead>
                 <tr>
+                    <th></th>
                     <th>Monday</th>
                     <th>Tuesday</th>
                     <th>Wednesday</th>
@@ -56,59 +44,104 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="success">LECT1111</td>
-                    <td></td>
-                    <td class="danger">LECT2222</td>
-                    <td>LECT3333</td>
-                    <td>LECT4444</td>
+                    <th>09:00</th>
+                    <td class="success">{{MONDAY9}}</td>
+                    <td>{{TUESDAY9}}</td>
+                    <td class="danger">{{WEDNESDAY9}}</td>
+                    <td>{{THURSDAY9}}</td>
+                    <td>{{FRIDAY9}}</td>
+                </tr>
+                <tr>
+                    <th>10:00</th>
+                    <td>{{MONDAY10}}</td>
+                    <td>{{TUESDAY10}}</td>
+                    <td>{{WEDNESDAY10}}</td>
+                    <td>{{THURSDAY10}}</td>
+                    <td>{{FRIDAY10}}</td>
+                </tr>
+                <tr>
+                    <th>11:00</th>
+                    <td>{{MONDAY11}}</td>
+                    <td>{{TUESDAY11}}</td>
+                    <td>{{WEDNESDAY11}}</td>
+                    <td>{{THURSDAY11}}</td>
+                    <td>{{FRIDAY11}}</td>
+                </tr>
+                <tr>
+                    <th>12:00</th>
+                    <td>{{MONDAY12}}</td>
+                    <td>{{TUESDAY12}}</td>
+                    <td>{{WEDNESDAY12}}</td>
+                    <td>{{THURSDAY12}}</td>
+                    <td>{{FRIDAY12}}</td>
+                </tr>
+                <tr>
+                    <th>13:00</th>
+                    <td>{{MONDAY13}}</td>
+                    <td>{{TUESDAY13}}</td>
+                    <td>{{WEDNESDAY13}}</td>
+                    <td>{{THURSDAY13}}</td>
+                    <td>{{FRIDAY13}}</td>
+                </tr>
+                <tr>
+                    <th>14:00</th>
+                    <td>{{MONDAY14}}</td>
+                    <td>{{TUESDAY14}}</td>
+                    <td>{{WEDNESDAY14}}</td>
+                    <td>{{THURSDAY14}}</td>
+                    <td>{{FRIDAY14}}</td>
+                </tr>
+                <tr>
+                    <th>15:00</th>
+                    <td>{{MONDAY15}}</td>
+                    <td>{{TUESDAY15}}</td>
+                    <td>{{WEDNESDAY15}}</td>
+                    <td>{{THURSDAY15}}</td>
+                    <td>{{FRIDAY15}}</td>
+                </tr>
+                <tr>
+                    <th>16:00</th>
+                    <td>{{MONDAY16}}</td>
+                    <td>{{TUESDAY16}}</td>
+                    <td>{{WEDNESDAY16}}</td>
+                    <td>{{THURSDAY16}}</td>
+                    <td>{{FRIDAY16}}</td>
+                </tr>
+                <tr>
+                    <th>17:00</th>
+                    <td>{{MONDAY17}}</td>
+                    <td>{{TUESDAY17}}</td>
+                    <td>{{WEDNESDAY17}}</td>
+                    <td>{{THURSDAY17}}</td>
+                    <td>{{FRIDAY17}}</td>
+                </tr>
+                <tr>
+                    <th>18:00</th>
+                    <td>{{MONDAY18}}</td>
+                    <td>{{TUESDAY18}}</td>
+                    <td>{{WEDNESDAY18}}</td>
+                    <td>{{THURSDAY18}}</td>
+                    <td>{{FRIDAY18}}</td>
+                </tr>
+                <tr>
+                    <th>19:00</th>
+                    <td>{{MONDAY19}}</td>
+                    <td>{{TUESDAY19}}</td>
+                    <td>{{WEDNESDAY19}}</td>
+                    <td>{{THURSDAY19}}</td>
+                    <td>{{FRIDAY19}}</td>
+                </tr>
+                <tr>
+                    <th>20:00</th>
+                    <td>{{MONDAY20}}</td>
+                    <td>{{TUESDAY20}}</td>
+                    <td>{{WEDNESDAY20}}</td>
+                    <td>{{THURSDAY20}}</td>
+                    <td>{{FRIDAY20}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
-
-<!--<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-2">Monday</div>
-        <div class="col-sm-2">Tuesday</div>
-        <div class="col-sm-2">Wednesday</div>
-        <div class="col-sm-2">Thursday</div>
-        <div class="col-sm-2">Friday</div>
-        <div class="col-sm-2">Saturday</div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2">LECT1111</div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2">LECT3210</div>
-        <div class="col-sm-2">LECT1111</div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2">LECT1122</div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2">LECT32123</div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2">LECT1111</div>
-        <div class="col-sm-2">LECT4231</div>
-        <div class="col-sm-2">LECT1122</div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2">LECT1221</div>
-        <div class="col-sm-2">LECT3241</div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2"></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-2">LECT1321</div>
-        <div class="col-sm-2">LECT32134</div>
-        <div class="col-sm-2">LECT1234</div>
-        <div class="col-sm-2">LECT1122</div>
-    </div>
-</div>-->
-
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
