@@ -71,6 +71,26 @@ def loadModules():
 				Lecture(module='LECT1114', location=3, day='WEDNESDAY', time=10),
 				Lecture(module='LECT1114', location=4, day='THURSDAY', time=14)])
 
+	LECT0000 = Module(
+		code='LECT0000',
+			lectures=[
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=21),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=21),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=21),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=21),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=21)])
+
+	LECT0000.put()
 	LECT1111.put()
 	LECT1112.put()
 	LECT1113.put()
@@ -115,52 +135,41 @@ class HomePage(webapp2.RequestHandler):
 
 	def post(self):
 		user = users.get_current_user()
-		logging.info(self.request.body)
+		#logging.info(self.request.body)
 		data = json.loads(self.request.body)
 		latitude = data["lat"]
 		longitude = data["lon"]
 
-		#logging.info(latitude)
-		#logging.info(longitude)
-
-		#time = datetime.now()
-
-		#self.response.write(" Day:" + str(time.day))
-		#self.response.write(" Hour:" + str(time.hour))
-		#self.response.write(" Min:" + str(time.minute))			
-
-		#meQuery = User.query(User.username == ThisUser.username)
-		#for me in meQuery:
-		#	for lecture in me.lectures:
-		#		if(lecture.date == time.day and lecture.time == time.hour):
-		#			self.response.write(" working")
 		days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
 
 		intday = datetime.today().weekday()
 		day = days[intday]
 		hour = datetime.now().hour
 
+		thisLecture=""
+		poly = []
+
 		userQuery = User.query(User.userid == user.user_id())
 		for userEntity in userQuery:
 			for lecture in userEntity.lectures:
 				if(lecture.day == day and lecture.time == hour):
-					logging.info(lecture)
-
+					thisLecture = lecture.module
+					buildingQuery = Building.query(Building.number == str(lecture.location))
+					for building in buildingQuery:
+						for i in range(0, len(building.coordinates)):
+							poly.append((building.coordinates[i].lat, building.coordinates[i].lon))	#will need to switch the order of lat and lon - i did this the wrong way round in my dummy test
 		
 		#poly = [(-1.39313923280514, 50.9354851665757),(-1.39297834453775, 50.9357212920631),(-1.39255721433256, 50.9356073903953),(-1.39271810259994, 50.9353712643295),(-1.39313923280514, 50.9354851665757)]
-
-		poly = [(52.187149, 0.207588), (52.187349, 0.208165), (52.186322, 0.209375), (52.186111, 0.208449)];
-
-		point_in_poly(latitude, longitude, poly);
+		#poly = [(52.187149, 0.207588), (52.187349, 0.208165), (52.186322, 0.209375), (52.186111, 0.208449)];
 
 		if(point_in_poly(latitude, longitude, poly)):
-			location = CheckIn(lat=latitude, lon=longitude)
-			location.put()
+			checkin = CheckIn(student=user.user_id(), lecture=thisLecture)
+			checkin.put()
 			self.response.out.write(json.dumps({"valid":1}))
-			#for user in userQuery:
-				#user.score = user.score + 10 + user.streak;
-				#user.streak = user.streak + 1;
-				#user.put()
+			for userEntity in userQuery:
+				userEntity.score = userEntity.score + 10 + userEntity.streak;
+				userEntity.streak = userEntity.streak + 1;
+				userEntity.put()
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))
 
@@ -175,6 +184,7 @@ class ModuleSelectPage(webapp2.RequestHandler):
 			template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
 			self.response.write(template.render(template_values))
 		else:
+
 			self.redirect('/')
 
 	def post(self):
@@ -215,7 +225,7 @@ class ModuleSelectPage(webapp2.RequestHandler):
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
-		loadBuildings()
+		#loadModules()
 		user = users.get_current_user()
 		if(user):
 			template_values = {

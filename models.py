@@ -42,9 +42,6 @@ class User(ndb.Model):
 	badges=ndb.StructuredProperty(Badge, repeated=True)
 
 class CheckIn(ndb.Model):
-	##adding this temprarily
-	lat=ndb.FloatProperty();
-	lon=ndb.FloatProperty();
 	student=ndb.StringProperty()
 	lecture=ndb.StringProperty()
 	date = ndb.DateTimeProperty(auto_now_add=True)
