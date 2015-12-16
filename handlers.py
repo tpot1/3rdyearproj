@@ -1,11 +1,11 @@
 import os
 
-import jinja2
 import webapp2
 from google.appengine.api import users
 
-from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module 
+from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module, Building
 
+import jinja2
 from datetime import datetime
 from google.appengine.ext import ndb
 import json
@@ -17,11 +17,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 	extensions=['jinja2.ext.autoescape'],
 	autoescape=True)
 
-#def challengecheck(user):	call this whenever a user attends a lecture?
-#	for challenge in user.challenges:
-#		if(challenge.predicate):
-#			challenge.complete=True
-#			challenge.put
+#def challengecheck(user):	call this whenever a user checks in successfully
+#	loop through all challenges, and call a specific check on each challenge
 
 def point_in_poly(x,y,poly):
 	n = len(poly)
@@ -41,7 +38,7 @@ def point_in_poly(x,y,poly):
 
 	return inside
 
-class Modules():
+def loadModules():
 	LECT1111 = Module(
 			code='LECT1111',
 			lectures=[
@@ -79,6 +76,10 @@ class Modules():
 	LECT1113.put()
 	LECT1114.put()
 
+def loadBuildings():
+	house = Building(number='0', coordinates=[ndb.GeoPt(52.187149, 0.207588), ndb.GeoPt(52.187349, 0.208165), ndb.GeoPt(52.186322, 0.209375), ndb.GeoPt(52.186111, 0.208449)])
+	house.put()
+
 class HomePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
@@ -113,31 +114,14 @@ class HomePage(webapp2.RequestHandler):
 			self.redirect(users.create_login_url(self.request.uri))
 
 	def post(self):
-		#logging.info(self.request.body)
+		user = users.get_current_user()
+		logging.info(self.request.body)
 		data = json.loads(self.request.body)
 		latitude = data["lat"]
 		longitude = data["lon"]
 
 		#logging.info(latitude)
 		#logging.info(longitude)
-		
-		#poly = [(-1.39313923280514, 50.9354851665757),(-1.39297834453775, 50.9357212920631),(-1.39255721433256, 50.9356073903953),(-1.39271810259994, 50.9353712643295),(-1.39313923280514, 50.9354851665757)]
-
-		poly = [(52.187149, 0.207588), (52.187349, 208165), (52.186322, 0.209375), (52.186111, 0.208449)];
-
-		point_in_poly(latitude, longitude, poly);
-
-		if(point_in_poly(latitude, longitude, poly)):
-			location = CheckIn(lat=latitude, lon=longitude)
-			location.put()
-			self.response.out.write(json.dumps({"valid":1}))
-			userQuery = User.query(User.username == ThisUser.username)
-			#for user in userQuery:
-				#user.score = user.score + 10 + user.streak;
-				#user.streak = user.streak + 1;
-				#user.put()
-		else: 
-			self.response.out.write(json.dumps({"valid":2}))
 
 		#time = datetime.now()
 
@@ -150,6 +134,36 @@ class HomePage(webapp2.RequestHandler):
 		#	for lecture in me.lectures:
 		#		if(lecture.date == time.day and lecture.time == time.hour):
 		#			self.response.write(" working")
+		days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
+
+		intday = datetime.today().weekday()
+		day = days[intday]
+		hour = datetime.now().hour
+
+		userQuery = User.query(User.userid == user.user_id())
+		for userEntity in userQuery:
+			for lecture in userEntity.lectures:
+				if(lecture.day == day and lecture.time == hour):
+					logging.info(lecture)
+
+		
+		#poly = [(-1.39313923280514, 50.9354851665757),(-1.39297834453775, 50.9357212920631),(-1.39255721433256, 50.9356073903953),(-1.39271810259994, 50.9353712643295),(-1.39313923280514, 50.9354851665757)]
+
+		poly = [(52.187149, 0.207588), (52.187349, 0.208165), (52.186322, 0.209375), (52.186111, 0.208449)];
+
+		point_in_poly(latitude, longitude, poly);
+
+		if(point_in_poly(latitude, longitude, poly)):
+			location = CheckIn(lat=latitude, lon=longitude)
+			location.put()
+			self.response.out.write(json.dumps({"valid":1}))
+			#for user in userQuery:
+				#user.score = user.score + 10 + user.streak;
+				#user.streak = user.streak + 1;
+				#user.put()
+		else: 
+			self.response.out.write(json.dumps({"valid":2}))
+
 
 class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
@@ -201,6 +215,7 @@ class ModuleSelectPage(webapp2.RequestHandler):
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
+		loadBuildings()
 		user = users.get_current_user()
 		if(user):
 			template_values = {

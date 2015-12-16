@@ -15,7 +15,6 @@ class Challenge(ndb.Model):
 	challengeid=ndb.IntegerProperty()
 	complete=ndb.BooleanProperty()
 	badge=ndb.StructuredProperty(Badge)
-	#predicate=ndb.functionproperty()??
 
 class Lecture(ndb.Model):
 	module=ndb.StringProperty()
@@ -28,6 +27,10 @@ class Lecture(ndb.Model):
 class Module(ndb.Model):
 	code=ndb.StringProperty()
 	lectures=ndb.StructuredProperty(Lecture, repeated=True)
+
+class Building(ndb.Model):
+	number=ndb.StringProperty()
+	coordinates=ndb.GeoPtProperty(repeated=True)
 
 class User(ndb.Model):
 	userid=ndb.StringProperty()
