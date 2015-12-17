@@ -17,8 +17,56 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 	extensions=['jinja2.ext.autoescape'],
 	autoescape=True)
 
-#def challengecheck(user):	call this whenever a user checks in successfully
-#	loop through all challenges, and call a specific check on each challenge
+def challengecheck(user, lecture):	
+	for challenge in user.challenges:
+		if type(challenge) != Challenge:
+			challenge = challenge.b_val
+
+		if predicates[challenge.challengeid](user, lecture):
+			challenge.complete = True;
+			user.put()
+
+def predicate1(user, lecture):
+	if lecture.time == 9:
+		return True
+	else:
+	 return False
+
+def predicate2(user, lecture):
+	return False
+
+def predicate3(user, lecture):
+	return False
+
+def predicate4(user, lecture):
+	return False
+
+def predicate5(user, lecture):
+	return False
+
+def predicate6(user, lecture):
+	return False
+
+def predicate7(user, lecture):
+	return False
+
+def predicate8(user, lecture):
+	return False
+
+def predicate9(user, lecture):
+	return True
+
+predicates = {
+	1 : predicate1,
+	2 : predicate2,
+	3 : predicate3,
+	4 : predicate4,
+	5 : predicate5,
+	6 : predicate6,
+	7 : predicate7,
+	8 : predicate8,
+	9 : predicate9
+}
 
 def point_in_poly(x,y,poly):
 	n = len(poly)
@@ -91,10 +139,10 @@ def loadModules():
 				Lecture(module='LECT0000', location=0, day='FRIDAY', time=21)])
 
 	LECT0000.put()
-	LECT1111.put()
-	LECT1112.put()
-	LECT1113.put()
-	LECT1114.put()
+	#LECT1111.put()
+	#LECT1112.put()
+	#LECT1113.put()
+	#LECT1114.put()
 
 def loadBuildings():
 	house = Building(number='0', coordinates=[ndb.GeoPt(52.187149, 0.207588), ndb.GeoPt(52.187349, 0.208165), ndb.GeoPt(52.186322, 0.209375), ndb.GeoPt(52.186111, 0.208449)])
@@ -146,30 +194,36 @@ class HomePage(webapp2.RequestHandler):
 		day = days[intday]
 		hour = datetime.now().hour
 
-		thisLecture=""
+		thisLecture=Lecture()
 		poly = []
 
 		userQuery = User.query(User.userid == user.user_id())
 		for userEntity in userQuery:
 			for lecture in userEntity.lectures:
 				if(lecture.day == day and lecture.time == hour):
-					thisLecture = lecture.module
+					thisLecture = lecture
 					buildingQuery = Building.query(Building.number == str(lecture.location))
 					for building in buildingQuery:
 						for i in range(0, len(building.coordinates)):
-							poly.append((building.coordinates[i].lat, building.coordinates[i].lon))	#will need to switch the order of lat and lon - i did this the wrong way round in my dummy test
+							poly.append((building.coordinates[i].lat, building.coordinates[i].lon))
 		
 		#poly = [(-1.39313923280514, 50.9354851665757),(-1.39297834453775, 50.9357212920631),(-1.39255721433256, 50.9356073903953),(-1.39271810259994, 50.9353712643295),(-1.39313923280514, 50.9354851665757)]
 		#poly = [(52.187149, 0.207588), (52.187349, 0.208165), (52.186322, 0.209375), (52.186111, 0.208449)];
+		
 
-		if(point_in_poly(latitude, longitude, poly)):
-			checkin = CheckIn(student=user.user_id(), lecture=thisLecture)
+		#if not poly:
+		#	self.response.out.write(json.dumps({"valid":3}))
+
+		#elif point_in_poly(latitude, longitude, poly):
+		if True:
+			checkin = CheckIn(student=user.user_id(), lecture=thisLecture.module)
 			checkin.put()
 			self.response.out.write(json.dumps({"valid":1}))
 			for userEntity in userQuery:
 				userEntity.score = userEntity.score + 10 + userEntity.streak;
 				userEntity.streak = userEntity.streak + 1;
 				userEntity.put()
+				challengecheck(userEntity, thisLecture)
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))
 
@@ -226,6 +280,7 @@ class ModuleSelectPage(webapp2.RequestHandler):
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
 		#loadModules()
+		#loadBuildings()
 		user = users.get_current_user()
 		if(user):
 			template_values = {
