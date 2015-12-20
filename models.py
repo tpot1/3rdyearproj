@@ -13,8 +13,11 @@ class Badge(ndb.Model):
 
 class Challenge(ndb.Model):
 	challengeid=ndb.IntegerProperty()
+	title=ndb.StringProperty()
+	description=ndb.StringProperty()
 	complete=ndb.BooleanProperty()
 	badge=ndb.StructuredProperty(Badge)
+	expiresat = ndb.FloatProperty()
 
 class Lecture(ndb.Model):
 	module=ndb.StringProperty()
