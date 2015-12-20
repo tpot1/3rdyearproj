@@ -12,6 +12,8 @@ from google.appengine.ext import ndb
 import json
 import logging
 import urllib2
+import math
+from bs4 import BeautifulSoup as Soup
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -87,6 +89,15 @@ def point_in_poly(x,y,poly):
 
 	return inside
 
+def timeConversion(remainingTime):
+	logging.info(remainingTime)
+	if(remainingTime < 3600):
+		return str(math.ceil(remainingTime/60)).split('.')[0] + " mins"
+	elif(remainingTime < 86400):
+		return str(math.floor(remainingTime/3600)).split('.')[0] + " hours"
+	else:
+		return str(math.floor(remainingTime/86400)).split('.')[0] + " days"
+
 def loadModules():
 	LECT1111 = Module(
 			code='LECT1111',
@@ -160,8 +171,8 @@ class HomePage(webapp2.RequestHandler):
 					userid=user.user_id(),
 					email=user.email(),
 					#instead of this I should probably make a list of challenges, and then update the users challenges from the list
-					challenges=[Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=2, title='First Blood', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+120),
+					challenges=[Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+172800),
+								Challenge(challengeid=2, title='First Blood', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+72800),
 								Challenge(challengeid=3, title='Logging Streak', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+120),
 								Challenge(challengeid=4, title='I can go all day', description='Attend every lecture in a day', complete=False, expiresat=currentTime+120),
 								Challenge(challengeid=5, title='Perfect Week', description='Attend every lecture in a week', complete=False, expiresat=currentTime+120),
@@ -284,6 +295,17 @@ class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
 		#loadModules()
 		#loadBuildings()
+
+		soup = Soup(open('challenges.html'))
+
+		tbody = soup.find('thead')
+		meta = soup.new_tag('tbody')
+		meta['content'] = "<tr class=success> <td>TEST</td> <td>test/td> <td>testtt</td> </tr>"
+		meta['http-equiv'] = "Content-Type"
+		tbody.insert_after(meta)
+
+		print soup
+
 		user = users.get_current_user()
 		if(user):
 			template_values = {
@@ -301,12 +323,13 @@ class ChallengesPage(webapp2.RequestHandler):
 					else:
 						template_values['title'+str(challenge.challengeid)] = challenge.title
 						template_values['desc'+str(challenge.challengeid)] = challenge.description
+						template_values['time'+str(challenge.challengeid)] = timeConversion(challenge.expiresat - time.time())
 						if(challenge.complete):
 							template_values['status'+str(challenge.challengeid)] = "success"
 						else:
 							template_values['status'+str(challenge.challengeid)] = "null"
 
-			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
+			template = JINJA_ENVIRONMENT.get_template('challenges.html')
 			self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')
