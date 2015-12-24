@@ -165,30 +165,38 @@ class HomePage(webapp2.RequestHandler):
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
-			if userQuery.count() == 0:
+
+			userEntity = None
+
+			for thisUser in userQuery:
+				userEntity = thisUser
+
+			if userEntity is None:
 				currentTime = time.time()
-				newUser = User(
+				userEntity = User(
 					userid=user.user_id(),
 					email=user.email(),
 					#instead of this I should probably make a list of challenges, and then update the users challenges from the list
-					challenges=[Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+172800),
+					challenges=[Challenge(challengeid=9, title='Golden Student', description='Check in to 15 lectures', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+172800),
 								Challenge(challengeid=2, title='First Blood', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+72800),
 								Challenge(challengeid=3, title='Logging Streak', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+120),
 								Challenge(challengeid=4, title='I can go all day', description='Attend every lecture in a day', complete=False, expiresat=currentTime+120),
 								Challenge(challengeid=5, title='Perfect Week', description='Attend every lecture in a week', complete=False, expiresat=currentTime+120),
 								Challenge(challengeid=6, title="Teacher's Pet", description='Have the highest (or joint highest) attendance out of all the students in your class', complete=False, expiresat=currentTime+120),
 								Challenge(challengeid=7, title='First Steps', description='Check in to 1 lecture', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=8, title='Larger Steps', description='Check in to 5 lectures', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=9, title='Golden Student', description='Check in to 15 lectures', complete=False, expiresat=currentTime+120)],
+								Challenge(challengeid=8, title='Larger Steps', description='Check in to 5 lectures', complete=False, expiresat=currentTime+120)],
 					lectures=[],
 					score=0,
 					streak=0)
-				newUser.put()
+				userEntity.put()
 				self.redirect('/modules')
 
 			template_values = {
 				'username' : user.nickname(),
-				'logout' : users.create_logout_url(self.request.uri)
+				'logout' : users.create_logout_url(self.request.uri),
+				'score' : userEntity.score,
+				'streak' : userEntity.streak
 			}
 			template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
 			self.response.write(template.render(template_values))
@@ -208,7 +216,7 @@ class HomePage(webapp2.RequestHandler):
 		day = days[intday]
 		hour = datetime.now().hour
 
-		thisLecture=Lecture()
+		thisLecture = None
 		poly = []
 
 		userQuery = User.query(User.userid == user.user_id())
@@ -224,23 +232,23 @@ class HomePage(webapp2.RequestHandler):
 		#poly = [(-1.39313923280514, 50.9354851665757),(-1.39297834453775, 50.9357212920631),(-1.39255721433256, 50.9356073903953),(-1.39271810259994, 50.9353712643295),(-1.39313923280514, 50.9354851665757)]
 		#poly = [(52.187149, 0.207588), (52.187349, 0.208165), (52.186322, 0.209375), (52.186111, 0.208449)];
 		
+		logging.info(poly)
 
-		#if not poly:
-		#	self.response.out.write(json.dumps({"valid":3}))
-
-		#elif point_in_poly(latitude, longitude, poly):
-		if True:
+		if thisLecture is None:
+			self.response.out.write(json.dumps({"valid":3}))
+		elif True: #point_in_poly(latitude, longitude, poly):
 			checkin = CheckIn(student=user.user_id(), lecture=thisLecture.module)
 			checkin.put()
-			self.response.out.write(json.dumps({"valid":1}))
 			for userEntity in userQuery:
 				userEntity.score = userEntity.score + 10 + userEntity.streak;
 				userEntity.streak = userEntity.streak + 1;
 				userEntity.put()
+				self.response.out.write(json.dumps({"valid":1, "score":userEntity.score, "streak":userEntity.streak}))
 				challengecheck(userEntity, thisLecture)
 		else: 
-			self.response.out.write(json.dumps({"valid":2}))
+			self.response.out.write(json.dumps({"valid":2}))	
 
+		#TODO - need to check the student hasn't already checked in to the lecture
 
 class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
@@ -296,15 +304,37 @@ class ChallengesPage(webapp2.RequestHandler):
 		#loadModules()
 		#loadBuildings()
 
-		soup = Soup(open('challenges.html'))
+		#can be used to add appropriate code to the challenges.html file, but I can't write this to the file to update it - this is a restriction on GAE
+		'''soup = Soup(open('challenges.html'))
 
-		tbody = soup.find('thead')
-		meta = soup.new_tag('tbody')
-		meta['content'] = "<tr class=success> <td>TEST</td> <td>test/td> <td>testtt</td> </tr>"
-		meta['http-equiv'] = "Content-Type"
-		tbody.insert_after(meta)
+		thead = soup.find('thead')
 
-		print soup
+		tbody = soup.new_tag('tbody')
+
+		tr = soup.new_tag('tr')
+		tr['class'] = "{{status1}}"
+
+		tdTitle = soup.new_tag('td')
+		tdTitle.insert(1, "{{title1}} TEST1")
+
+		tdDesc = soup.new_tag('td')
+		tdDesc.insert(1, "{{desc1}} TEST2")
+
+		tdTime = soup.new_tag('td')
+		tdTime.insert(1, "{{time1}} TEST3")
+		
+		thead.insert_after(tbody)
+		tbody.insert(1, tr)
+		tr.insert(1, tdTitle)
+		tr.insert(1, tdDesc)
+		tr.insert(1, tdTime)
+
+		logging.info(soup.prettify())
+
+		html = soup.prettify("utf-8")
+		with open("challenges.html", "w") as file:
+			logging.info(file)
+			#file.write(html)'''
 
 		user = users.get_current_user()
 		if(user):
@@ -312,6 +342,9 @@ class ChallengesPage(webapp2.RequestHandler):
 				'logout' : users.create_logout_url(self.request.uri),
 				'challenges' : 'class=active'
 			}
+
+			activechalls=[]
+
 			query = User.query(User.userid == user.user_id())
 			for thisUser in query:
 				for challenge in thisUser.challenges:
@@ -321,15 +354,18 @@ class ChallengesPage(webapp2.RequestHandler):
 						thisUser.challenges.remove(challenge)
 						thisUser.put()
 					else:
-						template_values['title'+str(challenge.challengeid)] = challenge.title
-						template_values['desc'+str(challenge.challengeid)] = challenge.description
-						template_values['time'+str(challenge.challengeid)] = timeConversion(challenge.expiresat - time.time())
-						if(challenge.complete):
-							template_values['status'+str(challenge.challengeid)] = "success"
-						else:
-							template_values['status'+str(challenge.challengeid)] = "null"
+						activechalls.append(challenge)
 
-			template = JINJA_ENVIRONMENT.get_template('challenges.html')
+			for i in range(0, len(activechalls)):
+				template_values['title'+str(i)] = activechalls[i].title
+				template_values['desc'+str(i)] = activechalls[i].description
+				template_values['time'+str(i)] = timeConversion(activechalls[i].expiresat - time.time())
+				if(activechalls[i].complete):
+					template_values['status'+str(i)] = "success"
+				else:
+					template_values['status'+str(i)] = "null"
+
+			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
 			self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')
@@ -343,7 +379,6 @@ class HistoryPage(webapp2.RequestHandler):
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
 				'history' : 'class=active',
-
 			}
 
 			userQuery = User.query(User.userid == user.user_id())

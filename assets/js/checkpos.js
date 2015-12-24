@@ -2,7 +2,8 @@ var button = document.getElementById('checkinbtn');
 
 var resultmessage = document.getElementById('msg');
 
-var result;
+var score = document.getElementById('score');
+var streak = document.getElementById('streak');
 
 function getLocation() {
     if(geo_position_js.init()){
@@ -19,18 +20,25 @@ function showPosition(position) {
   		type:"POST",
   		data: JSON.stringify({ lat : position.coords.latitude, lon : position.coords.longitude })
 	}).done(function( data ) {
-		result = data.split(":")[1].split("}")[0];
-		if(result === ' 1'){
+    data = $.parseJSON(data);
+		if(data['valid'] === 1){
 			resultmessage.style.color="green";
 			resultmessage.innerHTML = "You are now checked in!";
+
+      score.innerHTML = "Score: " + data['score'];
+      streak.innerHTML = "Current Streak: " + data['streak'];
 		}
-    else if(result === ' 2') {
+    else if(data['valid'] === 2) {
     	resultmessage.style.color="red";
     	resultmessage.innerHTML = "You must be in the lecture to check in.";
     }
-    else if(result === ' 3') {
+    else if(data['valid'] === 3) {
     	resultmessage.style.color="red";
     	resultmessage.innerHTML = "You do not currently have a lecture to check in to";
+    }
+    else if(data['valid'] === 4) {
+      resultmessage.style.color="red";
+      resultmessage.innerHTML = "You have already checked in to that lecture";
     }
   });
 }
