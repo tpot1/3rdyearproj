@@ -98,148 +98,6 @@ def timeConversion(remainingTime):
 	else:
 		return str(math.floor(remainingTime/86400)).split('.')[0] + " days"
 
-def loadModules():
-	LECT1111 = Module(
-			code='LECT1111',
-			lectures=[
-				Lecture(module='LECT1111', location=1, day='MONDAY', time=13),
-				Lecture(module='LECT1111', location=2, day='TUESDAY', time=14),
-				Lecture(module='LECT1111', location=3, day='WEDNESDAY', time=15),
-				Lecture(module='LECT1111', location=4, day='THURSDAY', time=16)])
-
-	LECT1112 = Module(
-			code='LECT1112',
-			lectures=[
-				Lecture(module='LECT1112', location=1, day='MONDAY', time=9),
-				Lecture(module='LECT1112', location=2, day='TUESDAY', time=9),
-				Lecture(module='LECT1112', location=3, day='WEDNESDAY', time=18),
-				Lecture(module='LECT1112', location=4, day='FRIDAY', time=20)])
-
-	LECT1113 = Module(
-			code='LECT1113',
-			lectures=[
-				Lecture(module='LECT1113', location=1, day='MONDAY', time=10),
-				Lecture(module='LECT1113', location=3, day='WEDNESDAY', time=12),
-				Lecture(module='LECT1113', location=4, day='THURSDAY', time=9),
-				Lecture(module='LECT1113', location=2, day='FRIDAY', time=18)])
-
-	LECT1114 = Module(
-			code='LECT1114',
-			lectures=[
-				Lecture(module='LECT1114', location=1, day='MONDAY', time=12),
-				Lecture(module='LECT1114', location=2, day='TUESDAY', time=15),
-				Lecture(module='LECT1114', location=3, day='WEDNESDAY', time=10),
-				Lecture(module='LECT1114', location=4, day='THURSDAY', time=14)])
-
-	LECT0000 = Module(
-		code='LECT0000',
-			lectures=[
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=10),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=10),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=10),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=10),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=10),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=10),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=10),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=11),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=11),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=11),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=11),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=11),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=11),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=11),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=12),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=12),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=12),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=12),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=12),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=12),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=12),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=13),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=13),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=13),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=13),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=13),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=13),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=13),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=14),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=14),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=14),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=14),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=14),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=14),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=14),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=15),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=15),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=15),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=15),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=15),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=15),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=15),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=16),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=16),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=16),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=16),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=16),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=16),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=16),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=17),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=17),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=17),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=17),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=17),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=17),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=17),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=18),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=18),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=18),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=18),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=18),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=18),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=18),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=19),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=19),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=19),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=19),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=19),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=19),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=19),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=20),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=20),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=20),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=20),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=20),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=20),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=20),
-
-				Lecture(module='LECT0000', location=0, day='MONDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='TUESDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='THURSDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='SATURDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='SUNDAY', time=21)])
-
-	LECT0000.put()
-	#LECT1111.put()
-	#LECT1112.put()
-	#LECT1113.put()
-	#LECT1114.put()
-
-def loadBuildings():
-	house = Building(number='0', coordinates=[ndb.GeoPt(52.187149, 0.207588), ndb.GeoPt(52.187349, 0.208165), ndb.GeoPt(52.186322, 0.209375), ndb.GeoPt(52.186111, 0.208449)])
-	house.put()
-
 class HomePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
@@ -252,34 +110,17 @@ class HomePage(webapp2.RequestHandler):
 				userEntity = thisUser
 
 			if userEntity is None:
-				currentTime = time.time()
-				userEntity = User(
-					userid=user.user_id(),
-					email=user.email(),
-					#instead of this I should probably make a list of challenges, and then update the users challenges from the list
-					challenges=[Challenge(challengeid=9, title='Golden Student', description='Check in to 15 lectures', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+172800),
-								Challenge(challengeid=2, title='First Blood', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+72800),
-								Challenge(challengeid=3, title='Logging Streak', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=4, title='I can go all day', description='Attend every lecture in a day', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=5, title='Perfect Week', description='Attend every lecture in a week', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=6, title="Teacher's Pet", description='Have the highest (or joint highest) attendance out of all the students in your class', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=7, title='First Steps', description='Check in to 1 lecture', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=8, title='Larger Steps', description='Check in to 5 lectures', complete=False, expiresat=currentTime+120)],
-					lectures=[],
-					score=0,
-					streak=0)
-				userEntity.put()
 				self.redirect('/modules')
 
-			template_values = {
-				'username' : user.nickname(),
-				'logout' : users.create_logout_url(self.request.uri),
-				'score' : userEntity.score,
-				'streak' : userEntity.streak
-			}
-			template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
-			self.response.write(template.render(template_values))
+			else:
+				template_values = {
+					'username' : user.nickname(),
+					'logout' : users.create_logout_url(self.request.uri),
+					'score' : userEntity.score,
+					'streak' : userEntity.streak
+				}
+				template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
+				self.response.write(template.render(template_values))
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
@@ -335,14 +176,48 @@ class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
-			template_values = {
-				'logout' : users.create_logout_url(self.request.uri)
-			}
-			template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
-			self.response.write(template.render(template_values))
-		else:
+			userQuery = User.query(User.userid == user.user_id())
+			if(userQuery.count() == 0):
+				currentTime = time.time()
+				userEntity = User(
+					userid=user.user_id(),
+					email=user.email(),
+					#instead of this I should probably make a list of challenges, and then update the users challenges from the list
+						#this would also solve the problem of users receiving their challenges at different times and therefore they exire at different times
+					challenges=[Challenge(challengeid=9, title='Golden Student', description='Check in to 15 lectures', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+172800),
+								Challenge(challengeid=2, title='First Blood', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+72800),
+								Challenge(challengeid=3, title='Logging Streak', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=4, title='I can go all day', description='Attend every lecture in a day', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=5, title='Perfect Week', description='Attend every lecture in a week', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=6, title="Teacher's Pet", description='Have the highest (or joint highest) attendance out of all the students in your class', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=7, title='First Steps', description='Check in to 1 lecture', complete=False, expiresat=currentTime+120),
+								Challenge(challengeid=8, title='Larger Steps', description='Check in to 5 lectures', complete=False, expiresat=currentTime+120)],
+					lectures=[],
+					score=0,
+					streak=0)
 
-			self.redirect('/')
+				userEntity.put()
+
+				template_values = {
+					'logout' : users.create_logout_url(self.request.uri)
+				}
+
+				template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
+				self.response.write(template.render(template_values))
+
+				self.response.out.write("<script> var moduleList = document.getElementById('moduleList');")
+
+				moduleQuery = Module.query()
+				for module in moduleQuery:
+					self.response.out.write("var option = document.createElement('option'); option.text = option.value = option.name = '" + module.code + "'; moduleList.add(option,moduleList.length);")
+
+				self.response.out.write("</script>")
+
+			else:
+				self.redirect('/')
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
 
 	def post(self):
 		user = users.get_current_user()
@@ -382,8 +257,6 @@ class ModuleSelectPage(webapp2.RequestHandler):
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
-		#loadModules()
-		#loadBuildings()
 
 		#can be used to add appropriate code to the challenges.html file, but I can't write this to the file to update it - this is a restriction on GAE
 		'''soup = Soup(open('challenges.html'))
@@ -449,7 +322,7 @@ class ChallengesPage(webapp2.RequestHandler):
 			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
 			self.response.write(template.render(template_values))
 		else:
-			self.redirect('/')
+			self.redirect(users.create_login_url(self.request.uri))
 
 
 class HistoryPage(webapp2.RequestHandler):
@@ -470,4 +343,4 @@ class HistoryPage(webapp2.RequestHandler):
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
 		else:
-			self.redirect('/')
+			self.redirect(users.create_login_url(self.request.uri))

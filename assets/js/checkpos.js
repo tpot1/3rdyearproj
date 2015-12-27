@@ -30,15 +30,15 @@ function showPosition(position) {
 		}
     else if(data['valid'] === 2) {
     	resultmessage.style.color="red";
-    	resultmessage.innerHTML = "You must be in the lecture to check in.";
+    	resultmessage.innerHTML = "You must be in the lecture to check in!";
     }
     else if(data['valid'] === 3) {
     	resultmessage.style.color="red";
-    	resultmessage.innerHTML = "You do not currently have a lecture to check in to";
+    	resultmessage.innerHTML = "You do not currently have a lecture to check in to!";
     }
     else if(data['valid'] === 4) {
       resultmessage.style.color="red";
-      resultmessage.innerHTML = "You have already checked in to that lecture";
+      resultmessage.innerHTML = "You have already checked in to that lecture!";
     }
   });
 }
