@@ -134,21 +134,101 @@ def loadModules():
 	LECT0000 = Module(
 		code='LECT0000',
 			lectures=[
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=10),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=10),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=10),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=10),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=10),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=10),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=10),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=11),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=11),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=11),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=11),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=11),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=11),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=11),
+
 				Lecture(module='LECT0000', location=0, day='MONDAY', time=12),
 				Lecture(module='LECT0000', location=0, day='TUESDAY', time=12),
 				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=12),
 				Lecture(module='LECT0000', location=0, day='THURSDAY', time=12),
 				Lecture(module='LECT0000', location=0, day='FRIDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=12),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=12),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=13),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=13),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=13),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=13),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=13),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=13),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=13),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=14),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=14),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=14),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=14),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=14),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=14),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=14),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=15),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=15),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=15),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=15),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=15),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=15),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=15),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=16),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=16),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=16),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=16),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=16),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=16),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=16),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=17),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=17),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=17),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=17),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=17),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=17),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=17),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=18),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=18),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=18),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=18),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=18),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=18),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=18),
+
+				Lecture(module='LECT0000', location=0, day='MONDAY', time=19),
+				Lecture(module='LECT0000', location=0, day='TUESDAY', time=19),
+				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=19),
+				Lecture(module='LECT0000', location=0, day='THURSDAY', time=19),
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=19),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=19),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=19),
+
 				Lecture(module='LECT0000', location=0, day='MONDAY', time=20),
 				Lecture(module='LECT0000', location=0, day='TUESDAY', time=20),
 				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=20),
 				Lecture(module='LECT0000', location=0, day='THURSDAY', time=20),
 				Lecture(module='LECT0000', location=0, day='FRIDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=20),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=20),
+
 				Lecture(module='LECT0000', location=0, day='MONDAY', time=21),
 				Lecture(module='LECT0000', location=0, day='TUESDAY', time=21),
 				Lecture(module='LECT0000', location=0, day='WEDNESDAY', time=21),
 				Lecture(module='LECT0000', location=0, day='THURSDAY', time=21),
-				Lecture(module='LECT0000', location=0, day='FRIDAY', time=21)])
+				Lecture(module='LECT0000', location=0, day='FRIDAY', time=21),
+				Lecture(module='LECT0000', location=0, day='SATURDAY', time=21),
+				Lecture(module='LECT0000', location=0, day='SUNDAY', time=21)])
 
 	LECT0000.put()
 	#LECT1111.put()
@@ -226,29 +306,30 @@ class HomePage(webapp2.RequestHandler):
 					thisLecture = lecture
 					buildingQuery = Building.query(Building.number == str(lecture.location))
 					for building in buildingQuery:
-						for i in range(0, len(building.coordinates)):
-							poly.append((building.coordinates[i].lat, building.coordinates[i].lon))
-		
-		#poly = [(-1.39313923280514, 50.9354851665757),(-1.39297834453775, 50.9357212920631),(-1.39255721433256, 50.9356073903953),(-1.39271810259994, 50.9353712643295),(-1.39313923280514, 50.9354851665757)]
-		#poly = [(52.187149, 0.207588), (52.187349, 0.208165), (52.186322, 0.209375), (52.186111, 0.208449)];
-		
-		logging.info(poly)
+						for coordinate in building.coordinates:
+							c = (coordinate.lon, coordinate.lat)
+							poly.append(c)
 
 		if thisLecture is None:
 			self.response.out.write(json.dumps({"valid":3}))
-		elif True: #point_in_poly(latitude, longitude, poly):
+		elif thisLecture.attended:
+			self.response.out.write(json.dumps({"valid":4}))
+		elif point_in_poly(longitude, latitude, poly):
 			checkin = CheckIn(student=user.user_id(), lecture=thisLecture.module)
 			checkin.put()
+			thisLecture.attended = True
+			thisLecture.put()
 			for userEntity in userQuery:
 				userEntity.score = userEntity.score + 10 + userEntity.streak;
 				userEntity.streak = userEntity.streak + 1;
+				for lecture in userEntity.lectures:
+					if(lecture.key == thisLecture.key):
+						lecture.attended = True
 				userEntity.put()
 				self.response.out.write(json.dumps({"valid":1, "score":userEntity.score, "streak":userEntity.streak}))
 				challengecheck(userEntity, thisLecture)
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))	
-
-		#TODO - need to check the student hasn't already checked in to the lecture
 
 class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
