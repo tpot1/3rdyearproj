@@ -63,3 +63,5 @@ remove4.onclick = function () {
 		selected[3] = false;
 	}	
 }
+
+

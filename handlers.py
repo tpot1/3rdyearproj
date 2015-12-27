@@ -288,12 +288,16 @@ class ChallengesPage(webapp2.RequestHandler):
 
 		user = users.get_current_user()
 		if(user):
+
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
 				'challenges' : 'class=active'
 			}
 
-			activechalls=[]
+			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
+			self.response.write(template.render(template_values))
+
+			self.response.out.write('<script> var table = document.getElementById("challengeTable"); ')
 
 			query = User.query(User.userid == user.user_id())
 			for thisUser in query:
@@ -304,25 +308,20 @@ class ChallengesPage(webapp2.RequestHandler):
 						thisUser.challenges.remove(challenge)
 						thisUser.put()
 					else:
-						activechalls.append(challenge)
+						self.response.out.write('var row = table.insertRow(table.rows.length); var cell1 = row.insertCell(0); var cell2 = row.insertCell(1); var cell3 = row.insertCell(2); cell1.innerHTML = "'+challenge.title+'"; cell2.innerHTML = "'+challenge.description+'"; cell3.innerHTML = "'+timeConversion(challenge.expiresat - time.time())+'"; ')
+						if challenge.complete:
+							self.response.out.write('row.className = "success"; ')
 
-			for i in range(0, len(activechalls)):
-				template_values['title'+str(i)] = activechalls[i].title
-				template_values['desc'+str(i)] = activechalls[i].description
-				template_values['time'+str(i)] = timeConversion(activechalls[i].expiresat - time.time())
-				if(activechalls[i].complete):
-					template_values['status'+str(i)] = "success"
-				else:
-					template_values['status'+str(i)] = "null"
-
-			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
-			self.response.write(template.render(template_values))
+			self.response.out.write(' </script>')
+			
 		else:
 			self.redirect('/')
 
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
+		#loadChallenges()
+
 		user = users.get_current_user()
 		if(user):
 
