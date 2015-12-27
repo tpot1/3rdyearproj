@@ -5,6 +5,10 @@ from google.appengine.api import users
 
 from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module, Building
 
+from challenges import loadChallenges
+from modules import loadModules
+from buildings import loadBuildings
+
 import jinja2
 from datetime import datetime
 import time
@@ -178,24 +182,16 @@ class ModuleSelectPage(webapp2.RequestHandler):
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
 			if(userQuery.count() == 0):
-				currentTime = time.time()
 				userEntity = User(
 					userid=user.user_id(),
 					email=user.email(),
-					#instead of this I should probably make a list of challenges, and then update the users challenges from the list
-						#this would also solve the problem of users receiving their challenges at different times and therefore they exire at different times
-					challenges=[Challenge(challengeid=9, title='Golden Student', description='Check in to 15 lectures', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=1, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+172800),
-								Challenge(challengeid=2, title='First Blood', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+72800),
-								Challenge(challengeid=3, title='Logging Streak', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=4, title='I can go all day', description='Attend every lecture in a day', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=5, title='Perfect Week', description='Attend every lecture in a week', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=6, title="Teacher's Pet", description='Have the highest (or joint highest) attendance out of all the students in your class', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=7, title='First Steps', description='Check in to 1 lecture', complete=False, expiresat=currentTime+120),
-								Challenge(challengeid=8, title='Larger Steps', description='Check in to 5 lectures', complete=False, expiresat=currentTime+120)],
 					lectures=[],
 					score=0,
 					streak=0)
+
+				challengeQuery = Challenge.query()
+				for challenge in challengeQuery:
+					userEntity.challenges.append(challenge)
 
 				userEntity.put()
 
@@ -217,7 +213,7 @@ class ModuleSelectPage(webapp2.RequestHandler):
 			else:
 				self.redirect('/')
 		else:
-			self.redirect(users.create_login_url(self.request.uri))
+			self.redirect('/')
 
 	def post(self):
 		user = users.get_current_user()
@@ -322,7 +318,7 @@ class ChallengesPage(webapp2.RequestHandler):
 			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
 			self.response.write(template.render(template_values))
 		else:
-			self.redirect(users.create_login_url(self.request.uri))
+			self.redirect('/')
 
 
 class HistoryPage(webapp2.RequestHandler):
@@ -343,4 +339,4 @@ class HistoryPage(webapp2.RequestHandler):
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
 		else:
-			self.redirect(users.create_login_url(self.request.uri))
+			self.redirect('/')

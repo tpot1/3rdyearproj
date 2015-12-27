@@ -1,3 +1,5 @@
+from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module, Building
+
 def loadModules():
 	LECT1111 = Module(
 			code='LECT1111',
