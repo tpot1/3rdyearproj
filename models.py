@@ -42,12 +42,14 @@ class User(ndb.Model):
 	lectures=ndb.StructuredProperty(Lecture, repeated=True)
 	score=ndb.IntegerProperty()
 	streak=ndb.IntegerProperty()
+	count=ndb.IntegerProperty()
 	badges=ndb.StructuredProperty(Badge, repeated=True)
 
 class CheckIn(ndb.Model):
-	student=ndb.StringProperty()
-	lecture=ndb.StringProperty()
-	date = ndb.DateTimeProperty(auto_now_add=True)
+	student=ndb.StructuredProperty(User)
+	lecture=ndb.StructuredProperty(Lecture)
+	date = ndb.DateProperty(auto_now_add=True)
+	time = ndb.TimeProperty(auto_now_add=True)
 
 
 class ThisUser():

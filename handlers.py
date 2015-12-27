@@ -24,44 +24,72 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 	extensions=['jinja2.ext.autoescape'],
 	autoescape=True)
 
-def challengecheck(user, lecture):	
+def challengecheck(user, lecture, checkin):	
 	for challenge in user.challenges:
 		if type(challenge) != Challenge:
 			challenge = challenge.b_val
 
-		if predicates[challenge.challengeid](user, lecture):
+		if predicates[challenge.challengeid](user, lecture, checkin):
 			challenge.complete = True;
 			user.put()
 
-def predicate1(user, lecture):
+def predicate1(user, lecture, checkin):
 	if lecture.time == 9:
 		return True
 	else:
-	 return False
+		return False
 
-def predicate2(user, lecture):
-	return False
+def predicate2(user, lecture, checkin):
+	checkinQuery = CheckIn.query(CheckIn.date == checkin.date and CheckIn.lecture.time == lecture.time and CheckIn.student.userid != user.userid)
+	for otherCheckin in checkinQuery:
+		if otherCheckin.time < checkin.time:
+			return False
 
-def predicate3(user, lecture):
-	return False
-
-def predicate4(user, lecture):
-	return False
-
-def predicate5(user, lecture):
-	return False
-
-def predicate6(user, lecture):
-	return False
-
-def predicate7(user, lecture):
-	return False
-
-def predicate8(user, lecture):
-	return False
-
-def predicate9(user, lecture):
 	return True
+
+def predicate3(user, lecture, checkin):
+	if user.streak >= 5:
+		return True
+	else:
+		return False
+
+def predicate4(user, lecture, checkin):
+	return False
+
+def predicate5(user, lecture, checkin):
+	return False
+
+def predicate6(user, lecture, checkin):
+	competitors = []
+	userQuery = User.query(User.userid != user.userid)
+	for otherUser in userQuery:
+		for otherLecture in otherUser.lectures:
+			if otherLecture.module == lecture.module:
+				competitors.append(otherUser)
+	
+	for competitor in competitors:
+		if competitor.count > user.count:
+			return False
+
+	return True
+
+def predicate7(user, lecture, checkin):
+	if user.count >= 1:
+		return True
+	else:
+		return True
+
+def predicate8(user, lecture, checkin):
+	if user.count >= 5:
+		return True
+	else:
+		return False
+
+def predicate9(user, lecture, checkin):
+	if user.count >= 15:
+		return True
+	else:
+		return False
 
 predicates = {
 	1 : predicate1,
@@ -94,7 +122,6 @@ def point_in_poly(x,y,poly):
 	return inside
 
 def timeConversion(remainingTime):
-	logging.info(remainingTime)
 	if(remainingTime < 3600):
 		return str(math.ceil(remainingTime/60)).split('.')[0] + " mins"
 	elif(remainingTime < 86400):
@@ -121,7 +148,8 @@ class HomePage(webapp2.RequestHandler):
 					'username' : user.nickname(),
 					'logout' : users.create_logout_url(self.request.uri),
 					'score' : userEntity.score,
-					'streak' : userEntity.streak
+					'streak' : userEntity.streak,
+					'count' : userEntity.count
 				}
 				template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
 				self.response.write(template.render(template_values))
@@ -142,10 +170,12 @@ class HomePage(webapp2.RequestHandler):
 		hour = datetime.now().hour
 
 		thisLecture = None
+		thisUser = None
 		poly = []
 
 		userQuery = User.query(User.userid == user.user_id())
 		for userEntity in userQuery:
+			thisUser = userEntity
 			for lecture in userEntity.lectures:
 				if(lecture.day == day and lecture.time == hour):
 					thisLecture = lecture
@@ -160,24 +190,26 @@ class HomePage(webapp2.RequestHandler):
 		elif thisLecture.attended:
 			self.response.out.write(json.dumps({"valid":4}))
 		elif point_in_poly(longitude, latitude, poly):
-			checkin = CheckIn(student=user.user_id(), lecture=thisLecture.module)
+			checkin = CheckIn(student=thisUser, lecture=thisLecture)
 			checkin.put()
 			thisLecture.attended = True
 			thisLecture.put()
-			for userEntity in userQuery:
-				userEntity.score = userEntity.score + 10 + userEntity.streak;
-				userEntity.streak = userEntity.streak + 1;
-				for lecture in userEntity.lectures:
-					if(lecture.key == thisLecture.key):
-						lecture.attended = True
-				userEntity.put()
-				self.response.out.write(json.dumps({"valid":1, "score":userEntity.score, "streak":userEntity.streak}))
-				challengecheck(userEntity, thisLecture)
+
+			thisUser.score = thisUser.score + 10 + thisUser.streak
+			thisUser.streak = thisUser.streak + 1
+			thisUser.count = thisUser.count + 1
+			for lecture in thisUser.lectures:
+				if(lecture.key == thisLecture.key):
+					lecture.attended = True
+			thisUser.put()
+			self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
+			challengecheck(thisUser, thisLecture, checkin)
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))	
 
 class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
+		#loadChallenges()
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
@@ -187,7 +219,8 @@ class ModuleSelectPage(webapp2.RequestHandler):
 					email=user.email(),
 					lectures=[],
 					score=0,
-					streak=0)
+					streak=0,
+					count=0)
 
 				challengeQuery = Challenge.query()
 				for challenge in challengeQuery:
@@ -253,39 +286,6 @@ class ModuleSelectPage(webapp2.RequestHandler):
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
-
-		#can be used to add appropriate code to the challenges.html file, but I can't write this to the file to update it - this is a restriction on GAE
-		'''soup = Soup(open('challenges.html'))
-
-		thead = soup.find('thead')
-
-		tbody = soup.new_tag('tbody')
-
-		tr = soup.new_tag('tr')
-		tr['class'] = "{{status1}}"
-
-		tdTitle = soup.new_tag('td')
-		tdTitle.insert(1, "{{title1}} TEST1")
-
-		tdDesc = soup.new_tag('td')
-		tdDesc.insert(1, "{{desc1}} TEST2")
-
-		tdTime = soup.new_tag('td')
-		tdTime.insert(1, "{{time1}} TEST3")
-		
-		thead.insert_after(tbody)
-		tbody.insert(1, tr)
-		tr.insert(1, tdTitle)
-		tr.insert(1, tdDesc)
-		tr.insert(1, tdTime)
-
-		logging.info(soup.prettify())
-
-		html = soup.prettify("utf-8")
-		with open("challenges.html", "w") as file:
-			logging.info(file)
-			#file.write(html)'''
-
 		user = users.get_current_user()
 		if(user):
 
@@ -299,20 +299,21 @@ class ChallengesPage(webapp2.RequestHandler):
 
 			self.response.out.write('<script> var table = document.getElementById("challengeTable"); ')
 
+			currTime = time.time()
 			query = User.query(User.userid == user.user_id())
 			for thisUser in query:
 				for challenge in thisUser.challenges:
 					if type(challenge) != Challenge:
 						challenge = challenge.b_val
-					if(time.time() > challenge.expiresat):
+					if(currTime > challenge.expiresat):
 						thisUser.challenges.remove(challenge)
 						thisUser.put()
 					else:
-						self.response.out.write('var row = table.insertRow(table.rows.length); var cell1 = row.insertCell(0); var cell2 = row.insertCell(1); var cell3 = row.insertCell(2); cell1.innerHTML = "'+challenge.title+'"; cell2.innerHTML = "'+challenge.description+'"; cell3.innerHTML = "'+timeConversion(challenge.expiresat - time.time())+'"; ')
+						self.response.out.write('var row = table.insertRow(table.rows.length); var cell1 = row.insertCell(0); var cell2 = row.insertCell(1); var cell3 = row.insertCell(2); cell1.innerHTML = "'+challenge.title+'"; cell2.innerHTML = "'+challenge.description+'"; cell3.innerHTML = "'+timeConversion(challenge.expiresat - currTime)+'"; ')
 						if challenge.complete:
 							self.response.out.write('row.className = "success"; ')
 
-			self.response.out.write(' </script>')
+			self.response.out.write('</script>')
 			
 		else:
 			self.redirect('/')
@@ -321,7 +322,6 @@ class ChallengesPage(webapp2.RequestHandler):
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
 		#loadChallenges()
-
 		user = users.get_current_user()
 		if(user):
 
