@@ -341,14 +341,14 @@ class HistoryPage(webapp2.RequestHandler):
 		else:
 			self.redirect('/')
 
-class SettingsPage(webapp2.RequestHandler):
+class ProfilePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
-				'settings' : 'class=active',
+				'profile' : 'class=active',
 			}
 
 			userEntity = None
@@ -369,7 +369,7 @@ class SettingsPage(webapp2.RequestHandler):
 				if 'mod'+str(i) not in template_values:
 					template_values['mod'+str(i)] = '*Module '+str(i)+'*'
 
-			template = JINJA_ENVIRONMENT.get_template('/assets/settings.html')
+			template = JINJA_ENVIRONMENT.get_template('/assets/profile.html')
 			self.response.write(template.render(template_values))
 
 
