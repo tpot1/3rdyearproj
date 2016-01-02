@@ -209,7 +209,6 @@ class HomePage(webapp2.RequestHandler):
 
 class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
-		#loadChallenges()
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
@@ -321,7 +320,9 @@ class ChallengesPage(webapp2.RequestHandler):
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		#loadChallenges()
+		loadChallenges()
+		loadBuildings()
+		loadModules()
 		user = users.get_current_user()
 		if(user):
 
@@ -339,3 +340,83 @@ class HistoryPage(webapp2.RequestHandler):
 			self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')
+
+class SettingsPage(webapp2.RequestHandler):
+	def get(self):
+		user = users.get_current_user()
+		if(user):
+
+			template_values = {
+				'logout' : users.create_logout_url(self.request.uri),
+				'settings' : 'class=active',
+			}
+
+			userEntity = None
+
+			userQuery = User.query(User.userid == user.user_id())
+			for thisUser in userQuery:
+				userEntity = thisUser
+
+			counter = 1
+
+			for lecture in userEntity.lectures:
+				if lecture.module not in template_values.values():
+					template_values['mod'+str(counter)] = lecture.module
+					counter = counter + 1
+
+			for i in range(1, 5):
+				logging.info(i)
+				if 'mod'+str(i) not in template_values:
+					template_values['mod'+str(i)] = '*Module '+str(i)+'*'
+
+			template = JINJA_ENVIRONMENT.get_template('/assets/settings.html')
+			self.response.write(template.render(template_values))
+
+
+			self.response.out.write("<script> var moduleList = document.getElementById('moduleList');")
+
+			moduleQuery = Module.query()
+			for module in moduleQuery:
+				if module.code not in template_values.values():
+					self.response.out.write("var option = document.createElement('option'); option.text = option.value = option.name = '" + module.code + "'; moduleList.add(option,moduleList.length);")
+
+			self.response.out.write("</script>")
+
+		else:
+			self.redirect('/')
+	def post(self):
+		user = users.get_current_user()
+
+		userQuery = User.query(User.userid == user.user_id())
+		for thisUser in userQuery:
+
+			thisUser.lectures = []
+
+			module1 = self.request.get('module1');
+			module2 = self.request.get('module2');
+			module3 = self.request.get('module3');
+			module4 = self.request.get('module4');
+
+			moduleQuery1 = Module.query(Module.code == module1)
+			for module in moduleQuery1:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
+
+			moduleQuery2 = Module.query(Module.code == module2)
+			for module in moduleQuery2:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
+
+			moduleQuery3 = Module.query(Module.code == module3)
+			for module in moduleQuery3:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
+
+			moduleQuery4 = Module.query(Module.code == module4)
+			for module in moduleQuery4:
+				for lecture in module.lectures:
+					thisUser.lectures.append(lecture)
+
+			thisUser.put()
+
+		self.redirect('/')

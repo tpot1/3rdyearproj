@@ -133,7 +133,7 @@ def loadModules():
 				Lecture(module='LECT0000', location=0, day='SUNDAY', time=21)])
 
 	LECT0000.put()
-	#LECT1111.put()
-	#LECT1112.put()
-	#LECT1113.put()
-	#LECT1114.put()
+	LECT1111.put()
+	LECT1112.put()
+	LECT1113.put()
+	LECT1114.put()
