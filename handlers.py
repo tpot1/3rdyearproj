@@ -121,7 +121,8 @@ def point_in_poly(x,y,poly):
 
 	return inside
 
-def timeConversion(remainingTime):
+def timeConversion(expireTime):
+	remainingTime = int(expireTime) - time.time()
 	if(remainingTime < 3600):
 		return str(math.ceil(remainingTime/60)).split('.')[0] + " mins"
 	elif(remainingTime < 86400):
@@ -189,7 +190,7 @@ class HomePage(webapp2.RequestHandler):
 			self.response.out.write(json.dumps({"valid":3}))
 		elif thisLecture.attended:
 			self.response.out.write(json.dumps({"valid":4}))
-		elif point_in_poly(longitude, latitude, poly):
+		elif True:#point_in_poly(longitude, latitude, poly):
 			checkin = CheckIn(student=thisUser, lecture=thisLecture)
 			checkin.put()
 			thisLecture.attended = True
@@ -231,16 +232,16 @@ class ModuleSelectPage(webapp2.RequestHandler):
 					'logout' : users.create_logout_url(self.request.uri)
 				}
 
-				template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
-				self.response.write(template.render(template_values))
-
-				self.response.out.write("<script> var moduleList = document.getElementById('moduleList');")
+				moduleList = []
 
 				moduleQuery = Module.query()
 				for module in moduleQuery:
-					self.response.out.write("var option = document.createElement('option'); option.text = option.value = option.name = '" + module.code + "'; moduleList.add(option,moduleList.length);")
+					moduleList.append(module)
 
-				self.response.out.write("</script>")
+				template_values['modules'] = moduleList
+
+				template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
+				self.response.write(template.render(template_values))
 
 			else:
 				self.redirect('/')
@@ -293,26 +294,21 @@ class ChallengesPage(webapp2.RequestHandler):
 				'challenges' : 'class=active'
 			}
 
-			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
-			self.response.write(template.render(template_values))
-
-			self.response.out.write('<script> var table = document.getElementById("challengeTable"); ')
-
 			currTime = time.time()
+			currentChalls = []
 			query = User.query(User.userid == user.user_id())
 			for thisUser in query:
 				for challenge in thisUser.challenges:
 					if type(challenge) != Challenge:
 						challenge = challenge.b_val
-					if(currTime > challenge.expiresat):
-						thisUser.challenges.remove(challenge)
-						thisUser.put()
-					else:
-						self.response.out.write('var row = table.insertRow(table.rows.length); var cell1 = row.insertCell(0); var cell2 = row.insertCell(1); var cell3 = row.insertCell(2); cell1.innerHTML = "'+challenge.title+'"; cell2.innerHTML = "'+challenge.description+'"; cell3.innerHTML = "'+timeConversion(challenge.expiresat - currTime)+'"; ')
-						if challenge.complete:
-							self.response.out.write('row.className = "success"; ')
+					if(currTime < challenge.expiresat):
+						currentChalls.append(challenge)
 
-			self.response.out.write('</script>')
+			template_values['currentChalls'] = currentChalls
+			template_values['timeConversion'] = timeConversion
+
+			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
+			self.response.write(template.render(template_values))
 			
 		else:
 			self.redirect('/')
@@ -320,9 +316,9 @@ class ChallengesPage(webapp2.RequestHandler):
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		loadChallenges()
-		loadBuildings()
-		loadModules()
+		#loadChallenges()
+		#loadBuildings()
+		#loadModules()
 		user = users.get_current_user()
 		if(user):
 
@@ -349,6 +345,7 @@ class ProfilePage(webapp2.RequestHandler):
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
 				'profile' : 'class=active',
+				'username' : user.nickname()
 			}
 
 			userEntity = None
@@ -365,22 +362,27 @@ class ProfilePage(webapp2.RequestHandler):
 					counter = counter + 1
 
 			for i in range(1, 5):
-				logging.info(i)
 				if 'mod'+str(i) not in template_values:
 					template_values['mod'+str(i)] = '*Module '+str(i)+'*'
+
+			completedChalls = []
+			for challenge in userEntity.challenges:
+				if challenge.complete:
+					completedChalls.append(challenge)
+
+			template_values['completedChalls'] = completedChalls
+
+			moduleList = []
+			moduleQuery = Module.query()
+			for module in moduleQuery:
+				if module.code not in template_values.values():
+					moduleList.append(module)
+
+			template_values['modules'] = moduleList
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/profile.html')
 			self.response.write(template.render(template_values))
 
-
-			self.response.out.write("<script> var moduleList = document.getElementById('moduleList');")
-
-			moduleQuery = Module.query()
-			for module in moduleQuery:
-				if module.code not in template_values.values():
-					self.response.out.write("var option = document.createElement('option'); option.text = option.value = option.name = '" + module.code + "'; moduleList.add(option,moduleList.length);")
-
-			self.response.out.write("</script>")
 
 		else:
 			self.redirect('/')

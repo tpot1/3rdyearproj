@@ -8,8 +8,7 @@ def user_key(user_name="Test"):
 	return ndb.Key('User', user_name)
 
 class Badge(ndb.Model):
-	name=ndb.StringProperty()
-	#icon=?
+	iconName=ndb.StringProperty()
 
 class Challenge(ndb.Model):
 	challengeid=ndb.IntegerProperty()

@@ -9,12 +9,25 @@
     	<table class="table" id="challengeTable">
             <thead>
                 <tr>
+                    <th>Badge</th>
                     <th>Challenge</th>
                     <th>Description</th>
                     <th>Time left</th>
                 </tr>
             </thead>
             <tbody>
+                {% for challenge in currentChalls %}
+                {% if challenge.complete %}
+                <tr class="success">
+                {% else %}
+                <tr>
+                {% endif %}
+                    <td><img src={{challenge.badge.iconName}} alt=""></img></td>
+                    <td>{{challenge.title}}</td>
+                    <td>{{challenge.description}}</td>
+                    <td>{{timeConversion(challenge.expiresat)}}</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

@@ -17,14 +17,13 @@
         }
     </style>
 
+    <div class="container-fluid">
+        <h2>Profile of: {{username}}</h2>
+    </div>
+
      <div class="container-fluid">
-        <h3>Select your modules from the list</h3>
         <form method="post">
-            <select id="moduleList">
-            </select>
-            <a class="btn btn-primary" role="button" id="addbtn">Add</a>
-            <hr></hr>
-            <h3>Selected Modules:</h3>     
+            <h3>Your Modules:</h3>     
             <textarea id="mod1" name='module1' readonly='readonly'>{{mod1}}</textarea>
             <button class="btn btn-primary" type='button' id="removebtn1">Remove</button>
             <p></p>
@@ -36,10 +35,21 @@
             <p></p>
             <textarea id="mod4" name='module4' readonly='readonly'>{{mod4}}</textarea> 
             <button class="btn btn-primary" type="button" id="removebtn4">Remove</button>
-            <hr></hr>
+            <h3>Re-select your modules from the list</h3>
+            <select id="moduleList">
+                {% for module in modules %}
+                <option value={{module.code}}>{{module.code}}</option>
+                {% endfor %}
+            </select>
+            <a class="btn btn-primary" role="button" id="addbtn">Add</a>
+            <p></p>
             <input class="btn btn-primary" role="button" type='submit' value='Save'></input>
+            <hr></hr>
+            <h3>Your Badges</h3>
+            {% for challenge in completedChalls %}
+            <img src={{challenge.badge.iconName}} alt="TEST" height="42" width="42">
+            {% endfor %}
         </form>
-        
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
