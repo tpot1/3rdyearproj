@@ -10,7 +10,7 @@ from modules import loadModules
 from buildings import loadBuildings
 
 import jinja2
-from datetime import datetime
+import datetime
 import time
 from google.appengine.ext import ndb
 import json
@@ -131,8 +131,16 @@ def timeConversion(expireTime):
 		return str(math.floor(remainingTime/86400)).split('.')[0] + " days"
 
 def getCurrentWeek():
-	#TODO
-	return 1
+	startWeek = datetime.date(2016, 1, 25)	#creates a date object, starting from the first day of semester 2
+	currDate = datetime.date.today()	#gets the current date
+	weekctr = 0 		#stores the current week number
+	
+	# adds 7 days to the start week until it is larger than the current week, then returns the number of weeks added
+	while startWeek <= currDate:
+		startWeek += datetime.timedelta(days = 7)
+		weekctr += 1
+
+	return weekctr
 
 class HomePage(webapp2.RequestHandler):
 	def get(self):
@@ -169,9 +177,6 @@ class HomePage(webapp2.RequestHandler):
 				template_values = {
 					'username' : user.nickname(),
 					'logout' : users.create_logout_url(self.request.uri),
-					'score' : userEntity.score,
-					'streak' : userEntity.streak,
-					'count' : userEntity.count
 				}
 				template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
 				self.response.write(template.render(template_values))
@@ -346,7 +351,8 @@ class HistoryPage(webapp2.RequestHandler):
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
-				'history' : 'class=active'
+				'history' : 'class=active',
+				'week' : getCurrentWeek()
 			}
 
 			userQuery = User.query(User.userid == user.user_id())
@@ -355,13 +361,13 @@ class HistoryPage(webapp2.RequestHandler):
 					if lecture.week == getCurrentWeek():
 						template_values[lecture.day+str(lecture.time)] = lecture.module
 						if lecture.attended:
-							template_values[lecture.day+str(lecture.time)+'att'] = 'class=success'
+							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
 						else:
-							template_values[lecture.day+str(lecture.time)+'att'] = 'class=danger'
+							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
 				for lecture in thisUser.lectures:
 					if lecture.day+str(lecture.time) not in template_values.keys():
 						template_values[lecture.day+str(lecture.time)] = lecture.module
-						template_values[lecture.day+str(lecture.time)+'att'] = 'class=warning'
+						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
@@ -383,6 +389,9 @@ class ProfilePage(webapp2.RequestHandler):
 
 			userQuery = User.query(User.userid == user.user_id())
 			for thisUser in userQuery:
+				template_values['score'] = thisUser.score
+				template_values['count'] = thisUser.count
+				template_values['streak'] = thisUser.streak
 				userEntity = thisUser
 
 			'''counter = 1

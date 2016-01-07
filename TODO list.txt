@@ -1,0 +1,21 @@
+Attendance History
+	Implement getCurrentWeek function
+
+	Find way to add attended=false for lectures that have been missed
+
+Leaderboards
+	Errytang
+
+Profile
+	Means of selecting a username
+
+	Maybe display challenge title/description as well as badge
+
+Challenges
+	Means of easily adding new challenges to all users on-the-fly 
+
+	Add some pop-up informing the user when they complete a challenge
+
+Check-Ins 
+	Allow users to check in from 15 minutes before the time until 15 minutes before the end
+		(e.g. for a 10am lecture, from 9:45 until 10:45)
