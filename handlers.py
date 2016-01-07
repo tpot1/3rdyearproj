@@ -332,14 +332,19 @@ class HistoryPage(webapp2.RequestHandler):
 				'history' : 'class=active'
 			}
 
-			lectureHistory = []
-
 			userQuery = User.query(User.userid == user.user_id())
 			for thisUser in userQuery:
 				for lecture in thisUser.history:
-					lectureHistory.append(lecture)
-					
-					template_values[lecture.day+str(lecture.time)] = lecture.module
+					if lecture.week == getCurrentWeek():
+						template_values[lecture.day+str(lecture.time)] = lecture.module
+						if lecture.attended:
+							template_values[lecture.day+str(lecture.time)+'att'] = 'class=success'
+						else:
+							template_values[lecture.day+str(lecture.time)+'att'] = 'class=danger'
+				for lecture in thisUser.lectures:
+					if lecture.day+str(lecture.time) not in template_values.keys():
+						template_values[lecture.day+str(lecture.time)] = lecture.module
+						template_values[lecture.day+str(lecture.time)+'att'] = 'class=warning'
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
