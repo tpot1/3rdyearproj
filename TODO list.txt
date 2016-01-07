@@ -1,5 +1,5 @@
 Attendance History
-	Implement getCurrentWeek function
+	Create page based on week number provided. Then allow users to scroll this number up/down
 
 	Find way to add attended=false for lectures that have been missed
 

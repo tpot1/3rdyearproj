@@ -374,6 +374,45 @@ class HistoryPage(webapp2.RequestHandler):
 		else:
 			self.redirect('/')
 
+	def post(self):
+
+		user = users.get_current_user()
+		if(user):
+
+			logging.info('*************')
+			logging.info(self.request.body)
+
+			data = json.loads(self.request.body)
+
+			logging.info(data)
+
+			weeknum = getCurrentWeek()+1
+
+			template_values = {
+					'logout' : users.create_logout_url(self.request.uri),
+					'history' : 'class=active',
+					'week' : weeknum
+				}
+
+			userQuery = User.query(User.userid == user.user_id())
+			for thisUser in userQuery:
+				for lecture in thisUser.history:
+					if lecture.week == weeknum:
+						template_values[lecture.day+str(lecture.time)] = lecture.module
+						if lecture.attended:
+							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
+						else:
+							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+				for lecture in thisUser.lectures:
+					if lecture.day+str(lecture.time) not in template_values.keys():
+						template_values[lecture.day+str(lecture.time)] = lecture.module
+						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+
+			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
+			self.response.write(template.render(template_values))
+		else:
+			self.redirect('/')
+
 class ProfilePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
