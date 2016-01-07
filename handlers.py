@@ -146,7 +146,24 @@ class HomePage(webapp2.RequestHandler):
 				userEntity = thisUser
 
 			if userEntity is None:
-				self.redirect('/modules')
+				userEntity = User(
+					userid=user.user_id(),
+					email=user.email(),
+					score=0,
+					streak=0,
+					count=0,
+					history=[])
+
+				moduleQuery = Module.query(Module.code == 'LECT0000')
+				for module in moduleQuery:
+					for lecture in module.lectures:
+						userEntity.lectures.append(lecture)
+
+				challengeQuery = Challenge.query()
+				for challenge in challengeQuery:
+					userEntity.challenges.append(challenge)
+
+				userEntity.put()
 
 			else:
 				template_values = {
@@ -212,7 +229,7 @@ class HomePage(webapp2.RequestHandler):
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))	
 
-class ModuleSelectPage(webapp2.RequestHandler):
+'''class ModuleSelectPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
@@ -286,7 +303,7 @@ class ModuleSelectPage(webapp2.RequestHandler):
 
 			thisUser.put()
 
-		self.redirect('/')
+		self.redirect('/')'''
 
 
 class ChallengesPage(webapp2.RequestHandler):
@@ -368,7 +385,7 @@ class ProfilePage(webapp2.RequestHandler):
 			for thisUser in userQuery:
 				userEntity = thisUser
 
-			counter = 1
+			'''counter = 1
 
 			for lecture in userEntity.lectures:
 				if lecture.module not in template_values.values():
@@ -377,7 +394,7 @@ class ProfilePage(webapp2.RequestHandler):
 
 			for i in range(1, 5):
 				if 'mod'+str(i) not in template_values:
-					template_values['mod'+str(i)] = '*Module '+str(i)+'*'
+					template_values['mod'+str(i)] = '*Module '+str(i)+'*' '''
 
 			completedChalls = []
 			for challenge in userEntity.challenges:
@@ -386,13 +403,13 @@ class ProfilePage(webapp2.RequestHandler):
 
 			template_values['completedChalls'] = completedChalls
 
-			moduleList = []
+			'''moduleList = []
 			moduleQuery = Module.query()
 			for module in moduleQuery:
 				if module.code not in template_values.values():
 					moduleList.append(module)
 
-			template_values['modules'] = moduleList
+			template_values['modules'] = moduleList '''
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/profile.html')
 			self.response.write(template.render(template_values))
@@ -400,7 +417,7 @@ class ProfilePage(webapp2.RequestHandler):
 
 		else:
 			self.redirect('/')
-	def post(self):
+	'''def post(self):
 		user = users.get_current_user()
 
 		userQuery = User.query(User.userid == user.user_id())
@@ -435,4 +452,4 @@ class ProfilePage(webapp2.RequestHandler):
 
 			thisUser.put()
 
-		self.redirect('/')
+		self.redirect('/') '''
