@@ -46,9 +46,13 @@
             <input class="btn btn-primary" role="button" type='submit' value='Save'></input>
             <hr></hr>
             <h3>Your Badges</h3>
+            {% if completedChalls|length == 0 %}
+            <p>Earn badges by completing challenges!<p>
+            {% else %}
             {% for challenge in completedChalls %}
             <img src={{challenge.badge.iconName}} alt="TEST" height="42" width="42">
             {% endfor %}
+            {% endif %}
         </form>
     </div>
 

@@ -130,6 +130,10 @@ def timeConversion(expireTime):
 	else:
 		return str(math.floor(remainingTime/86400)).split('.')[0] + " days"
 
+def getCurrentWeek():
+	#TODO
+	return 1
+
 class HomePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
@@ -199,9 +203,9 @@ class HomePage(webapp2.RequestHandler):
 			thisUser.score = thisUser.score + 10 + thisUser.streak
 			thisUser.streak = thisUser.streak + 1
 			thisUser.count = thisUser.count + 1
-			for lecture in thisUser.lectures:
-				if(lecture.key == thisLecture.key):
-					lecture.attended = True
+			thisLecture.attended = True
+			thisLecture.week = getCurrentWeek()
+			thisUser.history.append(thisLecture)
 			thisUser.put()
 			self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
 			challengecheck(thisUser, thisLecture, checkin)
@@ -220,7 +224,8 @@ class ModuleSelectPage(webapp2.RequestHandler):
 					lectures=[],
 					score=0,
 					streak=0,
-					count=0)
+					count=0,
+					history=[])
 
 				challengeQuery = Challenge.query()
 				for challenge in challengeQuery:
@@ -251,14 +256,14 @@ class ModuleSelectPage(webapp2.RequestHandler):
 	def post(self):
 		user = users.get_current_user()
 
+		module1 = self.request.get('module1');
+		module2 = self.request.get('module2');
+		module3 = self.request.get('module3');
+		module4 = self.request.get('module4');
+
 		userQuery = User.query(User.userid == user.user_id())
 		for thisUser in userQuery:
-
-			module1 = self.request.get('module1');
-			module2 = self.request.get('module2');
-			module3 = self.request.get('module3');
-			module4 = self.request.get('module4');
-
+			
 			moduleQuery1 = Module.query(Module.code == module1)
 			for module in moduleQuery1:
 				for lecture in module.lectures:
@@ -324,12 +329,16 @@ class HistoryPage(webapp2.RequestHandler):
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
-				'history' : 'class=active',
+				'history' : 'class=active'
 			}
+
+			lectureHistory = []
 
 			userQuery = User.query(User.userid == user.user_id())
 			for thisUser in userQuery:
-				for lecture in thisUser.lectures:
+				for lecture in thisUser.history:
+					lectureHistory.append(lecture)
+					
 					template_values[lecture.day+str(lecture.time)] = lecture.module
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')

@@ -43,6 +43,7 @@ class User(ndb.Model):
 	streak=ndb.IntegerProperty()
 	count=ndb.IntegerProperty()
 	badges=ndb.StructuredProperty(Badge, repeated=True)
+	history=ndb.StructuredProperty(Lecture, repeated=True)
 
 class CheckIn(ndb.Model):
 	student=ndb.StructuredProperty(User)
