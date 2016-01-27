@@ -1,48 +1,40 @@
-First time logging in page
-	Display participation information and consent form
+Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 
-	Display survey to complete to estimate grade and effect that the application has had on attendance
+First time logging in page
+1	Display participation information and consent form
+
+1	Display survey to complete to estimate grade and effect that the application has had on attendance
 		May need to add a property to user entities to store this information
 
 
-	Ask user to select a username
-
-Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
+1	Ask user to select a username (needs to have a max length)
 
 Check Ins
-	Change point-in-poly method to add some leeway
-
-	Find a way to determine if a lecture has been missed
+1	Find a way to determine if a lecture has been missed
 		(when checking in/going to attendance history page/logging in/something, loop through weeks and
 		check through lectures in that week that don't have a matching entity in attendance history where 
 		attended=true, and check if they have already occurred. If they have, set attended=false and week=week. 
 
 Attendance History
-	Allow users to scroll back/forth through weeks
+2	Allow users to scroll back/forth through weeks
 
-	For future lectures, add the lectures at their respective times but set to a neutral colour (like a timetable)
-
-	Add locations of lectures?
+3	Display locations of lectures?
 
 Leaderboards
-	List all students on a score by their usernames, sorted by their scores in descending order, and show their
+1	List all students on a leaderboard by their usernames, sorted by their scores in descending order, and show their
 	badges next to their name
 		In a table like so
 		<Name>		<Score>		<Badges>
 
 Profile
-	Display highest achieved streak
+3	Display highest achieved streak
 
-	Maybe display challenge title/description as well as badge
+3	Maybe display challenge title/description as well as badge
 
 Challenges
-	Means of easily adding new challenges to all users on-the-fly 
+2	Means of easily adding new challenges to all users on-the-fly 
 
-	Add some pop-up informing the user when they complete a challenge
-
-Check-Ins 
-	Allow users to check in from 15 minutes before the time until 15 minutes before the end
-		(e.g. for a 10am lecture, from 9:45 until 10:45)
+2	Add some pop-up informing the user when they complete a challenge
 
 
 	

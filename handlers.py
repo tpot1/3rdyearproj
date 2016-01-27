@@ -33,6 +33,34 @@ def challengecheck(user, lecture, checkin):
 			challenge.complete = True;
 			user.put()
 
+def missedLectureCheck(user):
+	#needs to stop checking at a certain point - currently checks the current week before it has even happened
+	#also needs to reset the streak
+
+	userQuery = User.query(User.userid == user.user_id())
+	#gets the current user
+	for user in userQuery:
+		#loops through the weeks that have occurred so far
+		for i in range(1, getCurrentWeek()+1):
+			#loops through the users lectures
+			for lecture in user.lectures:
+				#sets the default value to not attended
+				attended = False
+				#loops through the lectures in history
+				for attlecture in user.history:
+					#checks for a match
+					if attlecture.week == i and attlecture.day == lecture.day and attlecture.time == lecture.time:
+							#if one is found, there is an entry in the history so don't need to worry
+							attended = True
+				if not attended:
+					#else we need to add that the user missed that lecture to the history
+					missedLecture = lecture
+					missedLecture.attended = False
+					missedLecture.week = i
+					user.history.append(missedLecture)
+		user.put()
+
+
 def predicate1(user, lecture, checkin):
 	if lecture.time == 9:
 		return True
@@ -176,12 +204,22 @@ class HomePage(webapp2.RequestHandler):
 				userEntity.put()
 
 			else:
+				missedLectureCheck(user)
+
+				completedChalls = []
+
+				for challenge in userEntity.challenges:
+					if challenge.complete:
+						completedChalls.append(challenge)
+
+
 				template_values = {
 					'username' : user.nickname(),
 					'logout' : users.create_logout_url(self.request.uri),
 					'score' : userEntity.score,
 					'count' : userEntity.count,
 					'streak' : userEntity.streak,
+					'completedChalls' : completedChalls
 				}
 				template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
 				self.response.write(template.render(template_values))
@@ -190,6 +228,7 @@ class HomePage(webapp2.RequestHandler):
 
 	def post(self):
 		user = users.get_current_user()
+		missedLectureCheck(user)
 		#logging.info(self.request.body)
 		data = json.loads(self.request.body)
 		latitude = data["lat"]
@@ -200,6 +239,9 @@ class HomePage(webapp2.RequestHandler):
 		intday = datetime.date.today().weekday()
 		day = days[intday]
 		hour = datetime.datetime.now().hour
+		minute = datetime.datetime.now().minute
+		if minute > 45:
+			hour = hour + 1
 
 		thisLecture = None
 		thisUser = None
@@ -327,7 +369,7 @@ class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
-
+			missedLectureCheck(user)
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
 				'challenges' : 'class=active'
@@ -360,7 +402,7 @@ class HistoryPage(webapp2.RequestHandler):
 		#loadModules()
 		user = users.get_current_user()
 		if(user):
-
+			missedLectureCheck(user)
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
 				'history' : 'class=active',
@@ -390,6 +432,8 @@ class HistoryPage(webapp2.RequestHandler):
 
 		user = users.get_current_user()
 		if(user):
+
+			missedLectureCheck(user)
 
 			logging.info('*************')
 			logging.info(self.request.body)
