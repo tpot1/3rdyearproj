@@ -2,6 +2,10 @@ var button = document.getElementById('checkinbtn');
 
 var resultmessage = document.getElementById('msg');
 
+var score = document.getElementById('score');
+var streak = document.getElementById('streak');
+var count = document.getElementById('count');
+
 function getLocation() {
     if(geo_position_js.init()){
       geo_position_js.getCurrentPosition(showPosition,error);
@@ -21,6 +25,9 @@ function showPosition(position) {
 		if(data['valid'] === 1){
 			resultmessage.style.color="green";
 			resultmessage.innerHTML = "You are now checked in!";
+      score.innerHTML = "Score: " + data['score'];
+      count.innerHTML = "Number of Check-Ins: " + data['count'];
+      streak.innerHTML = "Current Streak: " + data['streak'];
 		}
     else if(data['valid'] === 2) {
     	resultmessage.style.color="red";

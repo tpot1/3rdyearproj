@@ -3,7 +3,7 @@ import os
 import webapp2
 from google.appengine.api import users
 
-from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module, Building
+from models import Challenge, Lecture, User, CheckIn, Badge, Module, Building, Survey
 
 from challenges import loadChallenges
 from modules import loadModules
@@ -131,9 +131,12 @@ def timeConversion(expireTime):
 		return str(math.floor(remainingTime/86400)).split('.')[0] + " days"
 
 def getCurrentWeek():
-	startWeek = datetime.date(2016, 1, 25)	#creates a date object, starting from the first day of semester 2
-	currDate = datetime.date.today()	#gets the current date
-	weekctr = 0 		#stores the current week number
+	#creates a date object, starting from the first day of semester 2
+	startWeek = datetime.date(2016, 1, 25) 
+	#gets the current date
+	currDate = datetime.date.today()	
+	#stores the current week number
+	weekctr = 0 		
 	
 	# adds 7 days to the start week until it is larger than the current week, then returns the number of weeks added
 	while startWeek <= currDate:
@@ -156,13 +159,12 @@ class HomePage(webapp2.RequestHandler):
 			if userEntity is None:
 				userEntity = User(
 					userid=user.user_id(),
-					email=user.email(),
 					score=0,
 					streak=0,
 					count=0,
 					history=[])
 
-				moduleQuery = Module.query(Module.code == 'LECT0000')
+				moduleQuery = Module.query(Module.code == 'GENG0014')
 				for module in moduleQuery:
 					for lecture in module.lectures:
 						userEntity.lectures.append(lecture)
@@ -177,6 +179,9 @@ class HomePage(webapp2.RequestHandler):
 				template_values = {
 					'username' : user.nickname(),
 					'logout' : users.create_logout_url(self.request.uri),
+					'score' : userEntity.score,
+					'count' : userEntity.count,
+					'streak' : userEntity.streak,
 				}
 				template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
 				self.response.write(template.render(template_values))
@@ -192,9 +197,9 @@ class HomePage(webapp2.RequestHandler):
 
 		days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
 
-		intday = datetime.today().weekday()
+		intday = datetime.date.today().weekday()
 		day = days[intday]
-		hour = datetime.now().hour
+		hour = datetime.datetime.now().hour
 
 		thisLecture = None
 		thisUser = None
@@ -212,11 +217,19 @@ class HomePage(webapp2.RequestHandler):
 							c = (coordinate.lon, coordinate.lat)
 							poly.append(c)
 
-		if thisLecture is None:
+		if False:#thisLecture is None:
 			self.response.out.write(json.dumps({"valid":3}))
-		elif thisLecture.attended:
+		elif False:#thisLecture.attended:
 			self.response.out.write(json.dumps({"valid":4}))
 		elif True:#point_in_poly(longitude, latitude, poly):
+
+
+
+			thisLecture = Lecture() 	#TODO remove this
+
+
+
+
 			checkin = CheckIn(student=thisUser, lecture=thisLecture)
 			checkin.put()
 			thisLecture.attended = True
@@ -242,7 +255,6 @@ class HomePage(webapp2.RequestHandler):
 			if(userQuery.count() == 0):
 				userEntity = User(
 					userid=user.user_id(),
-					email=user.email(),
 					lectures=[],
 					score=0,
 					streak=0,
@@ -367,7 +379,7 @@ class HistoryPage(webapp2.RequestHandler):
 				for lecture in thisUser.lectures:
 					if lecture.day+str(lecture.time) not in template_values.keys():
 						template_values[lecture.day+str(lecture.time)] = lecture.module
-						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#CCDDFF'
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
@@ -412,92 +424,3 @@ class HistoryPage(webapp2.RequestHandler):
 			self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')
-
-class ProfilePage(webapp2.RequestHandler):
-	def get(self):
-		user = users.get_current_user()
-		if(user):
-
-			template_values = {
-				'logout' : users.create_logout_url(self.request.uri),
-				'profile' : 'class=active',
-				'username' : user.nickname()
-			}
-
-			userEntity = None
-
-			userQuery = User.query(User.userid == user.user_id())
-			for thisUser in userQuery:
-				template_values['score'] = thisUser.score
-				template_values['count'] = thisUser.count
-				template_values['streak'] = thisUser.streak
-				userEntity = thisUser
-
-			'''counter = 1
-
-			for lecture in userEntity.lectures:
-				if lecture.module not in template_values.values():
-					template_values['mod'+str(counter)] = lecture.module
-					counter = counter + 1
-
-			for i in range(1, 5):
-				if 'mod'+str(i) not in template_values:
-					template_values['mod'+str(i)] = '*Module '+str(i)+'*' '''
-
-			completedChalls = []
-			for challenge in userEntity.challenges:
-				if challenge.complete:
-					completedChalls.append(challenge)
-
-			template_values['completedChalls'] = completedChalls
-
-			'''moduleList = []
-			moduleQuery = Module.query()
-			for module in moduleQuery:
-				if module.code not in template_values.values():
-					moduleList.append(module)
-
-			template_values['modules'] = moduleList '''
-
-			template = JINJA_ENVIRONMENT.get_template('/assets/profile.html')
-			self.response.write(template.render(template_values))
-
-
-		else:
-			self.redirect('/')
-	'''def post(self):
-		user = users.get_current_user()
-
-		userQuery = User.query(User.userid == user.user_id())
-		for thisUser in userQuery:
-
-			thisUser.lectures = []
-
-			module1 = self.request.get('module1');
-			module2 = self.request.get('module2');
-			module3 = self.request.get('module3');
-			module4 = self.request.get('module4');
-
-			moduleQuery1 = Module.query(Module.code == module1)
-			for module in moduleQuery1:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			moduleQuery2 = Module.query(Module.code == module2)
-			for module in moduleQuery2:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			moduleQuery3 = Module.query(Module.code == module3)
-			for module in moduleQuery3:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			moduleQuery4 = Module.query(Module.code == module4)
-			for module in moduleQuery4:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			thisUser.put()
-
-		self.redirect('/') '''

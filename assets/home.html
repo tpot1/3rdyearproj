@@ -5,14 +5,53 @@
 <body>
     {% include 'assets/navbar.html' %}
 
+    <style type="text/css">
+        .wrapper {
+            width:600px;
+            overflow: hidden;
+        }
+
+        .container {
+            float:left;
+        }
+
+        #profile {
+            float:left;
+        }
+
+        #badges {
+            float:right;
+        }
+    </style> 
+
+    <div class="wrapper">
+        <div id="profile" class="container-fluid">
+            <h4>{{username}}</h4>
+            <p id='score'>Score: {{score}}</p>
+            <p id='count'>Number of Check-Ins: {{count}}</p>
+            <p id='streak'>Current Streak: {{streak}}</p>
+        </div>
+
+        <div id="badges" class="container-fluid">
+            <h4>Badges:</h4>
+            {% if completedChalls|length == 0 %}
+            <p>Earn badges by completing challenges!</p>
+            {% else %}
+            {% for challenge in completedChalls %}
+            <img src={{challenge.badge.iconName}} alt="" height="42" width="42">
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
     <div class="container">
-    	<div class="jumotron">
+    	<div class="container-fluid">
     		<h1>Lecture Logger</h1>
-    		<p>Welcome to lecture logger!</p>
-            <p> Check in to lectures here!
+    		<h4>Welcome to lecture logger!</h4>
+            <h4> Check in to lectures here!
                 <button class="btn btn-primary" role="button" id="checkinbtn">Check In</button>
                 <h4 id="msg"></h4>
-            </p>
+            </h4>
     	</div>
     </div>
 

@@ -1,7 +1,7 @@
-from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module, Building
+from models import Challenge, Lecture, User, CheckIn, Badge, Module, Building, Survey
 
 def loadModules():
-	LECT1111 = Module(
+	'''LECT1111 = Module(
 			code='LECT1111',
 			lectures=[
 				Lecture(module='LECT1111', location=1, day='MONDAY', time=13),
@@ -136,4 +136,11 @@ def loadModules():
 	LECT1111.put()
 	LECT1112.put()
 	LECT1113.put()
-	LECT1114.put()
+	LECT1114.put()'''
+
+	GENG0014 = Module(
+			code='GENG0014',
+			lectures=[
+				Lecture(module='GENG0014', location=35, day='THURSDAY', time=15),
+				Lecture(module='GENG0014', location=35, day='FRIDAY', time=11)])
+	GENG0014.put()

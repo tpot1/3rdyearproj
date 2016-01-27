@@ -1,13 +1,37 @@
-Attendance History
-	Create page based on week number provided. Then allow users to scroll this number up/down
+First time logging in page
+	Display participation information and consent form
 
-	Find way to add attended=false for lectures that have been missed
+	Display survey to complete to estimate grade and effect that the application has had on attendance
+		May need to add a property to user entities to store this information
+
+
+	Ask user to select a username
+
+Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
+
+Check Ins
+	Change point-in-poly method to add some leeway
+
+	Find a way to determine if a lecture has been missed
+		(when checking in/going to attendance history page/logging in/something, loop through weeks and
+		check through lectures in that week that don't have a matching entity in attendance history where 
+		attended=true, and check if they have already occurred. If they have, set attended=false and week=week. 
+
+Attendance History
+	Allow users to scroll back/forth through weeks
+
+	For future lectures, add the lectures at their respective times but set to a neutral colour (like a timetable)
+
+	Add locations of lectures?
 
 Leaderboards
-	Errytang
+	List all students on a score by their usernames, sorted by their scores in descending order, and show their
+	badges next to their name
+		In a table like so
+		<Name>		<Score>		<Badges>
 
 Profile
-	Means of selecting a username
+	Display highest achieved streak
 
 	Maybe display challenge title/description as well as badge
 
@@ -19,3 +43,6 @@ Challenges
 Check-Ins 
 	Allow users to check in from 15 minutes before the time until 15 minutes before the end
 		(e.g. for a 10am lecture, from 9:45 until 10:45)
+
+
+	

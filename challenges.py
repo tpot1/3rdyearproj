@@ -1,4 +1,4 @@
-from models import Challenge, Lecture, User, CheckIn, ThisUser, Badge, Module, Building
+from models import Challenge, Lecture, User, CheckIn, Badge, Module, Building, Survey
 import time
 
 def loadChallenges():
