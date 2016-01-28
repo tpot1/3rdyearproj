@@ -41,7 +41,7 @@ def missedLectureCheck(user):
 	#gets the current user
 	for user in userQuery:
 		#loops through the weeks that have occurred so far
-		for i in range(1, getCurrentWeek()+1):
+		for i in range(1, getCurrentWeek()):
 			#loops through the users lectures
 			for lecture in user.lectures:
 				#sets the default value to not attended
@@ -58,6 +58,9 @@ def missedLectureCheck(user):
 					missedLecture.attended = False
 					missedLecture.week = i
 					user.history.append(missedLecture)
+
+
+
 		user.put()
 
 
@@ -234,10 +237,7 @@ class HomePage(webapp2.RequestHandler):
 		latitude = data["lat"]
 		longitude = data["lon"]
 
-		days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
-
-		intday = datetime.date.today().weekday()
-		day = days[intday]
+		day = datetime.date.today().weekday()
 		hour = datetime.datetime.now().hour
 		minute = datetime.datetime.now().minute
 		if minute > 45:
@@ -272,18 +272,20 @@ class HomePage(webapp2.RequestHandler):
 
 
 
+			
+			thisLecture.attended = True
+			thisLecture.week = getCurrentWeek()
+
 			checkin = CheckIn(student=thisUser, lecture=thisLecture)
 			checkin.put()
-			thisLecture.attended = True
-			thisLecture.put()
+
+			thisUser.history.append(thisLecture)
+			thisUser.put()
 
 			thisUser.score = thisUser.score + 10 + thisUser.streak
 			thisUser.streak = thisUser.streak + 1
 			thisUser.count = thisUser.count + 1
-			thisLecture.attended = True
-			thisLecture.week = getCurrentWeek()
-			thisUser.history.append(thisLecture)
-			thisUser.put()
+			
 			self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
 			challengecheck(thisUser, thisLecture, checkin)
 		else: 
@@ -397,7 +399,7 @@ class ChallengesPage(webapp2.RequestHandler):
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		#loadChallenges()
+		#Challenges()
 		#loadBuildings()
 		#loadModules()
 		user = users.get_current_user()
@@ -409,19 +411,21 @@ class HistoryPage(webapp2.RequestHandler):
 				'week' : getCurrentWeek()
 			}
 
+			days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
+
 			userQuery = User.query(User.userid == user.user_id())
 			for thisUser in userQuery:
 				for lecture in thisUser.history:
 					if lecture.week == getCurrentWeek():
-						template_values[lecture.day+str(lecture.time)] = lecture.module
+						template_values[days[lecture.day]+str(lecture.time)] = lecture.module
 						if lecture.attended:
-							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
+							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
 						else:
-							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
 				for lecture in thisUser.lectures:
-					if lecture.day+str(lecture.time) not in template_values.keys():
-						template_values[lecture.day+str(lecture.time)] = lecture.module
-						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#CCDDFF'
+					if days[lecture.day]+str(lecture.time) not in template_values.keys():
+						template_values[days[lecture.day]+str(lecture.time)] = lecture.module
+						template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#CCDDFF'
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))

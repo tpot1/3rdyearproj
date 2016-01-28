@@ -141,6 +141,6 @@ def loadModules():
 	GENG0014 = Module(
 			code='GENG0014',
 			lectures=[
-				Lecture(module='GENG0014', location=35, day='THURSDAY', time=15),
-				Lecture(module='GENG0014', location=35, day='FRIDAY', time=11)])
+				Lecture(module='GENG0014', location=35, day=3, time=15),
+				Lecture(module='GENG0014', location=35, day=4, time=11)])
 	GENG0014.put()
