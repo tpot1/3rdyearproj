@@ -18,7 +18,6 @@ class Challenge(ndb.Model):
 class Lecture(ndb.Model):
 	module=ndb.StringProperty()
 	location=ndb.IntegerProperty()
-	#day=ndb.StringProperty()
 	day=ndb.IntegerProperty()
 	time=ndb.IntegerProperty()
 	attended=ndb.BooleanProperty()	# can add these two attributes after the lecture

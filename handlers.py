@@ -34,8 +34,14 @@ def challengecheck(user, lecture, checkin):
 			user.put()
 
 def missedLectureCheck(user):
-	#needs to stop checking at a certain point - currently checks the current week before it has even happened
-	#also needs to reset the streak
+	day = datetime.date.today().weekday()
+	hour = datetime.datetime.now().hour
+	minute = datetime.datetime.now().minute
+	if minute > 45:
+		hour = hour + 1
+
+	logging.info(day)
+	logging.info(hour)
 
 	userQuery = User.query(User.userid == user.user_id())
 	#gets the current user
@@ -58,10 +64,24 @@ def missedLectureCheck(user):
 					missedLecture.attended = False
 					missedLecture.week = i
 					user.history.append(missedLecture)
+					user.streak = 0
 
+		#does the same check for the current week
+		for lecture in user.lectures:
+			#only applies to lectures that have already occured
+			if lecture.day < day or lecture.day == day and lecture.time < hour:
+				attended = False
+				for attlecture in user.history:
+					if attlecture.week == getCurrentWeek() and attlecture.day == lecture.day and attlecture.time == lecture.time:
+						attended = True
+				if not attended:
+					missedLecture = lecture
+					missedLecture.attended = False
+					missedLecture.week = getCurrentWeek()
+					user.history.append(missedLecture)
+					user.streak = 0
 
-
-		user.put()
+	user.put()
 
 
 def predicate1(user, lecture, checkin):
