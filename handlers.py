@@ -3,7 +3,7 @@ import os
 import webapp2
 from google.appengine.api import users
 
-from models import Challenge, Lecture, User, CheckIn, Badge, Module, Building, Survey
+from models import Challenge, Lecture, User, CheckIn, Badge, Module, Building, Questionnaire
 
 from challenges import loadChallenges
 from modules import loadModules
@@ -40,8 +40,7 @@ def missedLectureCheck(user):
 	if minute > 45:
 		hour = hour + 1
 
-	logging.info(day)
-	logging.info(hour)
+	logging.info(getCurrentWeek())
 
 	userQuery = User.query(User.userid == user.user_id())
 	#gets the current user
@@ -82,6 +81,25 @@ def missedLectureCheck(user):
 					user.streak = 0
 
 	user.put()
+
+def formCheck(self, user):
+	 userQuery = User.query(User.userid == user.user_id())
+	# #gets the current user
+	# for user in userQuery:
+
+	# 	#checks that they have gone through the procedue of reading the participant information
+	# 	if user.info != True:
+	# 		self.redirect('/info')
+	# 	#agreeing to the consent form
+	# 	elif user.consent != True:
+	# 		self.redirect('/consentform')
+	# 	#completing the questionnaire
+	# 	elif user.questionnaire is None:
+	# 		self.redirect('/questionnaire')
+	# 	#and creating a username
+	# 	elif user.username is None:
+	# 		self.redirect('/ftp')
+
 
 
 def predicate1(user, lecture, checkin):
@@ -196,6 +214,27 @@ def getCurrentWeek():
 
 	return weekctr
 
+class ParticipationInfoPage(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/assets/participantInfo.html')
+		self.response.write(template.render())
+
+class ConsentFormPage(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/assets/consentForm.html')
+		self.response.write(template.render())
+
+class QuestionnairePage(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/assets/questionnaire.html')
+		self.response.write(template.render())
+		
+class FirstTimePage(webapp2.RequestHandler):
+	def get(self):
+		template = JINJA_ENVIRONMENT.get_template('/assets/usernameSelect.html')
+		self.response.write(template.render())
+		
+
 class HomePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
@@ -226,7 +265,11 @@ class HomePage(webapp2.RequestHandler):
 
 				userEntity.put()
 
+				formCheck(self, user)
+
 			else:
+				formCheck(self, user)
+
 				missedLectureCheck(user)
 
 				completedChalls = []
@@ -311,86 +354,12 @@ class HomePage(webapp2.RequestHandler):
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))	
 
-'''class ModuleSelectPage(webapp2.RequestHandler):
-	def get(self):
-		user = users.get_current_user()
-		if(user):
-			userQuery = User.query(User.userid == user.user_id())
-			if(userQuery.count() == 0):
-				userEntity = User(
-					userid=user.user_id(),
-					lectures=[],
-					score=0,
-					streak=0,
-					count=0,
-					history=[])
-
-				challengeQuery = Challenge.query()
-				for challenge in challengeQuery:
-					userEntity.challenges.append(challenge)
-
-				userEntity.put()
-
-				template_values = {
-					'logout' : users.create_logout_url(self.request.uri)
-				}
-
-				moduleList = []
-
-				moduleQuery = Module.query()
-				for module in moduleQuery:
-					moduleList.append(module)
-
-				template_values['modules'] = moduleList
-
-				template = JINJA_ENVIRONMENT.get_template('/assets/modules.html')
-				self.response.write(template.render(template_values))
-
-			else:
-				self.redirect('/')
-		else:
-			self.redirect('/')
-
-	def post(self):
-		user = users.get_current_user()
-
-		module1 = self.request.get('module1');
-		module2 = self.request.get('module2');
-		module3 = self.request.get('module3');
-		module4 = self.request.get('module4');
-
-		userQuery = User.query(User.userid == user.user_id())
-		for thisUser in userQuery:
-			
-			moduleQuery1 = Module.query(Module.code == module1)
-			for module in moduleQuery1:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			moduleQuery2 = Module.query(Module.code == module2)
-			for module in moduleQuery2:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			moduleQuery3 = Module.query(Module.code == module3)
-			for module in moduleQuery3:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			moduleQuery4 = Module.query(Module.code == module4)
-			for module in moduleQuery4:
-				for lecture in module.lectures:
-					thisUser.lectures.append(lecture)
-
-			thisUser.put()
-
-		self.redirect('/')'''
-
 
 class ChallengesPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+			formCheck(self, user)
 			missedLectureCheck(user)
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
@@ -419,11 +388,12 @@ class ChallengesPage(webapp2.RequestHandler):
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		#Challenges()
+		#loadChallenges()
 		#loadBuildings()
 		#loadModules()
 		user = users.get_current_user()
 		if(user):
+			formCheck(self, user)
 			missedLectureCheck(user)
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
@@ -459,13 +429,12 @@ class HistoryPage(webapp2.RequestHandler):
 
 			missedLectureCheck(user)
 
-			logging.info('*************')
 			logging.info(self.request.body)
 
 			data = json.loads(self.request.body)
 
 			logging.info(data)
-
+			#views the next week
 			weeknum = getCurrentWeek()+1
 
 			template_values = {
@@ -489,6 +458,37 @@ class HistoryPage(webapp2.RequestHandler):
 						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
+			self.response.write(template.render(template_values))
+		else:
+			self.redirect('/')
+
+class LeaderboardsPage(webapp2.RequestHandler):
+	def get(self):
+
+		user = users.get_current_user()
+		if(user):
+
+			missedLectureCheck(user)
+
+			allUsers = []
+			me = None
+
+			allUserQuery = User.query()
+			for userEntity in allUserQuery:
+				allUsers.append(userEntity)
+				if userEntity.userid == user.user_id():
+					me = userEntity
+
+			allUsers = sorted(allUsers, key=lambda user: user.score, reverse=True)
+
+			template_values = {
+				'logout' : users.create_logout_url(self.request.uri),
+				'leaderboards' : 'class=active',
+				'users' : allUsers,
+				'me' : me
+			}
+
+			template = JINJA_ENVIRONMENT.get_template('/assets/leaderboards.html')
 			self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')

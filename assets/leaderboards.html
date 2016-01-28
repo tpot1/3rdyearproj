@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html lang="en">
+{%include 'assets/header.html' %}
+<body>
+    {% include 'assets/navbar.html' %}
+
+    <style type="text/css">
+        table {
+            counter-reset: rowNumber;
+            counter-increment: rowNumber;
+        }
+
+        table tr:not(:first-child) {
+            counter-increment: rowNumber;
+        }
+
+        table tr td:first-child::before {
+            content: counter(rowNumber);
+            min-width: 1em;
+            margin-right: 0.5em;
+        }
+    </style>
+
+    <div class="container">
+        <table class="table" id="challengeTable">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>User</th>
+                    <th>Score</th>
+                    <th>Badges</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                {% if user == me %}
+                <tr class="success">
+                {% else %}
+                <tr>
+                {% endif %}
+                    <td></td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.score}}</td>
+                    <td>
+                    {% for challenge in user.challenges %}
+                    {% if challenge.complete %}
+                    <img src={{challenge.badge.iconName}} alt=""></img>
+                    {% endif %}
+                    {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endautoescape %}

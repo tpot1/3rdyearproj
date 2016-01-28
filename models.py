@@ -31,7 +31,7 @@ class Building(ndb.Model):
 	number=ndb.StringProperty()
 	coordinates=ndb.GeoPtProperty(repeated=True)
 
-class Survey(ndb.Model):
+class Questionnaire(ndb.Model):
 	answer1=ndb.StringProperty()
 	answer2=ndb.StringProperty()
 	answer3=ndb.StringProperty()
@@ -40,13 +40,17 @@ class Survey(ndb.Model):
 class User(ndb.Model):
 	userid=ndb.StringProperty()
 	challenges=ndb.StructuredProperty(Challenge, repeated=True)
-	survey=ndb.StructuredProperty(Survey)
 	lectures=ndb.StructuredProperty(Lecture, repeated=True)
 	score=ndb.IntegerProperty()
 	streak=ndb.IntegerProperty()
 	count=ndb.IntegerProperty()
 	badges=ndb.StructuredProperty(Badge, repeated=True)
 	history=ndb.StructuredProperty(Lecture, repeated=True)
+
+	info=ndb.BooleanProperty()
+	consent=ndb.BooleanProperty()
+	questionnaire=ndb.StructuredProperty(Questionnaire)
+	username=ndb.StringProperty()
 
 class CheckIn(ndb.Model):
 	student=ndb.StructuredProperty(User)

@@ -7,13 +7,7 @@ First time logging in page
 		May need to add a property to user entities to store this information
 
 
-1	Ask user to select a username (needs to have a max length)
-
-Check Ins
-1	Find a way to determine if a lecture has been missed
-		(when checking in/going to attendance history page/logging in/something, loop through weeks and
-		check through lectures in that week that don't have a matching entity in attendance history where 
-		attended=true, and check if they have already occurred. If they have, set attended=false and week=week. 
+1	Ask user to select a username (needs to have a max length) 
 
 Attendance History
 2	Allow users to scroll back/forth through weeks
@@ -21,10 +15,9 @@ Attendance History
 3	Display locations of lectures?
 
 Leaderboards
-1	List all students on a leaderboard by their usernames, sorted by their scores in descending order, and show their
-	badges next to their name
-		In a table like so
-		<Name>		<Score>		<Badges>
+1	Sort users by their scores in descending order
+
+1	Add a position column showing users position in the leaderboard
 
 Profile
 3	Display highest achieved streak
@@ -35,6 +28,8 @@ Challenges
 2	Means of easily adding new challenges to all users on-the-fly 
 
 2	Add some pop-up informing the user when they complete a challenge
+
+3	Display completed challenges below
 
 
 	
