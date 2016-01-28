@@ -44,7 +44,6 @@ class User(ndb.Model):
 	score=ndb.IntegerProperty()
 	streak=ndb.IntegerProperty()
 	count=ndb.IntegerProperty()
-	badges=ndb.StructuredProperty(Badge, repeated=True)
 	history=ndb.StructuredProperty(Lecture, repeated=True)
 
 	info=ndb.BooleanProperty()

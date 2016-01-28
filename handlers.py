@@ -44,15 +44,15 @@ def missedLectureCheck(user):
 
 	userQuery = User.query(User.userid == user.user_id())
 	#gets the current user
-	for user in userQuery:
+	for userEntity in userQuery:
 		#loops through the weeks that have occurred so far
 		for i in range(1, getCurrentWeek()):
 			#loops through the users lectures
-			for lecture in user.lectures:
+			for lecture in userEntity.lectures:
 				#sets the default value to not attended
 				attended = False
 				#loops through the lectures in history
-				for attlecture in user.history:
+				for attlecture in userEntity.history:
 					#checks for a match
 					if attlecture.week == i and attlecture.day == lecture.day and attlecture.time == lecture.time:
 							#if one is found, there is an entry in the history so don't need to worry
@@ -62,25 +62,25 @@ def missedLectureCheck(user):
 					missedLecture = lecture
 					missedLecture.attended = False
 					missedLecture.week = i
-					user.history.append(missedLecture)
-					user.streak = 0
+					userEntity.history.append(missedLecture)
+					userEntity.streak = 0
 
 		#does the same check for the current week
-		for lecture in user.lectures:
+		for lecture in userEntity.lectures:
 			#only applies to lectures that have already occured
 			if lecture.day < day or lecture.day == day and lecture.time < hour:
 				attended = False
-				for attlecture in user.history:
+				for attlecture in userEntity.history:
 					if attlecture.week == getCurrentWeek() and attlecture.day == lecture.day and attlecture.time == lecture.time:
 						attended = True
 				if not attended:
 					missedLecture = lecture
 					missedLecture.attended = False
 					missedLecture.week = getCurrentWeek()
-					user.history.append(missedLecture)
-					user.streak = 0
+					userEntity.history.append(missedLecture)
+					userEntity.streak = 0
 
-	user.put()
+		userEntity.put()
 
 def formCheck(self, user):
 	 userQuery = User.query(User.userid == user.user_id())
@@ -265,30 +265,25 @@ class HomePage(webapp2.RequestHandler):
 
 				userEntity.put()
 
-				formCheck(self, user)
+			formCheck(self, user)
+			missedLectureCheck(user)
 
-			else:
-				formCheck(self, user)
+			completedChalls = []
 
-				missedLectureCheck(user)
+			for challenge in userEntity.challenges:
+				if challenge.complete:
+					completedChalls.append(challenge)
 
-				completedChalls = []
-
-				for challenge in userEntity.challenges:
-					if challenge.complete:
-						completedChalls.append(challenge)
-
-
-				template_values = {
-					'username' : user.nickname(),
-					'logout' : users.create_logout_url(self.request.uri),
-					'score' : userEntity.score,
-					'count' : userEntity.count,
-					'streak' : userEntity.streak,
-					'completedChalls' : completedChalls
-				}
-				template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
-				self.response.write(template.render(template_values))
+			template_values = {
+				'username' : user.nickname(),
+				'logout' : users.create_logout_url(self.request.uri),
+				'score' : userEntity.score,
+				'count' : userEntity.count,
+				'streak' : userEntity.streak,
+				'completedChalls' : completedChalls
+			}
+			template = JINJA_ENVIRONMENT.get_template('/assets/home.html')
+			self.response.write(template.render(template_values))
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
