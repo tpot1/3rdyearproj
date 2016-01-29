@@ -12,6 +12,7 @@ class Challenge(ndb.Model):
 	title=ndb.StringProperty()
 	description=ndb.StringProperty()
 	complete=ndb.BooleanProperty()
+	points=ndb.IntegerProperty()
 	badge=ndb.StructuredProperty(Badge)
 	expiresat = ndb.FloatProperty()
 

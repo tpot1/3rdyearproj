@@ -25,13 +25,20 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 	autoescape=True)
 
 def challengecheck(user, lecture, checkin):	
+	currTime = time.time()
+	pointsEarned = 0
+
 	for challenge in user.challenges:
 		if type(challenge) != Challenge:
 			challenge = challenge.b_val
 
-		if predicates[challenge.challengeid](user, lecture, checkin):
-			challenge.complete = True;
-			user.put()
+		if not challenge.complete and currTime < challenge.expiresat:
+			if predicates[challenge.challengeid](user, lecture, checkin):
+				challenge.complete = True;
+				pointsEarned += challenge.points
+				user.put()
+
+	return pointsEarned
 
 def missedLectureCheck(user):
 	day = datetime.date.today().weekday()
@@ -39,8 +46,6 @@ def missedLectureCheck(user):
 	minute = datetime.datetime.now().minute
 	if minute > 45:
 		hour = hour + 1
-
-	logging.info(getCurrentWeek())
 
 	userQuery = User.query(User.userid == user.user_id())
 	#gets the current user
@@ -103,10 +108,7 @@ def formCheck(self, user):
 
 
 def predicate1(user, lecture, checkin):
-	if lecture.time == 9:
-		return True
-	else:
-		return False
+	return False
 
 def predicate2(user, lecture, checkin):
 	checkinQuery = CheckIn.query(CheckIn.date == checkin.date and CheckIn.lecture.time == lecture.time and CheckIn.student.userid != user.userid)
@@ -117,7 +119,8 @@ def predicate2(user, lecture, checkin):
 	return True
 
 def predicate3(user, lecture, checkin):
-	if user.streak >= 5:
+	#the streak will increase after this check in, so if its equal to 4 it will become 5
+	if user.streak >= 4:
 		return True
 	else:
 		return False
@@ -129,33 +132,20 @@ def predicate5(user, lecture, checkin):
 	return False
 
 def predicate6(user, lecture, checkin):
-	competitors = []
-	userQuery = User.query(User.userid != user.userid)
-	for otherUser in userQuery:
-		for otherLecture in otherUser.lectures:
-			if otherLecture.module == lecture.module:
-				competitors.append(otherUser)
-	
-	for competitor in competitors:
-		if competitor.count > user.count:
-			return False
-
-	return True
+	return False
 
 def predicate7(user, lecture, checkin):
-	if user.count >= 1:
-		return True
-	else:
-		return True
+	#always returns true since only needs 1 check in
+	return True
 
 def predicate8(user, lecture, checkin):
-	if user.count >= 5:
+	if user.count >= 4:
 		return True
 	else:
 		return False
 
 def predicate9(user, lecture, checkin):
-	if user.count >= 15:
+	if user.count >= 9:
 		return True
 	else:
 		return False
@@ -338,14 +328,16 @@ class HomePage(webapp2.RequestHandler):
 			checkin.put()
 
 			thisUser.history.append(thisLecture)
-			thisUser.put()
 
-			thisUser.score = thisUser.score + 10 + thisUser.streak
+			pointsEarned = challengecheck(thisUser, thisLecture, checkin)
+
+			thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
 			thisUser.streak = thisUser.streak + 1
 			thisUser.count = thisUser.count + 1
+
+			thisUser.put()
 			
 			self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
-			challengecheck(thisUser, thisLecture, checkin)
 		else: 
 			self.response.out.write(json.dumps({"valid":2}))	
 

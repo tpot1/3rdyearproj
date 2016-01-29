@@ -1,9 +1,5 @@
 Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 
-
-bug when logging in for first time - doesnt display anything,just creates your user in database
-	should run the display code too
-
 First time logging in page
 1	Display participation information and consent form
 
@@ -24,11 +20,11 @@ Profile
 3	Maybe display challenge title/description as well as badge
 
 Challenges
-1	Reasses challenges to match the timetable of the class
+1	Re-assess challenges to match the timetable of the class (i.e. remove the 9am one, create one for checking in to both lectures in same week/same lecture for 5 weeks etc)
 
 2	Means of easily adding new challenges to all users on-the-fly 
 
-2	Add some pop-up informing the user when they complete a challenge
+2	Add some pop-up informing the user when they complete a challenge, and updating home page with new badge
 
 
 	

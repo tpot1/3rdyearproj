@@ -12,6 +12,7 @@
                     <th>Badge</th>
                     <th>Challenge</th>
                     <th>Description</th>
+                    <th>Points</th>
                     <th>Time left</th>
                 </tr>
             </thead>
@@ -25,6 +26,7 @@
                     <td><img src={{challenge.badge.iconName}} alt=""></img></td>
                     <td>{{challenge.title}}</td>
                     <td>{{challenge.description}}</td>
+                    <td>{{challenge.points}}</td>
                     <td>{{timeConversion(challenge.expiresat)}}</td>
                 </tr>
                 {% endfor %}
