@@ -4,7 +4,26 @@
 {%include 'assets/header.html' %}
 <body>
 
-	<p>username</p>
+	{%include 'assets/pre_navbar.html' %}
+
+	<style type="text/css">
+		.container {
+			margin-top: 50px
+		}
+	</style>
+
+	<div class="container">
+    	<div class="container-fluid">
+    		<h1>Almost There!</h1>
+    		<h4>The only thing left to do is select a username!</h4>
+            <h4>This name will be shown on the leaderboards, so it is recommended that you make it anonymous.</h4>
+            <form method='POST'>
+            	<h4 style="display:inline;">Username:</h4> 
+            	<input type="text" name="username" style="display:inline;"/>
+            	<input type="submit" class="btn btn-primary" value="Submit"/>
+            </form>
+    	</div>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

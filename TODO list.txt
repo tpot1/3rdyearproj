@@ -1,5 +1,12 @@
 Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 
+
+current problem: 
+seems like put() takes a while, so when I add the new username and call put() and then redirect, it hasn't finished
+putting yet, so when I check it still doesn't have a username, and takes me back
+
+
+
 First time logging in page
 1	Display participation information and consent form
 
@@ -21,6 +28,8 @@ Profile
 
 Challenges
 1	Re-assess challenges to match the timetable of the class (i.e. remove the 9am one, create one for checking in to both lectures in same week/same lecture for 5 weeks etc)
+
+1	Design the badges
 
 2	Means of easily adding new challenges to all users on-the-fly 
 
