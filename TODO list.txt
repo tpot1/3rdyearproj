@@ -1,10 +1,6 @@
 Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 
-
-current problem: 
-seems like put() takes a while, so when I add the new username and call put() and then redirect, it hasn't finished
-putting yet, so when I check it still doesn't have a username, and takes me back
-
+CHANGE REDIRECT UPON MAKING ACCOUNT TO PARTICIPANT INFO PAGE - CURRENTLY GOES TO USERNAME SELECT PAGE
 
 
 First time logging in page

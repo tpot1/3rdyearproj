@@ -267,10 +267,15 @@ class FirstTimePage(webapp2.RequestHandler):
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				username = str(self.request.get('username'))
-				userEntity.username = username
-				userEntity.put()
-				userEntity.put()
-				self.redirect('/')
+				if len(username) == 0:
+					self.response.write("Please enter your username.")
+				elif len(username) > 15:
+					self.response.write("Your username is too long.")
+				else:
+					userEntity.username = username
+					userEntity.put()
+					userEntity.put()
+					self.redirect('/')
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
