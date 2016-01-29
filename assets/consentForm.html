@@ -3,7 +3,13 @@
 <html lang="en">
 {%include 'assets/header.html' %}
 <body>
-	<p>consent</p>
+	{%include 'assets/pre_navbar.html' %}
+
+	<div class="container-fluid">
+	    <form method='POST'>
+        	<input type="submit" class="btn btn-primary" value="Continue" id="btn"/>
+        </form>
+	</div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

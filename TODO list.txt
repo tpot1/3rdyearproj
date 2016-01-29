@@ -3,14 +3,13 @@ Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 CHANGE REDIRECT UPON MAKING ACCOUNT TO PARTICIPANT INFO PAGE - CURRENTLY GOES TO USERNAME SELECT PAGE
 
 
-First time logging in page
-1	Display participation information and consent form
+First time logging in pages
 
-1	Display survey to complete to estimate grade and effect that the application has had on attendance
-		May need to add a property to user entities to store this information
+1	Display consent form
 
+1	Display questionnaire
 
-1	Ask user to select a username (needs to have a max length) 
+2	Check username isnt taken
 
 Attendance History
 2	Allow users to scroll back/forth through weeks
@@ -20,10 +19,10 @@ Attendance History
 Profile
 3	Display highest achieved streak
 
-3	Maybe display challenge title/description as well as badge
-
 Challenges
 1	Re-assess challenges to match the timetable of the class (i.e. remove the 9am one, create one for checking in to both lectures in same week/same lecture for 5 weeks etc)
+
+1	Plan the timings for the challenges
 
 1	Design the badges
 
@@ -31,5 +30,5 @@ Challenges
 
 2	Add some pop-up informing the user when they complete a challenge, and updating home page with new badge
 
-
+3	Display completed challenges at the bottom, even after they have expired
 	

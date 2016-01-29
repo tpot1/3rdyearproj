@@ -3,8 +3,47 @@
 <html lang="en">
 {%include 'assets/header.html' %}
 <body>
+	{%include 'assets/pre_navbar.html' %}
 
-	<p>info</p>
+	<div class="container-fluid">
+		<h3>Participant Information</h3>
+		<br>
+		<h4><strong>Study Title:</strong> Lecture Logger: A Web Application for Students to 'Check In' to Lectures</h4>
+		<h4 style="display:inline"><strong>Date:</strong> 25/01/2016</h4>
+		<h4 style="display:inline; margin-left:108px"><strong>Version:</strong> 1.0</h4>
+		<p></p>
+		<h4 style="display:inline"><strong>Researcher:</strong> Thomas Potter</h4>
+		<h4 style="display:inline; margin-left:20px"><strong>Ethics Number:</strong> 18874</h4>
+		<br></br>
+		<h4><strong>Please read this information carefully before deciding to take part in this research. If you are happy to participate you will be asked to sign a consent form.</strong></h4>
+		<br>
+		<h4><strong>What is the research about?</strong></h4>
+		<p>I am a student at the University of Southampton, and this research will make up part of my 3rd Year Project. My project consists of developing a web application to be used by university students to ‘check in’ to lectures. By doing so, you will earn gamification rewards, much like the app ‘Foursquare’, and will provide me with data regarding your attendance. I will also ask you to complete a questionnaire, which will allow me to roughly estimate the grade that you will achieve. This will allow me to plot a graph of lecture attendance vs exam results for each student, and investigate the relationship between the two.</p>
+		<h4><strong>Why have I been chosen?</strong></h4>
+		<p>I required a class to use my application to allow me to gather some data. Su White, my project supervisor, suggested that I use it with her foundation year class, since there tends to be interesting patterns in the spread of exam results amongst students in this class.</p>
+		<h4><strong>What will happen to me if I take part?</strong></h4>
+		<p>You will be asked to use Lecture Logger to ‘check in’ whenever you attend a lecture for this module. You are encouraged to try to complete the challenges provided, and compete with your classmates via the leaderboards.<br>
+		Additionally, you will be asked to complete a short questionnaire, which will be used to allow me to roughly estimate the grade you will achieve, allowing me to investigate the relationship between your attendance and exam results.</p>
+		<h4><strong>Are there any benefits in my taking part?</strong></h4>
+		<p>You can use the application to monitor your lecture attendance, which could help you to catch up on lectures which you missed, and see how your attendance compares with your classmates.<br>
+		Additionally, you will earn points for every lecture you attend, and there will be challenges throughout the semester which can be earned by completing specific check-ins or combinations of check-ins. You can compare your score with other students on the leaderboards.</p>
+		<h4><strong>Are there any risks involved?</strong></h4>
+		<p>When checking in, GPS is used to verify that you are in the correct building, and thus attending the lecture, which could be considered a risk since if the website was somehow hacked it could be used to locate the participants, but this is very unlikely. Additionally, the GPS locations are never stored to minimise this risk.</p>
+		<h4><strong>Will my participation be confidential?</strong></h4>
+		<p>All information gathered during the project will be kept strictly confidential, and will comply with the Data Protection Act of 1998. The data will be stored in a secure database on a password protected laptop, and will be stored anonymously, using a random and unique number to identify each participant. The information will only be used for the purposes of my project, and will only be stored for the duration of my project, after which it will be destroyed.<br>                                                       
+		However, the leaderboards will display the username, points and badges of each student using the system, so from this your participation could be determined. Therefore, it is recommended that you select an anonymous username.</p>
+		<h4><strong>What happens if I change my mind?</strong></h4>
+		<p>You may modify or withdraw your data at any time during the study for whatever reason by contacting me at tp10g13@soton.ac.uk, or my project supervisor Su White at su@soton.ac.uk.</br>
+		If you would like to modify or withdraw your data after your participation, please contact Su White at su@soton.ac.uk.</p>
+		<h4><strong>What happens if something goes wrong?</strong></h4>
+		<p>In the case of concern or complain, you should email my project supervisor, Su White (su@soton.ac.uk), or alternatively the head of ECS office (alg1@soton.ac.uk).</p>
+		<h4><strong>Where can I get more information?</strong></h4>
+		<p>If you have any further questions, feel free to email me at tp10g13@soton.ac.uk.</p>
+
+        <form method='POST'>
+        	<input type="submit" class="btn btn-primary" value="Continue" id="btn"/>
+        </form>
+	</div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

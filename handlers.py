@@ -91,20 +91,17 @@ def formCheck(self, user):
 	userQuery = User.query(User.userid == user.user_id())
 	# #gets the current user
 	for userEntity in userQuery:
-
-	# 	#checks that they have gone through the procedue of reading the participant information
-	# 	if userEntity.info != True:
-	# 		self.redirect('/info')
-	# 	#agreeing to the consent form
-	# 	elif userEntity.consent != True:
-	# 		self.redirect('/consentform')
-	# 	#completing the questionnaire
-	# 	elif userEntity.questionnaire is None:
-	# 		self.redirect('/questionnaire')
-	# 	#and creating a username
-	 	if userEntity.username is None:
-	 		logging.info("formcheck: ")
-	 		logging.info(userEntity.username)
+	 	#checks that they have gone through the procedue of reading the participant information
+	 	if userEntity.info != True:
+	 		self.redirect('/info')
+	 	#agreeing to the consent form
+	 	elif userEntity.consent != True:
+	 		self.redirect('/consentform')
+	 	#completing the questionnaire
+	 	elif userEntity.questionnaire is None:
+	 		self.redirect('/questionnaire')
+	 	#and creating a username
+	 	elif userEntity.username is None:
 	 		self.redirect('/ftp')
 
 
@@ -210,6 +207,10 @@ class ParticipationInfoPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				if userEntity.info:
+					self.redirect('/')
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri)
@@ -217,11 +218,30 @@ class ParticipationInfoPage(webapp2.RequestHandler):
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/participantInfo.html')
 			self.response.write(template.render(template_values))
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
+
+	def post(self):
+		user = users.get_current_user()
+		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				userEntity.info = True
+				userEntity.put()
+				userEntity.put()
+				self.redirect('/consentform')
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
+
 
 class ConsentFormPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				if userEntity.consent:
+					self.redirect('/')
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri)
@@ -232,10 +252,27 @@ class ConsentFormPage(webapp2.RequestHandler):
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
+	def post(self):
+		user = users.get_current_user()
+		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				userEntity.consent = True
+				userEntity.put()
+				userEntity.put()
+				self.redirect('/questionnaire')
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
+
+
 class QuestionnairePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				if userEntity.questionnaire is not None:
+					self.redirect('/')
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri)
@@ -245,11 +282,27 @@ class QuestionnairePage(webapp2.RequestHandler):
 
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
+
+	def post(self):
+		user = users.get_current_user()
+		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				userEntity.questionnaire = Questionnaire()
+				userEntity.put()
+				userEntity.put()
+				self.redirect('/ftp')
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
 		
 class FirstTimePage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				if userEntity.username is not None:
+					self.redirect('/')
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri)
@@ -268,7 +321,7 @@ class FirstTimePage(webapp2.RequestHandler):
 			for userEntity in userQuery:
 				username = str(self.request.get('username'))
 				if len(username) == 0:
-					self.response.write("Please enter your username.")
+					self.response.write("Please enter a username.")
 				elif len(username) > 15:
 					self.response.write("Your username is too long.")
 				else:
@@ -312,7 +365,7 @@ class HomePage(webapp2.RequestHandler):
 					userEntity.challenges.append(challenge)
 
 				userEntity.put()
-				self.redirect('/ftp')#TODO - change this to the info page once it is made
+				self.redirect('/info')#TODO - change this to the info page once it is made
 
 			completedChalls = []
 
