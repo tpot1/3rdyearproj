@@ -235,7 +235,7 @@ class ParticipationInfoPage(webapp2.RequestHandler):
 
 
 class ConsentFormPage(webapp2.RequestHandler):
-	def get(self):
+	def get(self, error=""):
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
@@ -244,7 +244,8 @@ class ConsentFormPage(webapp2.RequestHandler):
 					self.redirect('/')
 
 			template_values = {
-				'logout' : users.create_logout_url(self.request.uri)
+				'logout' : users.create_logout_url(self.request.uri),
+				'error' : error
 			}
 			template = JINJA_ENVIRONMENT.get_template('/assets/consentForm.html')
 			self.response.write(template.render(template_values))
@@ -270,17 +271,17 @@ class ConsentFormPage(webapp2.RequestHandler):
 							userEntity.put()
 							self.redirect('/questionnaire')
 					else:
-						self.response.write("Your initials boxes were empty")
+						self.get("Your initials boxes were empty")
 				else:
-					self.response.write("You have invalid numbers or symbols in your initials")
+					self.get("You have invalid numbers or symbols in your initials")
 			else:
-				self.response.write("The initials you entered did not match")
+				self.get("The initials you entered did not match")
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
 
 class QuestionnairePage(webapp2.RequestHandler):
-	def get(self):
+	def get(self, error=""):
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
@@ -289,7 +290,8 @@ class QuestionnairePage(webapp2.RequestHandler):
 					self.redirect('/')
 
 			template_values = {
-				'logout' : users.create_logout_url(self.request.uri)
+				'logout' : users.create_logout_url(self.request.uri),
+				'error' : error
 			}
 			template = JINJA_ENVIRONMENT.get_template('/assets/questionnaire.html')
 			self.response.write(template.render(template_values))
@@ -306,10 +308,10 @@ class QuestionnairePage(webapp2.RequestHandler):
 			for i in range(1, 10):
 				answer = str(self.request.get("q"+str(i)))
 				if answer == "":
-					self.response.write("You must answer all of the questions")
+					self.get("You must answer all of the questions")
 					valid = False
 				elif not answer.isdigit():
-					self.response.write("Something went wrong. Please try again")
+					self.get("Something went wrong. Please try again")
 					valid = False
 
 			if valid:

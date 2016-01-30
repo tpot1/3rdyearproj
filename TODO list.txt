@@ -5,7 +5,7 @@ TURN OFF DEBUG MODE??
 
 First time logging in pages
 
-2	Check username isnt taken
+2	Add better error messaging
 
 Attendance History
 
