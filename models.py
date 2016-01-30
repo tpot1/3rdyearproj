@@ -33,10 +33,15 @@ class Building(ndb.Model):
 	coordinates=ndb.GeoPtProperty(repeated=True)
 
 class Questionnaire(ndb.Model):
-	answer1=ndb.StringProperty()
-	answer2=ndb.StringProperty()
-	answer3=ndb.StringProperty()
-	answer4=ndb.StringProperty()	
+	answer1=ndb.IntegerProperty()
+	answer2=ndb.IntegerProperty()
+	answer3=ndb.IntegerProperty()
+	answer4=ndb.IntegerProperty()
+	answer5=ndb.IntegerProperty()
+	answer6=ndb.IntegerProperty()
+	answer7=ndb.IntegerProperty()
+	answer8=ndb.IntegerProperty()
+	answer9=ndb.IntegerProperty()	
 
 class User(ndb.Model):
 	userid=ndb.StringProperty()

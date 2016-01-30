@@ -255,12 +255,26 @@ class ConsentFormPage(webapp2.RequestHandler):
 	def post(self):
 		user = users.get_current_user()
 		if(user):
-			userQuery = User.query(User.userid == user.user_id())
-			for userEntity in userQuery:
-				userEntity.consent = True
-				userEntity.put()
-				userEntity.put()
-				self.redirect('/questionnaire')
+
+			input1 = str(self.request.get('input1'))
+			input2 = str(self.request.get('input2'))
+			input3 = str(self.request.get('input3'))
+
+			if input1 == input2 == input3:
+				if input1.isalpha():
+					if input1 != "":
+						userQuery = User.query(User.userid == user.user_id())
+						for userEntity in userQuery:
+							userEntity.consent = True
+							userEntity.put()
+							userEntity.put()
+							self.redirect('/questionnaire')
+					else:
+						self.response.write("Your initials boxes were empty")
+				else:
+					self.response.write("You have invalid numbers or symbols in your initials")
+			else:
+				self.response.write("The initials you entered did not match")
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
@@ -286,12 +300,34 @@ class QuestionnairePage(webapp2.RequestHandler):
 	def post(self):
 		user = users.get_current_user()
 		if(user):
-			userQuery = User.query(User.userid == user.user_id())
-			for userEntity in userQuery:
-				userEntity.questionnaire = Questionnaire()
-				userEntity.put()
-				userEntity.put()
-				self.redirect('/ftp')
+
+			valid = True
+
+			for i in range(1, 10):
+				answer = str(self.request.get("q"+str(i)))
+				if answer == "":
+					self.response.write("You must answer all of the questions")
+					valid = False
+				elif not answer.isdigit():
+					self.response.write("Something went wrong. Please try again")
+					valid = False
+
+			if valid:
+				userQuery = User.query(User.userid == user.user_id())
+				for userEntity in userQuery:
+					userEntity.questionnaire = Questionnaire(
+						answer1 = int(self.request.get("q1")),
+						answer2 = int(self.request.get("q2")),
+						answer3 = int(self.request.get("q3")),
+						answer4 = int(self.request.get("q4")),
+						answer5 = int(self.request.get("q5")),
+						answer6 = int(self.request.get("q6")),
+						answer7 = int(self.request.get("q7")),
+						answer8 = int(self.request.get("q8")),
+						answer9 = int(self.request.get("q9")))
+					userEntity.put()
+					userEntity.put()
+					self.redirect('/ftp')
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 		

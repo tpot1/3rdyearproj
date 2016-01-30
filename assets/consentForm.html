@@ -6,7 +6,30 @@
 	{%include 'assets/pre_navbar.html' %}
 
 	<div class="container-fluid">
-	    <form method='POST'>
+		<h3>Consent Form</h3>
+		<br>
+		<h4><strong>Study Title:</strong> Lecture Logger: A Web Application for Students to 'Check In' to Lectures</h4>
+		<h4 style="display:inline"><strong>Date:</strong> 25/01/2016</h4>
+		<h4 style="display:inline; margin-left:108px"><strong>Version:</strong> 1.0</h4>
+		<p></p>
+		<h4 style="display:inline"><strong>Researcher:</strong> Thomas Potter</h4>
+		<h4 style="display:inline; margin-left:20px"><strong>Ethics Number:</strong> 18874</h4>
+		<br></br>
+		<h4>Please enter your initials into the boxes if you agree with the statements:	</h4>
+		<br>
+		<form method='POST'>
+			<h4 style="display:inline">1) I have read and understood the information sheet version 1.0 dated 25/01/2016 and have had the opportunity to ask questions about the study.</h4>
+			<input  type="text" name="input1" id="input1" maxlength="5" size="5" required/>
+			<br>
+			<h4 style="display:inline">2) I agree to take part in this research project and agree for my data to be used for the purpose of this study</h4>
+			<input  type="text" name="input2" id="input2" maxlength="5" size="5" required/>
+			<br>
+			<h4 style="display:inline">3) I understand my participation is voluntary and I may withdraw at any time without my legal rights being affected</h4>
+			<input  type="text" name="input3" id="input3" maxlength="5" size="5" required/>
+			<br></br>
+			<h4><strong>Data Protection</strong><br>
+			I understand that information collected about me during my participation in this study will be stored on a password protected computer and that this information will only be used for the purpose of this study. All files containing any personal data will be made anonymous.
+			<h4>
         	<input type="submit" class="btn btn-primary" value="Continue" id="btn"/>
         </form>
 	</div>
