@@ -556,44 +556,71 @@ class HistoryPage(webapp2.RequestHandler):
 			self.redirect('/')
 
 	def post(self):
-
 		user = users.get_current_user()
 		if(user):
-
 			missedLectureCheck(user)
 
-			logging.info(self.request.body)
+			weeknum = int(self.request.get('week'))
 
-			data = json.loads(self.request.body)
-
-			logging.info(data)
-			#views the next week
-			weeknum = getCurrentWeek()+1
-
-			template_values = {
+			fwd = self.request.get('fwd')
+			if fwd == "Forward":
+				weeknum += 1
+				template_values = {
 					'logout' : users.create_logout_url(self.request.uri),
 					'history' : 'class=active',
 					'week' : weeknum
 				}
 
-			userQuery = User.query(User.userid == user.user_id())
-			for thisUser in userQuery:
-				for lecture in thisUser.history:
-					if lecture.week == weeknum:
-						template_values[lecture.day+str(lecture.time)] = lecture.module
-						if lecture.attended:
-							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
-						else:
-							template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
-				for lecture in thisUser.lectures:
-					if lecture.day+str(lecture.time) not in template_values.keys():
-						template_values[lecture.day+str(lecture.time)] = lecture.module
-						template_values[lecture.day+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+				days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
 
-			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
-			self.response.write(template.render(template_values))
+				userQuery = User.query(User.userid == user.user_id())
+				for thisUser in userQuery:
+					for lecture in thisUser.history:
+						if lecture.week == weeknum:
+							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
+							if lecture.attended:
+								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
+							else:
+								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+					for lecture in thisUser.lectures:
+						if days[lecture.day]+str(lecture.time) not in template_values.keys():
+							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
+							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+
+				template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
+				self.response.write(template.render(template_values))
+			else:
+				weeknum -= 1
+				if(weeknum < 1):
+					weeknum = 1
+				template_values = {
+					'logout' : users.create_logout_url(self.request.uri),
+					'history' : 'class=active',
+					'week' : weeknum
+				}
+				days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
+
+				userQuery = User.query(User.userid == user.user_id())
+				for thisUser in userQuery:
+					for lecture in thisUser.history:
+						if lecture.week == weeknum:
+							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
+							if lecture.attended:
+								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
+							else:
+								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+					for lecture in thisUser.lectures:
+						if days[lecture.day]+str(lecture.time) not in template_values.keys():
+							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
+							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+
+				template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
+				self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')
+
+	def fwd(self):
+		self.response.write('test')
 
 class LeaderboardsPage(webapp2.RequestHandler):
 	def get(self):

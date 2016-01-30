@@ -142,15 +142,18 @@
                 </tr>
             </tbody>
         </table>
-            <button class="btn btn-primary" role="button" type='submit' value='Back' id='back'></button>
-            <button class="btn btn-primary" role="button" type='submit' value='Forward' id='forward'></button>
+        <form method="post">
+            <input class="btn btn-primary" type='submit' name="bck" value="Back"/>
+            <input class="btn btn-primary"type='submit' name="fwd" value="Forward" style="float:right;"/>
+            <input type="hidden" name="week" value={{week}}>
+        </form>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/weekSelect.js"></script>
+    
   </body>
 </html>
 {% endautoescape %}

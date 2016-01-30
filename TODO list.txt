@@ -5,10 +5,6 @@ TURN OFF DEBUG MODE??
 
 First time logging in pages
 
-1	Display consent form
-
-1	Display questionnaire
-
 2	Check username isnt taken
 
 Attendance History
@@ -26,7 +22,7 @@ Challenges
 
 1	Design the badges
 
-2	Means of easily adding new challenges to all users on-the-fly 
+2	Means of easily adding new challenges to all users on-the-fly ?
 
 2	Add some pop-up informing the user when they complete a challenge, and updating home page with new badge
 
