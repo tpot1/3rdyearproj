@@ -332,7 +332,7 @@ class QuestionnairePage(webapp2.RequestHandler):
 			self.redirect(users.create_login_url(self.request.uri))
 		
 class FirstTimePage(webapp2.RequestHandler):
-	def get(self):
+	def get(self, error=""):
 		user = users.get_current_user()
 		if(user):
 			userQuery = User.query(User.userid == user.user_id())
@@ -341,30 +341,41 @@ class FirstTimePage(webapp2.RequestHandler):
 					self.redirect('/')
 
 			template_values = {
-				'logout' : users.create_logout_url(self.request.uri)
+				'logout' : users.create_logout_url(self.request.uri),
+				'error' : error
 			}
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/usernameSelect.html')
 			self.response.write(template.render(template_values))
-
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 
 	def post(self):
 		user = users.get_current_user()
 		if(user):
-			userQuery = User.query(User.userid == user.user_id())
-			for userEntity in userQuery:
-				username = str(self.request.get('username'))
-				if len(username) == 0:
-					self.response.write("Please enter a username.")
-				elif len(username) > 15:
-					self.response.write("Your username is too long.")
-				else:
-					userEntity.username = username
-					userEntity.put()
-					userEntity.put()
-					self.redirect('/')
+			username = str(self.request.get('username'))
+			taken = False
+
+			usernameQuery = User.query()
+			for allUsers in usernameQuery:
+				if allUsers.username == username:
+					taken = True
+
+			if taken:
+				self.get("Username taken. Please try another.")
+
+			else:
+				userQuery = User.query(User.userid == user.user_id())
+				for userEntity in userQuery:
+					if len(username) == 0:
+						self.response.write("Please enter a username.")
+					elif len(username) > 15:
+						self.response.write("Your username is too long.")
+					else:
+						userEntity.username = username
+						userEntity.put()
+						userEntity.put()
+						self.redirect('/')
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 

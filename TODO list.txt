@@ -8,7 +8,6 @@ First time logging in pages
 2	Check username isnt taken
 
 Attendance History
-2	Allow users to scroll back/forth through weeks
 
 3	Display locations of lectures?
 
