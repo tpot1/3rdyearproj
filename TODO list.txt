@@ -3,9 +3,19 @@ Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 
 TURN OFF DEBUG MODE??
 
+ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, on laptop and phone
+
+
+
+problem: it is including our check in, so we are never faster than ourself :P
+
 
 Home page
 1	fix display for mobile phones - nav bar only spans half of screen, badges interferes with it
+
+3	Display highest achieved streak
+
+3	Display message while checking in code is running
 
 
 Attendance History
@@ -14,9 +24,6 @@ Attendance History
 	(this says they all missed the first week of lectures - might annoy people)
 
 3	Display locations of lectures?
-
-Profile
-3	Display highest achieved streak
 
 Challenges
 1	Re-assess challenges to match the timetable of the class (i.e. remove the 9am one, create one for checking in to both lectures in same week/same lecture for 5 weeks etc)

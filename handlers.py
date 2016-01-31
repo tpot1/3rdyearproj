@@ -126,8 +126,10 @@ def predicate3(user, lecture, checkin):
 		return False
 
 def predicate4(user, lecture, checkin):
-	checkinQuery = CheckIn.query(CheckIn.date == checkin.date and CheckIn.lecture.time == lecture.time and CheckIn.student.userid != user.userid)
+	# finds all check ins for the same lecture, by other students
+	checkinQuery = CheckIn.query().filter(CheckIn.lecture.day == lecture.day, CheckIn.lecture.time == lecture.time, CheckIn.lecture.week == getCurrentWeek(), CheckIn.student.userid != user.userid)
 	for otherCheckin in checkinQuery:
+		# checks if any were made earlier than this check in
 		if otherCheckin.time < checkin.time:
 			return False
 
@@ -419,7 +421,7 @@ class HomePage(webapp2.RequestHandler):
 					for lecture in module.lectures:
 						userEntity.lectures.append(lecture)
 
-				challengeQuery = Challenge.query()
+				challengeQuery = Challenge.query().order(Challenge.challengeid)
 				for challenge in challengeQuery:
 					userEntity.challenges.append(challenge)
 
@@ -448,67 +450,70 @@ class HomePage(webapp2.RequestHandler):
 
 	def post(self):
 		user = users.get_current_user()
-		missedLectureCheck(user)
-		#logging.info(self.request.body)
-		data = json.loads(self.request.body)
-		latitude = data["lat"]
-		longitude = data["lon"]
+		if user:
+			missedLectureCheck(user)
+			#logging.info(self.request.body)
+			data = json.loads(self.request.body)
+			latitude = data["lat"]
+			longitude = data["lon"]
 
-		day = datetime.date.today().weekday()
-		hour = datetime.datetime.now().hour
-		minute = datetime.datetime.now().minute
-		if minute > 45:
-			hour = hour + 1
+			day = datetime.date.today().weekday()
+			hour = datetime.datetime.now().hour
+			minute = datetime.datetime.now().minute
+			if minute > 45:
+				hour = hour + 1
 
-		thisLecture = None
-		thisUser = None
-		poly = []
+			thisLecture = None
+			thisUser = None
+			poly = []
 
-		userQuery = User.query(User.userid == user.user_id())
-		for userEntity in userQuery:
-			thisUser = userEntity
-			for lecture in userEntity.lectures:
-				if(lecture.day == day and lecture.time == hour):
-					thisLecture = lecture
-					buildingQuery = Building.query(Building.number == str(lecture.location))
-					for building in buildingQuery:
-						for coordinate in building.coordinates:
-							c = (coordinate.lon, coordinate.lat)
-							poly.append(c)
+			userQuery = User.query(User.userid == user.user_id())
+			for userEntity in userQuery:
+				thisUser = userEntity
+				for lecture in userEntity.lectures:
+					if(lecture.day == day and lecture.time == hour):
+						thisLecture = lecture
+						buildingQuery = Building.query(Building.number == str(lecture.location))
+						for building in buildingQuery:
+							for coordinate in building.coordinates:
+								c = (coordinate.lon, coordinate.lat)
+								poly.append(c)
 
-		if False:#thisLecture is None:
-			self.response.out.write(json.dumps({"valid":3}))
-		elif False:#thisLecture.attended:
-			self.response.out.write(json.dumps({"valid":4}))
-		elif True:#point_in_poly(longitude, latitude, poly):
-
-
-
-			thisLecture = Lecture(module='GENG0014', location=35, day=4, time=11) 	#TODO remove this
+			if False:#thisLecture is None:
+				self.response.out.write(json.dumps({"valid":3}))
+			elif False:#thisLecture.attended:
+				self.response.out.write(json.dumps({"valid":4}))
+			elif True:#point_in_poly(longitude, latitude, poly):
 
 
 
+				thisLecture = Lecture(module='GENG0014', location=35, day=4, time=16) 	#TODO remove this
 
-			
-			thisLecture.attended = True
-			thisLecture.week = getCurrentWeek()
 
-			checkin = CheckIn(student=thisUser, lecture=thisLecture)
-			checkin.put()
 
-			thisUser.history.append(thisLecture)
 
-			pointsEarned = challengecheck(thisUser, thisLecture, checkin)
+				
+				thisLecture.attended = True
+				thisLecture.week = getCurrentWeek()
 
-			thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
-			thisUser.streak = thisUser.streak + 1
-			thisUser.count = thisUser.count + 1
+				checkin = CheckIn(student=thisUser, lecture=thisLecture)
+				checkin.put()
 
-			thisUser.put()
-			
-			self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
-		else: 
-			self.response.out.write(json.dumps({"valid":2}))	
+				thisUser.history.append(thisLecture)
+
+				pointsEarned = challengecheck(thisUser, thisLecture, checkin)
+
+				thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
+				thisUser.streak = thisUser.streak + 1
+				thisUser.count = thisUser.count + 1
+
+				thisUser.put()
+				
+				self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
+			else: 
+				self.response.out.write(json.dumps({"valid":2}))	
+		else:
+			self.redirect(users.create_login_url(self.request.uri))
 
 
 class ChallengesPage(webapp2.RequestHandler):
