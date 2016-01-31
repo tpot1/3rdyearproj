@@ -1,13 +1,17 @@
 Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
+	AND REMOVE ARBITRARY LECTURE TO BE ATTENDED
 
 TURN OFF DEBUG MODE??
 
 
-First time logging in pages
+Home page
+1	fix display for mobile phones - nav bar only spans half of screen, badges interferes with it
 
-2	Add better error messaging
 
 Attendance History
+
+3	When checking for missed lectures, start from the week students start using the system rather than week 1
+	(this says they all missed the first week of lectures - might annoy people)
 
 3	Display locations of lectures?
 
@@ -22,8 +26,10 @@ Challenges
 1	Design the badges
 
 2	Means of easily adding new challenges to all users on-the-fly ?
+	(should instead define all challenges at the start, but plan when they activate - startsAt time?)
 
 2	Add some pop-up informing the user when they complete a challenge, and updating home page with new badge
+	(challengecheck returns completed challs, pass info to javascript which then shows these pop ups)
 
-3	Display completed challenges at the bottom, even after they have expired
+2	Display completed challenges at the bottom, even after they have expired
 	

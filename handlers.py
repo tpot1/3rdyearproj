@@ -74,6 +74,7 @@ def missedLectureCheck(user):
 		for lecture in userEntity.lectures:
 			#only applies to lectures that have already occured
 			if lecture.day < day or lecture.day == day and lecture.time < hour:
+				#sets the default value to False
 				attended = False
 				for attlecture in userEntity.history:
 					if attlecture.week == getCurrentWeek() and attlecture.day == lecture.day and attlecture.time == lecture.time:
@@ -88,6 +89,9 @@ def missedLectureCheck(user):
 		userEntity.put()
 
 def formCheck(self, user):
+
+	return True
+
 	userQuery = User.query(User.userid == user.user_id())
 	# #gets the current user
 	for userEntity in userQuery:
@@ -105,11 +109,23 @@ def formCheck(self, user):
 	 		self.redirect('/ftp')
 
 
-
 def predicate1(user, lecture, checkin):
-	return False
+	#always returns true since only needs 1 check in
+	return True
 
 def predicate2(user, lecture, checkin):
+	if user.count >= 4:
+		return True
+	else:
+		return False
+
+def predicate3(user, lecture, checkin):
+	if user.count >= 9:
+		return True
+	else:
+		return False
+
+def predicate4(user, lecture, checkin):
 	checkinQuery = CheckIn.query(CheckIn.date == checkin.date and CheckIn.lecture.time == lecture.time and CheckIn.student.userid != user.userid)
 	for otherCheckin in checkinQuery:
 		if otherCheckin.time < checkin.time:
@@ -117,37 +133,34 @@ def predicate2(user, lecture, checkin):
 
 	return True
 
-def predicate3(user, lecture, checkin):
-	#the streak will increase after this check in, so if its equal to 4 it will become 5
+def predicate5(user, lecture, checkin):
+	# the streak will increase after this check in, so if its equal to 4 it will become 5
 	if user.streak >= 4:
 		return True
 	else:
 		return False
 
-def predicate4(user, lecture, checkin):
-	return False
-
-def predicate5(user, lecture, checkin):
-	return False
-
 def predicate6(user, lecture, checkin):
-	return False
+	# # simply checks that the user attended another lecture this week, as there are only 2 lectures for this class
+	# for prevLect in user.history:
+	# 	if prevLect != lecture and prevLect.week == getCurrentWeek() and prevLect.attended:
+	# 		return True
 
-def predicate7(user, lecture, checkin):
-	#always returns true since only needs 1 check in
+	# return False
+
+	for lecture in user.lectures:
+		matched = False
+		for attlecture in user.history:
+			if attlecture.week == getCurrentWeek() and attlecture.day == lecture.day and attlecture.time == lecture.time and attlecture.attended == True:
+				matched = True
+		if not matched:
+			return False
+
 	return True
 
-def predicate8(user, lecture, checkin):
-	if user.count >= 4:
-		return True
-	else:
-		return False
 
-def predicate9(user, lecture, checkin):
-	if user.count >= 9:
-		return True
-	else:
-		return False
+
+
 
 predicates = {
 	1 : predicate1,
@@ -155,10 +168,7 @@ predicates = {
 	3 : predicate3,
 	4 : predicate4,
 	5 : predicate5,
-	6 : predicate6,
-	7 : predicate7,
-	8 : predicate8,
-	9 : predicate9
+	6 : predicate6
 }
 
 def point_in_poly(x,y,poly):
@@ -474,7 +484,7 @@ class HomePage(webapp2.RequestHandler):
 
 
 
-			thisLecture = Lecture() 	#TODO remove this
+			thisLecture = Lecture(module='GENG0014', location=35, day=4, time=11) 	#TODO remove this
 
 
 
