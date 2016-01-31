@@ -13,6 +13,14 @@ indexes:
 - kind: CheckIn
   properties:
   - name: lecture.day
+  - name: lecture.module
+  - name: lecture.time
+  - name: lecture.week
+  - name: student.userid
+
+- kind: CheckIn
+  properties:
+  - name: lecture.day
   - name: lecture.time
   - name: lecture.week
   - name: student.userid

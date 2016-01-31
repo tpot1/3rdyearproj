@@ -1,14 +1,11 @@
 Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 	AND REMOVE ARBITRARY LECTURE TO BE ATTENDED
 
+RE-ENABLE FORM CHECK
+
 TURN OFF DEBUG MODE??
 
 ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, on laptop and phone
-
-
-
-problem: it is including our check in, so we are never faster than ourself :P
-
 
 Home page
 1	fix display for mobile phones - nav bar only spans half of screen, badges interferes with it
@@ -16,6 +13,8 @@ Home page
 3	Display highest achieved streak
 
 3	Display message while checking in code is running
+
+3	Move logout to right of navbar
 
 
 Attendance History

@@ -127,7 +127,7 @@ def predicate3(user, lecture, checkin):
 
 def predicate4(user, lecture, checkin):
 	# finds all check ins for the same lecture, by other students
-	checkinQuery = CheckIn.query().filter(CheckIn.lecture.day == lecture.day, CheckIn.lecture.time == lecture.time, CheckIn.lecture.week == getCurrentWeek(), CheckIn.student.userid != user.userid)
+	checkinQuery = CheckIn.query().filter(CheckIn.lecture.day == lecture.day, CheckIn.lecture.time == lecture.time, CheckIn.lecture.week == getCurrentWeek(), CheckIn.lecture.module == lecture.module, CheckIn.student.userid != user.userid)
 	for otherCheckin in checkinQuery:
 		# checks if any were made earlier than this check in
 		if otherCheckin.time < checkin.time:
@@ -137,19 +137,19 @@ def predicate4(user, lecture, checkin):
 
 def predicate5(user, lecture, checkin):
 	# the streak will increase after this check in, so if its equal to 4 it will become 5
-	if user.streak >= 4:
+	if user.streak >= 2:
 		return True
 	else:
 		return False
 
 def predicate6(user, lecture, checkin):
-	# # simply checks that the user attended another lecture this week, as there are only 2 lectures for this class
-	# for prevLect in user.history:
-	# 	if prevLect != lecture and prevLect.week == getCurrentWeek() and prevLect.attended:
-	# 		return True
+	# the streak will increase after this check in, so if its equal to 4 it will become 5
+	if user.streak >= 4:
+		return True
+	else:
+		return False
 
-	# return False
-
+def predicate7(user, lecture, checkin):
 	for lecture in user.lectures:
 		matched = False
 		for attlecture in user.history:
@@ -160,9 +160,17 @@ def predicate6(user, lecture, checkin):
 
 	return True
 
-
-
-
+def predicate8(user, lecture, checkin):
+	prev1 = False
+	prev2 = False
+	for prevLecture in user.history:
+		if prevLecture.day == lecture.day and prevLecture.time == lecture.time and prevLecture.module == lecture.module and prevLecture.attended:
+			if prevLecture.week == getCurrentWeek()-1:
+				prev1 = True
+			elif prevLecture.week == getCurrentWeek()-2:
+				prev2 = True
+		
+	return prev1 and prev2
 
 predicates = {
 	1 : predicate1,
@@ -170,7 +178,9 @@ predicates = {
 	3 : predicate3,
 	4 : predicate4,
 	5 : predicate5,
-	6 : predicate6
+	6 : predicate6,
+	7 : predicate7,
+	8 : predicate8
 }
 
 def point_in_poly(x,y,poly):
@@ -487,7 +497,7 @@ class HomePage(webapp2.RequestHandler):
 
 
 
-				thisLecture = Lecture(module='GENG0014', location=35, day=4, time=16) 	#TODO remove this
+				thisLecture = Lecture(module='GENG0014', location=35, day=4, time=19) 	#TODO remove this
 
 
 
