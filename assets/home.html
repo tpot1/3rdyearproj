@@ -35,13 +35,44 @@
         <div id="badges" class="container-fluid">
             <h4>Badges:</h4>
             {% if completedChalls|length == 0 %}
-            <p>Earn badges by completing challenges!</p>
+            <p id="nobadge">Earn badges by completing challenges!</p>
             {% else %}
             {% for challenge in completedChalls %}
             <img src={{challenge.badge.iconName}} alt='' height="42" width="42">
             {% endfor %}
             {% endif %}
         </div>
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Challenge Complete!</h4>
+          </div>
+          <div class="modal-body">
+            <p>Congratulations! You completed the following challenges:</p>
+            <table class="table" id="modalTable">
+                <thead>
+                    <tr>
+                        <th>Badge</th>
+                        <th>Challenge</th>
+                        <th>Description</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <div class="container">

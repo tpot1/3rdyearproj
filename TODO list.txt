@@ -12,12 +12,14 @@ Home page
 
 3	Display highest achieved streak
 
-3	Display message while checking in code is running
+3	Display some message while checking in code is running
 
 3	Move logout to right of navbar
 
 
 Attendance History
+
+2	Display dates of weeks as well as week number
 
 3	When checking for missed lectures, start from the week students start using the system rather than week 1
 	(this says they all missed the first week of lectures - might annoy people)
@@ -25,11 +27,8 @@ Attendance History
 3	Display locations of lectures?
 
 Challenges
-1	Re-assess challenges to match the timetable of the class (i.e. remove the 9am one, create one for checking in to both lectures in same week/same lecture for 5 weeks etc)
 
 1	Plan the timings for the challenges
-
-1	Design the badges
 
 2	Means of easily adding new challenges to all users on-the-fly ?
 	(should instead define all challenges at the start, but plan when they activate - startsAt time?)

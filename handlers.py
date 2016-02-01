@@ -17,7 +17,6 @@ import json
 import logging
 import urllib2
 import math
-from bs4 import BeautifulSoup as Soup
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -26,7 +25,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 def challengecheck(user, lecture, checkin):	
 	currTime = time.time()
-	pointsEarned = 0
+	completedChalls = []
 
 	for challenge in user.challenges:
 		if type(challenge) != Challenge:
@@ -35,10 +34,10 @@ def challengecheck(user, lecture, checkin):
 		if not challenge.complete and currTime < challenge.expiresat:
 			if predicates[challenge.challengeid](user, lecture, checkin):
 				challenge.complete = True;
-				pointsEarned += challenge.points
+				completedChalls.append(challenge)
 				user.put()
 
-	return pointsEarned
+	return completedChalls
 
 def missedLectureCheck(user):
 	day = datetime.date.today().weekday()
@@ -511,15 +510,34 @@ class HomePage(webapp2.RequestHandler):
 
 				thisUser.history.append(thisLecture)
 
-				pointsEarned = challengecheck(thisUser, thisLecture, checkin)
+				completedChalls = challengecheck(thisUser, thisLecture, checkin)
+
+				pointsEarned = 0
+				
+				challIcons = []
+				challTitles = []
+				challDescs = []
+				challPoints = []
+
+				for challenge in completedChalls:
+					pointsEarned += challenge.points
+					challTitles.append(challenge.title)
+					challIcons.append(challenge.badge.iconName)
+					challDescs.append(challenge.description)
+					challPoints.append(challenge.points)
 
 				thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
 				thisUser.streak = thisUser.streak + 1
 				thisUser.count = thisUser.count + 1
 
 				thisUser.put()
+
+				logging.info(challIcons)
+				logging.info(challTitles)
+				logging.info(challDescs)
+				logging.info(challPoints)
 				
-				self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak}))
+				self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "descriptions":challDescs, "points":challPoints}))
 			else: 
 				self.response.out.write(json.dumps({"valid":2}))	
 		else:
@@ -657,8 +675,6 @@ class HistoryPage(webapp2.RequestHandler):
 		else:
 			self.redirect('/')
 
-	def fwd(self):
-		self.response.write('test')
 
 class LeaderboardsPage(webapp2.RequestHandler):
 	def get(self):
