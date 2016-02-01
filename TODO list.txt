@@ -10,12 +10,7 @@ ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, 
 Home page
 1	fix display for mobile phones - nav bar only spans half of screen, badges interferes with it
 
-3	Display highest achieved streak
-
 3	Display some message while checking in code is running
-
-3	Move logout to right of navbar
-
 
 Attendance History
 
@@ -33,8 +28,5 @@ Challenges
 2	Means of easily adding new challenges to all users on-the-fly ?
 	(should instead define all challenges at the start, but plan when they activate - startsAt time?)
 
-2	Add some pop-up informing the user when they complete a challenge, and updating home page with new badge
-	(challengecheck returns completed challs, pass info to javascript which then shows these pop ups)
-
-2	Display completed challenges at the bottom, even after they have expired
+2	Display completed challenges at the bottom of page, even after they have expired
 	

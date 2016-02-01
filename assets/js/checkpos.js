@@ -35,7 +35,7 @@ function showPosition(position) {
       streak.innerHTML = "Current Streak: " + data['streak'];
 
       for(i = 0; i < data['titles'].length; i++){
-        //removes the message telling the user how to earn badges
+        //removes the original message telling the user how to earn badges
         var nobadge = document.getElementById("nobadge");
         if(nobadge){
           nobadge.remove();
