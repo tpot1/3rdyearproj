@@ -8,7 +8,12 @@ TURN OFF DEBUG MODE??
 ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, on laptop and phone
 
 Home page
-1	fix display for mobile phones - nav bar only spans half of screen, badges interferes with it
+1	fix display for mobile phones
+		nav bar doesnt span the entire length if the page is too big
+		pop up on home page is waaaay too big
+			reduce text size in pop up
+				or remove all together and just display normal text message...
+			reduce text size on challenges page too
 
 3	Display some message while checking in code is running
 
@@ -24,6 +29,8 @@ Attendance History
 Challenges
 
 1	Plan the timings for the challenges
+
+1	Revise points for challenges
 
 2	Means of easily adding new challenges to all users on-the-fly ?
 	(should instead define all challenges at the start, but plan when they activate - startsAt time?)

@@ -278,9 +278,9 @@ class ConsentFormPage(webapp2.RequestHandler):
 		user = users.get_current_user()
 		if(user):
 
-			input1 = str(self.request.get('input1'))
-			input2 = str(self.request.get('input2'))
-			input3 = str(self.request.get('input3'))
+			input1 = str(self.request.get('input1')).lower()
+			input2 = str(self.request.get('input2')).lower()
+			input3 = str(self.request.get('input3')).lower()
 
 			if input1 == input2 == input3:
 				if input1.isalpha():
@@ -531,13 +531,8 @@ class HomePage(webapp2.RequestHandler):
 				thisUser.count = thisUser.count + 1
 
 				thisUser.put()
-
-				logging.info(challIcons)
-				logging.info(challTitles)
-				logging.info(challDescs)
-				logging.info(challPoints)
 				
-				self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "descriptions":challDescs, "points":challPoints}))
+				self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "points":challPoints, "descriptions":challDescs}))
 			else: 
 				self.response.out.write(json.dumps({"valid":2}))	
 		else:

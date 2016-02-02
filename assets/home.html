@@ -20,19 +20,32 @@
         }
 
         #badges {
-            float:left;
+            float:right;
+            margin-right: 100px;
         }
+
+        @media screen and (max-width: 500px){
+            th, tr {
+                font-size: 9px;
+            }
+
+             #badges {
+                margin-right: 0px;
+             }
+        }
+
+        
     </style> 
 
-    <div class="wrapper">
-        <div id="profile" class="container-fluid">
+    <div class="wrapper" align="center">
+        <div id="profile" class="container-fluid" align="left">
             <h4>{{username}}</h4>
             <p id='score'>Score: {{score}}</p>
             <p id='count'>Number of Check-Ins: {{count}}</p>
             <p id='streak'>Current Streak: {{streak}}</p>
         </div>
 
-        <div id="badges" class="container-fluid">
+        <div id="badges" class="container-fluid" align="right">
             <h4>Badges:</h4>
             {% if completedChalls|length == 0 %}
             <p id="nobadge">Earn badges by completing challenges!</p>
@@ -46,14 +59,10 @@
 
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Challenge Complete!</h4>
-          </div>
           <div class="modal-body">
-            <p>Congratulations! You completed the following challenges:</p>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title" style="font-size: 14px;">Congratulations! You completed a challenge!</h4>
             <table class="table" id="modalTable">
                 <thead>
                     <tr>
@@ -67,15 +76,12 @@
                 </tbody>
             </table>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
         </div>
 
       </div>
     </div>
 
-    <div class="container" id="main">
+    <div class="container" id="main" align="center">
     	<div class="container-fluid">
     		<h1>Lecture Logger</h1>
     		<h4>Welcome to lecture logger!</h4>

@@ -50,8 +50,14 @@ function showPosition(position) {
         
         var modalBadge = document.createElement("img");
         modalBadge.setAttribute("src", data['icons'][i]);
-        modalBadge.setAttribute("height", "42");
-        modalBadge.setAttribute("width", "42");
+        if (window.innerWidth < 500){
+          modalBadge.setAttribute("height", "18");
+          modalBadge.setAttribute("width", "18");
+        }
+        else {
+          modalBadge.setAttribute("height", "42");
+          modalBadge.setAttribute("width", "42");
+        }
         modalBadge.setAttribute("alt", "");
         var title = document.createTextNode(data['titles'][i]);
         var description = document.createTextNode(data['descriptions'][i]);
