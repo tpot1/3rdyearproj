@@ -15,12 +15,6 @@ Home page
 3	Display some message while checking in code is running
 	may not be necessary - its not too slow, and a pop up appears asking if it can take your location anyway
 
-Attendance History
-
-2	Display dates of weeks as well as week number
-
-3	Display locations of lectures?
-
 Challenges
 
 2	Add a starts-at parameter for challenges? So they start 'spontaneously'

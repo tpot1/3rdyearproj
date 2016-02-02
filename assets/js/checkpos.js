@@ -13,6 +13,8 @@ var modalTable = document.getElementById('modalTable');
 
 function getLocation() {
     if(geo_position_js.init()){
+      resultmessage.style.color="blue";
+      resultmessage.innerHTML = "Checking location...";
       geo_position_js.getCurrentPosition(showPosition,error);
     }
     else {
