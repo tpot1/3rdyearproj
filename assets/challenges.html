@@ -25,16 +25,21 @@
             </thead>
             <tbody>
                 {% for challenge in currentChalls %}
-                {% if challenge.complete %}
-                <tr class="success">
-                {% else %}
                 <tr>
-                {% endif %}
                     <td><img src={{challenge.badge.iconName}} alt=""></img></td>
                     <td>{{challenge.title}}</td>
                     <td>{{challenge.description}}</td>
                     <td>{{challenge.points}}</td>
                     <td>{{timeConversion(challenge.expiresat)}}</td>
+                </tr>
+                {% endfor %}
+                {% for challenge in completeChalls %}
+                <tr class="success">
+                    <td><img src={{challenge.badge.iconName}} alt=""></img></td>
+                    <td>{{challenge.title}}</td>
+                    <td>{{challenge.description}}</td>
+                    <td>{{challenge.points}}</td>
+                    <td></td>
                 </tr>
                 {% endfor %}
             </tbody>

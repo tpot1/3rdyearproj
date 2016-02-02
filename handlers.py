@@ -552,15 +552,19 @@ class ChallengesPage(webapp2.RequestHandler):
 
 			currTime = time.time()
 			currentChalls = []
+			completeChalls = []
 			query = User.query(User.userid == user.user_id())
 			for thisUser in query:
 				for challenge in thisUser.challenges:
 					if type(challenge) != Challenge:
 						challenge = challenge.b_val
-					if(currTime < challenge.expiresat):
+					if challenge.complete:
+						completeChalls.append(challenge)
+					elif currTime < challenge.expiresat:
 						currentChalls.append(challenge)
 
 			template_values['currentChalls'] = currentChalls
+			template_values['completeChalls'] = completeChalls
 			template_values['timeConversion'] = timeConversion
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/challenges.html')
@@ -572,7 +576,7 @@ class ChallengesPage(webapp2.RequestHandler):
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		#loadChallenges()
+		loadChallenges()
 		#loadBuildings()
 		#loadModules()
 		user = users.get_current_user()

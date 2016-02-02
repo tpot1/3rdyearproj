@@ -1,39 +1,27 @@
 Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
 	AND REMOVE ARBITRARY LECTURE TO BE ATTENDED
 
+ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, on laptop and phone
+
 RE-ENABLE FORM CHECK
 
 TURN OFF DEBUG MODE??
 
-ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, on laptop and phone
+ACTIVATE CHALLENGES - timings are designed to give x weeks and 2 days, which needs to last until the end of friday of each week
+			- so needs to be done some time after 11am on Wednesday, might be better to do on Thursday
 
 Home page
-1	fix display for mobile phones
-		nav bar doesnt span the entire length if the page is too big
-		pop up on home page is waaaay too big
-			reduce text size in pop up
-				or remove all together and just display normal text message...
-			reduce text size on challenges page too
 
 3	Display some message while checking in code is running
+	may not be necessary - its not too slow, and a pop up appears asking if it can take your location anyway
 
 Attendance History
 
 2	Display dates of weeks as well as week number
 
-3	When checking for missed lectures, start from the week students start using the system rather than week 1
-	(this says they all missed the first week of lectures - might annoy people)
-
 3	Display locations of lectures?
 
 Challenges
-
-1	Plan the timings for the challenges
-
-1	Revise points for challenges
-
-2	Means of easily adding new challenges to all users on-the-fly ?
-	(should instead define all challenges at the start, but plan when they activate - startsAt time?)
 
 2	Display completed challenges at the bottom of page, even after they have expired
 	
