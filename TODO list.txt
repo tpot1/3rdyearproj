@@ -23,5 +23,5 @@ Attendance History
 
 Challenges
 
-2	Display completed challenges at the bottom of page, even after they have expired
+2	Add a starts-at parameter for challenges? So they start 'spontaneously'
 	

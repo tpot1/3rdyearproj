@@ -576,17 +576,21 @@ class ChallengesPage(webapp2.RequestHandler):
 
 class HistoryPage(webapp2.RequestHandler):
 	def get(self):
-		loadChallenges()
+		#loadChallenges()
 		#loadBuildings()
 		#loadModules()
 		user = users.get_current_user()
 		if(user):
 			formCheck(self, user)
 			missedLectureCheck(user)
+
+			dates = ['25th Jan - 29th Jan', '1st Feb - 5th Feb', '8th Feb - 12th Feb', '15th Feb - 19th Feb', '22nd Feb - 26th Feb', '29th Feb - 4th March', '8th March - 12th March', '15th March - 19th March']
+
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
 				'history' : 'class=active',
-				'week' : getCurrentWeek()
+				'week' : getCurrentWeek(),
+				'dates' : dates[getCurrentWeek()-1]
 			}
 
 			days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
@@ -620,10 +624,16 @@ class HistoryPage(webapp2.RequestHandler):
 			fwd = self.request.get('fwd')
 			if fwd == "Forward":
 				weeknum += 1
+				if weeknum > 8:
+					weeknum = 8
+
+				dates = ['25th Jan - 29th Jan', '1st Feb - 5th Feb', '8th Feb - 12th Feb', '15th Feb - 19th Feb', '22nd Feb - 26th Feb', '29th Feb - 4th March', '8th March - 12th March', '15th March - 19th March']
+
 				template_values = {
 					'logout' : users.create_logout_url(self.request.uri),
 					'history' : 'class=active',
-					'week' : weeknum
+					'week' : weeknum,
+					'dates' : dates[weeknum-1]
 				}
 
 				days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
@@ -648,10 +658,14 @@ class HistoryPage(webapp2.RequestHandler):
 				weeknum -= 1
 				if(weeknum < 1):
 					weeknum = 1
+
+				dates = ['25th Jan - 29th Jan', '1st Feb - 5th Feb', '8th Feb - 12th Feb', '15th Feb - 19th Feb', '22nd Feb - 26th Feb', '29th Feb - 4th March', '8th March - 12th March', '15th March - 19th March']
+
 				template_values = {
 					'logout' : users.create_logout_url(self.request.uri),
 					'history' : 'class=active',
-					'week' : weeknum
+					'week' : weeknum,
+					'dates' : dates[weeknum-1]
 				}
 				days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
 
