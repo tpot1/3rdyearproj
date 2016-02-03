@@ -88,9 +88,6 @@ def missedLectureCheck(user):
 		userEntity.put()
 
 def formCheck(self, user):
-
-	return True
-
 	userQuery = User.query(User.userid == user.user_id())
 	# #gets the current user
 	for userEntity in userQuery:
@@ -488,53 +485,51 @@ class HomePage(webapp2.RequestHandler):
 								c = (coordinate.lon, coordinate.lat)
 								poly.append(c)
 
-			if False:#thisLecture is None:
+			noLecture = False
+			checkedIn = False
+			if thisLecture is None:
+				noLecture = True
 				self.response.out.write(json.dumps({"valid":3}))
-			elif False:#thisLecture.attended:
-				self.response.out.write(json.dumps({"valid":4}))
-			elif True:#point_in_poly(longitude, latitude, poly):
+			else:
+				for pastLecture in thisUser.history:
+					if pastLecture.week == getCurrentWeek() and pastLecture.time == thisLecture.time and pastLecture.day == thisLecture.day:
+						checkedIn = True
+						self.response.out.write(json.dumps({"valid":4}))	
+			if not checkedIn and not noLecture:
+				if point_in_poly(longitude, latitude, poly):
+					thisLecture.attended = True
+					thisLecture.week = getCurrentWeek()
 
+					checkin = CheckIn(student=thisUser, lecture=thisLecture)
+					checkin.put()
 
+					thisUser.history.append(thisLecture)
 
-				thisLecture = Lecture(module='GENG0014', location=35, day=4, time=19) 	#TODO remove this
+					completedChalls = challengecheck(thisUser, thisLecture, checkin)
 
+					pointsEarned = 0
+					
+					challIcons = []
+					challTitles = []
+					challDescs = []
+					challPoints = []
 
+					for challenge in completedChalls:
+						pointsEarned += challenge.points
+						challTitles.append(challenge.title)
+						challIcons.append(challenge.badge.iconName)
+						challDescs.append(challenge.description)
+						challPoints.append(challenge.points)
 
+					thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
+					thisUser.streak = thisUser.streak + 1
+					thisUser.count = thisUser.count + 1
 
-				
-				thisLecture.attended = True
-				thisLecture.week = getCurrentWeek()
-
-				checkin = CheckIn(student=thisUser, lecture=thisLecture)
-				checkin.put()
-
-				thisUser.history.append(thisLecture)
-
-				completedChalls = challengecheck(thisUser, thisLecture, checkin)
-
-				pointsEarned = 0
-				
-				challIcons = []
-				challTitles = []
-				challDescs = []
-				challPoints = []
-
-				for challenge in completedChalls:
-					pointsEarned += challenge.points
-					challTitles.append(challenge.title)
-					challIcons.append(challenge.badge.iconName)
-					challDescs.append(challenge.description)
-					challPoints.append(challenge.points)
-
-				thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
-				thisUser.streak = thisUser.streak + 1
-				thisUser.count = thisUser.count + 1
-
-				thisUser.put()
-				
-				self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "points":challPoints, "descriptions":challDescs}))
-			else: 
-				self.response.out.write(json.dumps({"valid":2}))	
+					thisUser.put()
+					
+					self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "points":challPoints, "descriptions":challDescs}))
+				else: 
+					self.response.out.write(json.dumps({"valid":2}))	
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
 

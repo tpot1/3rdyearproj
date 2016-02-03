@@ -21,7 +21,7 @@ class Lecture(ndb.Model):
 	location=ndb.IntegerProperty()
 	day=ndb.IntegerProperty()
 	time=ndb.IntegerProperty()
-	attended=ndb.BooleanProperty()	# can add these two attributes after the lecture
+	attended=ndb.BooleanProperty()
 	week=ndb.IntegerProperty()
 
 class Module(ndb.Model):

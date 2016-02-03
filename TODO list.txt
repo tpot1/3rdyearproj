@@ -1,21 +1,10 @@
-Re-ENABLE THE LOCATION CHECK - AT THE MOMENT IT JUST RETURNS TRUE FOR EVERYTHING
-	AND REMOVE ARBITRARY LECTURE TO BE ATTENDED
+Try checking in during a lecture from the correct location, to ensure it works
 
-ACTUALLY CHECK THE CHECK-IN WORKS, i.e. go to lecture room and try checking in, on laptop and phone
+Possibly reduce the area in which you can check in, since its seems to work pretty accurately
 
-RE-ENABLE FORM CHECK
-
-TURN OFF DEBUG MODE??
-
-ACTIVATE CHALLENGES - timings are designed to give x weeks and 2 days, which needs to last until the end of friday of each week
-			- so needs to be done some time after 11am on Wednesday, might be better to do on Thursday
-
-Home page
-
-3	Display some message while checking in code is running
-	may not be necessary - its not too slow, and a pop up appears asking if it can take your location anyway
 
 Challenges
 
 2	Add a starts-at parameter for challenges? So they start 'spontaneously'
 	
+
