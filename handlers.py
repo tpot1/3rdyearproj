@@ -88,6 +88,9 @@ def missedLectureCheck(user):
 		userEntity.put()
 
 def formCheck(self, user):
+
+	return True
+
 	userQuery = User.query(User.userid == user.user_id())
 	# #gets the current user
 	for userEntity in userQuery:
@@ -422,8 +425,13 @@ class HomePage(webapp2.RequestHandler):
 					count=0,
 					history=[])
 
-				moduleQuery = Module.query(Module.code == 'GENG0014')
-				for module in moduleQuery:
+				module1Query = Module.query(Module.code == 'GENG0013')
+				for module in module1Query:
+					for lecture in module.lectures:
+						userEntity.lectures.append(lecture)
+
+				module2Query = Module.query(Module.code == 'GENG0002')
+				for module in module2Query:
 					for lecture in module.lectures:
 						userEntity.lectures.append(lecture)
 
@@ -432,7 +440,7 @@ class HomePage(webapp2.RequestHandler):
 					userEntity.challenges.append(challenge)
 
 				userEntity.put()
-				self.redirect('/info')#TODO - change this to the info page once it is made
+				self.redirect('/info')
 
 			completedChalls = []
 
@@ -477,13 +485,17 @@ class HomePage(webapp2.RequestHandler):
 			for userEntity in userQuery:
 				thisUser = userEntity
 				for lecture in userEntity.lectures:
-					if(lecture.day == day and lecture.time == hour):
+					#checks for a lecture that matches the current day and time
+					if(lecture.day == day and (lecture.time == hour or (lecture.time + lecture.duration > hour and lecture.time < hour))):
 						thisLecture = lecture
-						buildingQuery = Building.query(Building.number == str(lecture.location))
-						for building in buildingQuery:
-							for coordinate in building.coordinates:
-								c = (coordinate.lon, coordinate.lat)
-								poly.append(c)
+						locations = lecture.location.split(";");
+						for location in locations:
+							#need to make multiple polys for each lecture, for each possible location
+							buildingQuery = Building.query(Building.number == location)
+							for building in buildingQuery:
+								for coordinate in building.coordinates:
+									c = (coordinate.lon, coordinate.lat)
+									poly.append(c)
 
 			noLecture = False
 			checkedIn = False
@@ -580,6 +592,7 @@ class HistoryPage(webapp2.RequestHandler):
 			missedLectureCheck(user)
 
 			dates = ['25th Jan - 29th Jan', '1st Feb - 5th Feb', '8th Feb - 12th Feb', '15th Feb - 19th Feb', '22nd Feb - 26th Feb', '29th Feb - 4th March', '8th March - 12th March', '15th March - 19th March']
+			days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
 
 			template_values = {
 				'logout' : users.create_logout_url(self.request.uri),
@@ -588,21 +601,23 @@ class HistoryPage(webapp2.RequestHandler):
 				'dates' : dates[getCurrentWeek()-1]
 			}
 
-			days = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
-
 			userQuery = User.query(User.userid == user.user_id())
 			for thisUser in userQuery:
 				for lecture in thisUser.history:
 					if lecture.week == getCurrentWeek():
-						template_values[days[lecture.day]+str(lecture.time)] = lecture.module
-						if lecture.attended:
-							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
-						else:
-							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+						for i in range(0, lecture.duration):
+							if(i == 0):
+								template_values[days[lecture.day]+str(lecture.time+i)] = lecture.title
+							if lecture.attended:
+								template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#77FF77'
+							else:
+								template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#FF7777'
 				for lecture in thisUser.lectures:
 					if days[lecture.day]+str(lecture.time) not in template_values.keys():
-						template_values[days[lecture.day]+str(lecture.time)] = lecture.module
-						template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#CCDDFF'
+						for i in range(0, lecture.duration):
+							if(i == 0):
+								template_values[days[lecture.day]+str(lecture.time+i)] = lecture.title
+							template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#DDEEFF'
 
 			template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 			self.response.write(template.render(template_values))
@@ -637,15 +652,19 @@ class HistoryPage(webapp2.RequestHandler):
 				for thisUser in userQuery:
 					for lecture in thisUser.history:
 						if lecture.week == weeknum:
-							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
-							if lecture.attended:
-								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
-							else:
-								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+							for i in range(0, lecture.duration):
+								if(i == 0):
+									template_values[days[lecture.day]+str(lecture.time+i)] = lecture.title
+								if lecture.attended:
+									template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#77FF77'
+								else:
+									template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#FF7777'
 					for lecture in thisUser.lectures:
 						if days[lecture.day]+str(lecture.time) not in template_values.keys():
-							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
-							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+							for i in range(0, lecture.duration):
+								if(i == 0):
+									template_values[days[lecture.day]+str(lecture.time+i)] = lecture.title
+								template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#DDEEFF'
 
 				template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 				self.response.write(template.render(template_values))
@@ -668,15 +687,19 @@ class HistoryPage(webapp2.RequestHandler):
 				for thisUser in userQuery:
 					for lecture in thisUser.history:
 						if lecture.week == weeknum:
-							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
-							if lecture.attended:
-								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#77FF77'
-							else:
-								template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#FF7777'
+							for i in range(0, lecture.duration):
+								if(i == 0):
+									template_values[days[lecture.day]+str(lecture.time+i)] = lecture.title
+								if lecture.attended:
+									template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#77FF77'
+								else:
+									template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#FF7777'
 					for lecture in thisUser.lectures:
 						if days[lecture.day]+str(lecture.time) not in template_values.keys():
-							template_values[days[lecture.day]+str(lecture.time)] = lecture.module
-							template_values[days[lecture.day]+str(lecture.time)+'att'] = 'bgcolor=#DDEEFF'
+							for i in range(0, lecture.duration):
+								if(i == 0):
+									template_values[days[lecture.day]+str(lecture.time+i)] = lecture.title
+								template_values[days[lecture.day]+str(lecture.time+i)+'att'] = 'bgcolor=#DDEEFF'
 
 				template = JINJA_ENVIRONMENT.get_template('/assets/history.html')
 				self.response.write(template.render(template_values))

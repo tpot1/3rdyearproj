@@ -9,13 +9,13 @@
 
         table {
             margin-left: 0px;
+            border-collapse:collapse;
         }
 
         tr {
            line-height: 35px;
            min-height: 35px;
            height: 35px;
-           border: 1px solid #dddddd;
         }
 
         .table-bordered > thead > tr > th,
@@ -37,7 +37,7 @@
     <div class="container">
         <h3 style="display:inline">Week: {{week}}</h3>
         <h3 style="display:inline; margin-left:20%">{{dates}}</h3>
-        <table class="table table-condensed table-bordered">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th></th>
@@ -54,7 +54,7 @@
                     <td {{MONDAY9att}}>{{MONDAY9}}</td>
                     <td {{TUESDAY9att}}>{{TUESDAY9}}</td>
                     <td {{WEDNESDAY9att}}>{{WEDNESDAY9}}</td>
-                    <td {{THURSDAY9att}}>{{THURSDAY9}}</td>
+                    <td {{THURSDAY9att}} style='border-bottom: none'>{{THURSDAY9}}</td>
                     <td {{FRIDAY9att}}>{{FRIDAY9}}</td>
                 </tr>
                 <tr>
@@ -62,7 +62,7 @@
                     <td {{MONDAY10att}}>{{MONDAY10}}</td>
                     <td {{TUESDAY10att}}>{{TUESDAY10}}</td>
                     <td {{WEDNESDAY10att}}>{{WEDNESDAY10}}</td>
-                    <td {{THURSDAY10att}}>{{THURSDAY10}}</td>
+                    <td {{THURSDAY10att}} style='border-top: none'>{{THURSDAY10}}</td>
                     <td {{FRIDAY10att}}>{{FRIDAY10}}</td>
                 </tr>
                 <tr>
@@ -78,7 +78,7 @@
                     <td {{MONDAY12att}}>{{MONDAY12}}</td>
                     <td {{TUESDAY12att}}>{{TUESDAY12}}</td>
                     <td {{WEDNESDAY12att}}>{{WEDNESDAY12}}</td>
-                    <td {{THURSDAY12att}}>{{THURSDAY12}}</td>
+                    <td {{THURSDAY12att}} style='border-bottom: none'>{{THURSDAY12}}</td>
                     <td {{FRIDAY12att}}>{{FRIDAY12}}</td>
                 </tr>
                 <tr>
@@ -86,7 +86,7 @@
                     <td {{MONDAY13att}}>{{MONDAY13}}</td>
                     <td {{TUESDAY13att}}>{{TUESDAY13}}</td>
                     <td {{WEDNESDAY13att}}>{{WEDNESDAY13}}</td>
-                    <td {{THURSDAY13att}}>{{THURSDAY13}}</td>
+                    <td {{THURSDAY13att}} style='border-top: none'>{{THURSDAY13}}</td>
                     <td {{FRIDAY13att}}>{{FRIDAY13}}</td>
                 </tr>
                 <tr>
@@ -110,7 +110,7 @@
                     <td {{MONDAY16att}}>{{MONDAY16}}</td>
                     <td {{TUESDAY16att}}>{{TUESDAY16}}</td>
                     <td {{WEDNESDAY16att}}>{{WEDNESDAY16}}</td>
-                    <td {{THURSDAY16att}}>{{THURSDAY16}}</td>
+                    <td {{THURSDAY16att}} style='border-bottom: none'>{{THURSDAY16}}</td>
                     <td {{FRIDAY16att}}>{{FRIDAY16}}</td>
                 </tr>
                 <tr>
@@ -118,7 +118,7 @@
                     <td {{MONDAY17att}}>{{MONDAY17}}</td>
                     <td {{TUESDAY17att}}>{{TUESDAY17}}</td>
                     <td {{WEDNESDAY17att}}>{{WEDNESDAY17}}</td>
-                    <td {{THURSDAY17att}}>{{THURSDAY17}}</td>
+                    <td {{THURSDAY17att}} style='border-top: none'>{{THURSDAY17}}</td>
                     <td {{FRIDAY17att}}>{{FRIDAY17}}</td>
                 </tr>
                 <tr>

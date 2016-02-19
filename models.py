@@ -18,9 +18,11 @@ class Challenge(ndb.Model):
 
 class Lecture(ndb.Model):
 	module=ndb.StringProperty()
-	location=ndb.IntegerProperty()
+	title=ndb.StringProperty()
+	location=ndb.StringProperty()
 	day=ndb.IntegerProperty()
 	time=ndb.IntegerProperty()
+	duration=ndb.IntegerProperty()
 	attended=ndb.BooleanProperty()
 	week=ndb.IntegerProperty()
 

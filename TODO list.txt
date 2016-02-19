@@ -6,5 +6,26 @@ Possibly reduce the area in which you can check in, since its seems to work pret
 Challenges
 
 2	Add a starts-at parameter for challenges? So they start 'spontaneously'
+
+3	Add new challenges for new lectures
+
+
+Buildings
+1	Define new buildings and test them
+
+
+Lectures
+
+1	deal with double lectures (duration variable)
+		-need to incorporate this into checking in so can check in during either lecture
+		-need to incorporate this into missedlecturecheck so only defines a lecture as missed if second lecture has finished
 	
+1	allow multiple locations for a lecture
+		-need to incorporate this into checking in
+			-have multiple polys for each possible building, and check them all
+
+
+
+
+
 
