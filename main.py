@@ -13,4 +13,4 @@ app = webapp2.WSGIApplication([
 	('/consentform', ConsentFormPage),
 	('/questionnaire', QuestionnairePage),
 	('/ftp', FirstTimePage)
-], debug=False)
+], debug=True)

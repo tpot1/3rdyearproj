@@ -29,6 +29,7 @@ function showPosition(position) {
   		data: JSON.stringify({ lat : position.coords.latitude, lon : position.coords.longitude })
 	}).done(function( data ) {
     data = $.parseJSON(data);
+
 		if(data['valid'] === 1){
 			resultmessage.style.color="green";
 			resultmessage.innerHTML = "You are now checked in!";

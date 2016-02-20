@@ -1,30 +1,39 @@
+RE ENABLE DEBUG MODE
+
+RE ENABLE LOCATION CHECK
+
+REMOVE TEST LECTURE DURING CHECK IN
+
+
 Try checking in during a lecture from the correct location, to ensure it works
 
 Possibly reduce the area in which you can check in, since its seems to work pretty accurately
+
+Questionnaire
+1	Re word question about how comfortable are you in this module
 
 
 Challenges
 
 2	Add a starts-at parameter for challenges? So they start 'spontaneously'
 
-3	Add new challenges for new lectures
-
 
 Buildings
-1	Define new buildings and test them
+1	test them
 
 
 Lectures
 
-1	deal with double lectures (duration variable)
-		-need to incorporate this into checking in so can check in during either lecture
-		-need to incorporate this into missedlecturecheck so only defines a lecture as missed if second lecture has finished
-	
-1	allow multiple locations for a lecture
-		-need to incorporate this into checking in
-			-have multiple polys for each possible building, and check them all
+1	test checking in to lecture with multiple possible locations
 
 
+Check Ins
+
+3	Make a check-in FAQ popup kinda thing to help people struggling to check in
+		-enable javascript on your web browser
+		-enable location checks on your web browser
+		-your device's GPS may take a while to update to your position, so you may need to try
+		checking in twice before it will work
 
 
 

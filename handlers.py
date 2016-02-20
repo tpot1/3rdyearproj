@@ -72,7 +72,7 @@ def missedLectureCheck(user):
 		#does the same check for the current week
 		for lecture in userEntity.lectures:
 			#only applies to lectures that have already occured
-			if lecture.day < day or lecture.day == day and lecture.time < hour:
+			if lecture.day < day or (lecture.day == day and lecture.time+lecture.duration <= hour):
 				#sets the default value to False
 				attended = False
 				for attlecture in userEntity.history:
@@ -135,7 +135,7 @@ def predicate4(user, lecture, checkin):
 	return True
 
 def predicate5(user, lecture, checkin):
-	# the streak will increase after this check in, so if its equal to 4 it will become 5
+	# the streak will increase after this check in, so if its equal to 2 it will become 3
 	if user.streak >= 2:
 		return True
 	else:
@@ -149,6 +149,7 @@ def predicate6(user, lecture, checkin):
 		return False
 
 def predicate7(user, lecture, checkin):
+	#loops through all lectures in history for the current week, checking for a match
 	for lecture in user.lectures:
 		matched = False
 		for attlecture in user.history:
@@ -162,6 +163,7 @@ def predicate7(user, lecture, checkin):
 def predicate8(user, lecture, checkin):
 	prev1 = False
 	prev2 = False
+	#loops through all previous lectures, looking for a lecture that matches the current one from the past 2 weeks
 	for prevLecture in user.history:
 		if prevLecture.day == lecture.day and prevLecture.time == lecture.time and prevLecture.module == lecture.module and prevLecture.attended:
 			if prevLecture.week == getCurrentWeek()-1:
@@ -171,6 +173,17 @@ def predicate8(user, lecture, checkin):
 		
 	return prev1 and prev2
 
+def predicate9(user, lecture, checkin):
+	return lecture.time == 9
+
+def predicate10(user, lecture, checkin):
+	count = 0
+	for pastLecture in user.history:
+		if pastLecture.day == lecture.day and pastLecture.week == getCurrentWeek() and pastLecture.attended:
+			count += 1
+
+	return count >= 4
+
 predicates = {
 	1 : predicate1,
 	2 : predicate2,
@@ -179,23 +192,34 @@ predicates = {
 	5 : predicate5,
 	6 : predicate6,
 	7 : predicate7,
-	8 : predicate8
+	8 : predicate8,
+	9 : predicate9,
+	10 : predicate10	
 }
 
 def point_in_poly(x,y,poly):
 	n = len(poly)
 	inside = False
 
+	#stores the first two values in the poly
 	p1x,p1y = poly[0]
 	for i in range(n+1):
+		#stores the next two values
 		p2x,p2y = poly[i % n]
+		#checks if y is greater than the smallest y coord out of the two
 		if y > min(p1y,p2y):
+			#and less than or equal to the biggest y coord
 			if y <= max(p1y,p2y):
+				#and x is less than or equal to the biggest x coord
 				if x <= max(p1x,p2x):
+					#if the two y points are different
 					if p1y != p2y:
+						#draws an imaginary line between the two points
 						xints = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+					#checks the x point is the correct side of it
 					if p1x == p2x or x <= xints:
 						inside = not inside
+		#moves on to next point
 		p1x,p1y = p2x,p2y
 
 	return inside
@@ -481,66 +505,82 @@ class HomePage(webapp2.RequestHandler):
 			thisUser = None
 			poly = []
 
+
+			day = 6
+			hour = 10
+			
+
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				thisUser = userEntity
-				for lecture in userEntity.lectures:
-					#checks for a lecture that matches the current day and time
-					if(lecture.day == day and (lecture.time == hour or (lecture.time + lecture.duration > hour and lecture.time < hour))):
-						thisLecture = lecture
-						locations = lecture.location.split(";");
-						for location in locations:
-							#need to make multiple polys for each lecture, for each possible location
-							buildingQuery = Building.query(Building.number == location)
-							for building in buildingQuery:
-								for coordinate in building.coordinates:
-									c = (coordinate.lon, coordinate.lat)
-									poly.append(c)
+				#for lecture in userEntity.lectures:
+					
+				lecture = Lecture(module='GENG0013', title='TT Math Support', location='35', day=6, time=9, duration=2)
+				#checks for a lecture that matches the current day and time
+				if(lecture.day == day and (lecture.time <= hour and lecture.time + lecture.duration > hour)):
+					thisLecture = lecture
+					locations = lecture.location.split(";");
+					for location in locations:
+						#need to make multiple polys for each lecture, for each possible location
+						buildingQuery = Building.query(Building.number == location)
+						for building in buildingQuery:
+							buildingCoords = []
+							for coordinate in building.coordinates:
+								c = (coordinate.lon, coordinate.lat)
+								buildingCoords.append(c)
+							poly.append(buildingCoords)
 
 			noLecture = False
 			checkedIn = False
+
+			#checks if there is no current lecture
 			if thisLecture is None:
 				noLecture = True
 				self.response.out.write(json.dumps({"valid":3}))
-			else:
-				for pastLecture in thisUser.history:
-					if pastLecture.week == getCurrentWeek() and pastLecture.time == thisLecture.time and pastLecture.day == thisLecture.day:
-						checkedIn = True
-						self.response.out.write(json.dumps({"valid":4}))	
+			# else:
+			# 	#checks if the user has already checked in to this lecture
+			# 	for pastLecture in thisUser.history:
+			# 		if pastLecture.week == getCurrentWeek() and pastLecture.time == thisLecture.time and pastLecture.day == thisLecture.day:
+			# 			checkedIn = True
+			# 			self.response.out.write(json.dumps({"valid":4}))	
 			if not checkedIn and not noLecture:
-				if point_in_poly(longitude, latitude, poly):
-					thisLecture.attended = True
-					thisLecture.week = getCurrentWeek()
+				inBuilding = False
+				for coords in poly:
+					if True and not inBuilding:#point_in_poly(longitude, latitude, coords):
+						inBuilding = True
 
-					checkin = CheckIn(student=thisUser, lecture=thisLecture)
-					checkin.put()
+						thisLecture.attended = True
+						thisLecture.week = getCurrentWeek()
 
-					thisUser.history.append(thisLecture)
+						checkin = CheckIn(student=thisUser, lecture=thisLecture)
+						checkin.put()
 
-					completedChalls = challengecheck(thisUser, thisLecture, checkin)
+						thisUser.history.append(thisLecture)
 
-					pointsEarned = 0
-					
-					challIcons = []
-					challTitles = []
-					challDescs = []
-					challPoints = []
+						completedChalls = challengecheck(thisUser, thisLecture, checkin)
 
-					for challenge in completedChalls:
-						pointsEarned += challenge.points
-						challTitles.append(challenge.title)
-						challIcons.append(challenge.badge.iconName)
-						challDescs.append(challenge.description)
-						challPoints.append(challenge.points)
+						pointsEarned = 0
+						
+						challIcons = []
+						challTitles = []
+						challDescs = []
+						challPoints = []
 
-					thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
-					thisUser.streak = thisUser.streak + 1
-					thisUser.count = thisUser.count + 1
+						for challenge in completedChalls:
+							pointsEarned += challenge.points
+							challTitles.append(challenge.title)
+							challIcons.append(challenge.badge.iconName)
+							challDescs.append(challenge.description)
+							challPoints.append(challenge.points)
 
-					thisUser.put()
-					
-					self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "points":challPoints, "descriptions":challDescs}))
-				else: 
+						thisUser.score = thisUser.score + 10 + thisUser.streak + pointsEarned
+						thisUser.streak = thisUser.streak + 1
+						thisUser.count = thisUser.count + 1
+
+						thisUser.put()
+						
+						self.response.out.write(json.dumps({"valid":1, "score":thisUser.score, "count":thisUser.count, "streak":thisUser.streak, "icons":challIcons, "titles":challTitles, "points":challPoints, "descriptions":challDescs}))
+				if not inBuilding: 
 					self.response.out.write(json.dumps({"valid":2}))	
 		else:
 			self.redirect(users.create_login_url(self.request.uri))
