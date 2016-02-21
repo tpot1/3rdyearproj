@@ -1,31 +1,11 @@
-RE ENABLE DEBUG MODE
-
-RE ENABLE LOCATION CHECK
-
-REMOVE TEST LECTURE DURING CHECK IN
-
-
 Try checking in during a lecture from the correct location, to ensure it works
 
 Possibly reduce the area in which you can check in, since its seems to work pretty accurately
-
-Questionnaire
-1	Re word question about how comfortable are you in this module
 
 
 Challenges
 
 2	Add a starts-at parameter for challenges? So they start 'spontaneously'
-
-
-Buildings
-1	test them
-
-
-Lectures
-
-1	test checking in to lecture with multiple possible locations
-
 
 Check Ins
 

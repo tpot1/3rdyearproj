@@ -88,9 +88,6 @@ def missedLectureCheck(user):
 		userEntity.put()
 
 def formCheck(self, user):
-
-	return True
-
 	userQuery = User.query(User.userid == user.user_id())
 	# #gets the current user
 	for userEntity in userQuery:
@@ -503,32 +500,25 @@ class HomePage(webapp2.RequestHandler):
 
 			thisLecture = None
 			thisUser = None
-			poly = []
-
-
-			day = 6
-			hour = 10
-			
+			poly = []			
 
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				thisUser = userEntity
-				#for lecture in userEntity.lectures:
-					
-				lecture = Lecture(module='GENG0013', title='TT Math Support', location='35', day=6, time=9, duration=2)
-				#checks for a lecture that matches the current day and time
-				if(lecture.day == day and (lecture.time <= hour and lecture.time + lecture.duration > hour)):
-					thisLecture = lecture
-					locations = lecture.location.split(";");
-					for location in locations:
-						#need to make multiple polys for each lecture, for each possible location
-						buildingQuery = Building.query(Building.number == location)
-						for building in buildingQuery:
-							buildingCoords = []
-							for coordinate in building.coordinates:
-								c = (coordinate.lon, coordinate.lat)
-								buildingCoords.append(c)
-							poly.append(buildingCoords)
+				for lecture in userEntity.lectures:
+					#checks for a lecture that matches the current day and time
+					if(lecture.day == day and (lecture.time <= hour and lecture.time + lecture.duration > hour)):
+						thisLecture = lecture
+						locations = lecture.location.split(";");
+						for location in locations:
+							#need to make multiple polys for each lecture, for each possible location
+							buildingQuery = Building.query(Building.number == location)
+							for building in buildingQuery:
+								buildingCoords = []
+								for coordinate in building.coordinates:
+									c = (coordinate.lon, coordinate.lat)
+									buildingCoords.append(c)
+								poly.append(buildingCoords)
 
 			noLecture = False
 			checkedIn = False
@@ -537,16 +527,17 @@ class HomePage(webapp2.RequestHandler):
 			if thisLecture is None:
 				noLecture = True
 				self.response.out.write(json.dumps({"valid":3}))
-			# else:
-			# 	#checks if the user has already checked in to this lecture
-			# 	for pastLecture in thisUser.history:
-			# 		if pastLecture.week == getCurrentWeek() and pastLecture.time == thisLecture.time and pastLecture.day == thisLecture.day:
-			# 			checkedIn = True
-			# 			self.response.out.write(json.dumps({"valid":4}))	
+			else:
+				#checks if the user has already checked in to this lecture
+				for pastLecture in thisUser.history:
+					if pastLecture.week == getCurrentWeek() and pastLecture.time == thisLecture.time and pastLecture.day == thisLecture.day:
+						checkedIn = True
+						self.response.out.write(json.dumps({"valid":4}))	
 			if not checkedIn and not noLecture:
 				inBuilding = False
 				for coords in poly:
-					if True and not inBuilding:#point_in_poly(longitude, latitude, coords):
+					#checks user is at the correct location(s) for the lecture
+					if not inBuilding and point_in_poly(longitude, latitude, coords):
 						inBuilding = True
 
 						thisLecture.attended = True
