@@ -12,7 +12,7 @@ def loadChallenges():
 	chall6 = Challenge(challengeid=6, title='Unstoppable', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/unstoppable.png'), points=50)
 	chall7 = Challenge(challengeid=7, title='Perfect Week', description='Attend every lecture in a week', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/perfectweek.png'), points=20)
 	chall8 = Challenge(challengeid=8, title='Selective Attendance', description='Attend the same lecture 3 weeks in a row', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/selectiveattendance.png'), points=30)
-	chall9 = Challenge(challengeid=9, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+864000, badge=Badge(iconName='/img/earlybird.png'), points=10)
+	chall9 = Challenge(challengeid=9, title='Early Bird', description='Make it to a 9am lecture', complete=False, expiresat=currentTime+1382400, badge=Badge(iconName='/img/earlybird.png'), points=10)
 	chall10 = Challenge(challengeid=10, title='Long day', description='Check in to 4 lectures in the same day', complete=False, expiresat=currentTime+1987200, badge=Badge(iconName='/img/longday.png'), points=30)
 
 	chall1.put()

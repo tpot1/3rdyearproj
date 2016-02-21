@@ -87,21 +87,21 @@ def missedLectureCheck(user):
 
 		userEntity.put()
 
-def formCheck(self, user):
+def formCheck(self, user, i=0):
 	userQuery = User.query(User.userid == user.user_id())
 	# #gets the current user
 	for userEntity in userQuery:
 	 	#checks that they have gone through the procedue of reading the participant information
-	 	if userEntity.info != True:
+	 	if userEntity.info != True and i < 4:
 	 		self.redirect('/info')
 	 	#agreeing to the consent form
-	 	elif userEntity.consent != True:
+	 	elif userEntity.consent != True and i < 3:
 	 		self.redirect('/consentform')
 	 	#completing the questionnaire
-	 	elif userEntity.questionnaire is None:
+	 	elif userEntity.questionnaire is None and i < 2:
 	 		self.redirect('/questionnaire')
 	 	#and creating a username
-	 	elif userEntity.username is None:
+	 	elif userEntity.username is None and i < 1:
 	 		self.redirect('/ftp')
 
 
@@ -249,6 +249,7 @@ class ParticipationInfoPage(webapp2.RequestHandler):
 	def get(self):
 		user = users.get_current_user()
 		if(user):
+			formCheck(self, user, 4)
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				if userEntity.info:
@@ -280,6 +281,7 @@ class ConsentFormPage(webapp2.RequestHandler):
 	def get(self, error=""):
 		user = users.get_current_user()
 		if(user):
+			formCheck(self, user, 3)
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				if userEntity.consent:
@@ -326,6 +328,7 @@ class QuestionnairePage(webapp2.RequestHandler):
 	def get(self, error=""):
 		user = users.get_current_user()
 		if(user):
+			formCheck(self, user, 2)
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				if userEntity.questionnaire is not None:
@@ -379,6 +382,7 @@ class FirstTimePage(webapp2.RequestHandler):
 	def get(self, error=""):
 		user = users.get_current_user()
 		if(user):
+			formCheck(self, user, 1)
 			userQuery = User.query(User.userid == user.user_id())
 			for userEntity in userQuery:
 				if userEntity.username is not None:

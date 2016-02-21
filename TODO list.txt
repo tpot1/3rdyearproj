@@ -7,13 +7,7 @@ Challenges
 
 2	Add a starts-at parameter for challenges? So they start 'spontaneously'
 
-Check Ins
 
-3	Make a check-in FAQ popup kinda thing to help people struggling to check in
-		-enable javascript on your web browser
-		-enable location checks on your web browser
-		-your device's GPS may take a while to update to your position, so you may need to try
-		checking in twice before it will work
 
 
 
