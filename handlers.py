@@ -536,7 +536,8 @@ class HomePage(webapp2.RequestHandler):
 				for pastLecture in thisUser.history:
 					if pastLecture.week == getCurrentWeek() and pastLecture.time == thisLecture.time and pastLecture.day == thisLecture.day:
 						checkedIn = True
-						self.response.out.write(json.dumps({"valid":4}))	
+				if checkedIn:
+					self.response.out.write(json.dumps({"valid":4}))	
 			if not checkedIn and not noLecture:
 				inBuilding = False
 				for coords in poly:
