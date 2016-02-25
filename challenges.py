@@ -6,7 +6,7 @@ def loadChallenges():
 
 	chall1 = Challenge(challengeid=1, title='First Step', description='Check in to 1 lecture', complete=False, expiresat=currentTime+864000, badge=Badge(iconName='/img/firststeps.png'), points=10)
 	chall2 = Challenge(challengeid=2, title='Not Bad', description='Check in to 5 lectures', complete=False, expiresat=currentTime+1382400, badge=Badge(iconName='/img/notbad.png'), points=30)
-	chall3 = Challenge(challengeid=3, title='Golden Student', description='Check in to 10 lectures', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/goldenstudent.png'), points=80)
+	chall3 = Challenge(challengeid=3, title='Golden Student', description='Check in to 10 lectures', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/goldenstudent.png'), points=50)
 	chall4 = Challenge(challengeid=4, title='Gotta Go Fast', description='Be the first in your class to check in to a lecture', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/gottagofast.png'), points=30)
 	chall5 = Challenge(challengeid=5, title='Hat-trick', description='Check in to 3 consecutive lectures', complete=False, expiresat=currentTime+1382400, badge=Badge(iconName='/img/hattrick.png'), points=30) 
 	chall6 = Challenge(challengeid=6, title='Unstoppable', description='Check in to 5 consecutive lectures', complete=False, expiresat=currentTime+2592000, badge=Badge(iconName='/img/unstoppable.png'), points=50)

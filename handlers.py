@@ -176,7 +176,7 @@ def predicate9(user, lecture, checkin):
 def predicate10(user, lecture, checkin):
 	count = 0
 	for pastLecture in user.history:
-		if pastLecture.day == lecture.day and pastLecture.week == getCurrentWeek() and pastLecture.attended:
+		if pastLecture.day == lecture.day and pastLecture.week == getCurrentWeek() and pastLecture.attended and pastLecture.time != lecture.time:
 			count += 1
 
 	return count >= 4
@@ -667,7 +667,7 @@ class HistoryPage(webapp2.RequestHandler):
 			weeknum = int(self.request.get('week'))
 
 			fwd = self.request.get('fwd')
-			if fwd == "Forward":
+			if fwd == ">>>":
 				weeknum += 1
 				if weeknum > 8:
 					weeknum = 8

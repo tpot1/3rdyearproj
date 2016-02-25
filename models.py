@@ -14,6 +14,7 @@ class Challenge(ndb.Model):
 	complete=ndb.BooleanProperty()
 	points=ndb.IntegerProperty()
 	badge=ndb.StructuredProperty(Badge)
+	startsat = ndb.FloatProperty()
 	expiresat = ndb.FloatProperty()
 
 class Lecture(ndb.Model):
