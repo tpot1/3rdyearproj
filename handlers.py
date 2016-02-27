@@ -53,17 +53,17 @@ def missedLectureCheck(user):
 		for i in range(1, getCurrentWeek()):
 			#loops through the users lectures
 			for lecture in userEntity.lectures:
-				#sets the default value to not attended
-				attended = False
+				#sets the default value to not checked
+				checked = False
 				#loops through the lectures in history
 				for attlecture in userEntity.history:
 					#checks for a match
 					if attlecture.week == i and attlecture.day == lecture.day and attlecture.time == lecture.time:
 							#if one is found, there is an entry in the history so don't need to worry
-							attended = True
-				if not attended:
+							checked = True
+				if not checked:
 					#else we need to add that the user missed that lecture to the history
-					missedLecture = lecture
+					missedLecture = Lecture(module=lecture.module, title=lecture.title, location=lecture.location, day=lecture.day, time=lecture.time, duration=lecture.duration)
 					missedLecture.attended = False
 					missedLecture.week = i
 					userEntity.history.append(missedLecture)
@@ -74,12 +74,12 @@ def missedLectureCheck(user):
 			#only applies to lectures that have already occured
 			if lecture.day < day or (lecture.day == day and lecture.time+lecture.duration <= hour):
 				#sets the default value to False
-				attended = False
+				checked = False
 				for attlecture in userEntity.history:
 					if attlecture.week == getCurrentWeek() and attlecture.day == lecture.day and attlecture.time == lecture.time:
-						attended = True
-				if not attended:
-					missedLecture = lecture
+						checked = True
+				if not checked:
+					missedLecture = Lecture(module=lecture.module, title=lecture.title, location=lecture.location, day=lecture.day, time=lecture.time, duration=lecture.duration)
 					missedLecture.attended = False
 					missedLecture.week = getCurrentWeek()
 					userEntity.history.append(missedLecture)
