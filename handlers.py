@@ -545,15 +545,17 @@ class HomePage(webapp2.RequestHandler):
 					if not inBuilding and point_in_poly(longitude, latitude, coords):
 						inBuilding = True
 
-						thisLecture.attended = True
-						thisLecture.week = getCurrentWeek()
+						attendedLecture = Lecture(module=thisLecture.module, title=thisLecture.title, location=thisLecture.location, day=thisLecture.day, time=thisLecture.time, duration=thisLecture.duration)
 
-						checkin = CheckIn(student=thisUser, lecture=thisLecture)
+						attendedLecture.attended = True
+						attendedLecture.week = getCurrentWeek()
+
+						checkin = CheckIn(student=thisUser, lecture=attendedLecture)
 						checkin.put()
 
-						thisUser.history.append(thisLecture)
+						thisUser.history.append(attendedLecture)
 
-						completedChalls = challengecheck(thisUser, thisLecture, checkin)
+						completedChalls = challengecheck(thisUser, attendedLecture, checkin)
 
 						pointsEarned = 0
 						
