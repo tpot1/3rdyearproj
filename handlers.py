@@ -18,6 +18,8 @@ import logging
 import urllib2
 import math
 
+import unittest 
+
 JINJA_ENVIRONMENT = jinja2.Environment(
 	loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
 	extensions=['jinja2.ext.autoescape'],
@@ -179,7 +181,7 @@ def predicate10(user, lecture, checkin):
 		if pastLecture.day == lecture.day and pastLecture.week == getCurrentWeek() and pastLecture.attended and pastLecture.time != lecture.time:
 			count += 1
 
-	return count >= 4
+	return count >= 3
 
 predicates = {
 	1 : predicate1,
@@ -756,7 +758,7 @@ class LeaderboardsPage(webapp2.RequestHandler):
 			allUsers = []
 			me = None
 
-			allUserQuery = User.query()
+			allUserQuery = User.query(User.username != None)
 			for userEntity in allUserQuery:
 				allUsers.append(userEntity)
 				if userEntity.userid == user.user_id():
@@ -775,3 +777,23 @@ class LeaderboardsPage(webapp2.RequestHandler):
 			self.response.write(template.render(template_values))
 		else:
 			self.redirect('/')
+
+
+class TestCase(unittest.TestCase):
+
+	def setUp(self):
+		print('test')
+
+	def test_upper(self):
+		self.assertEqual('foo'.upper(), 'FOO')
+
+	def tearDown(self):
+		print('test2')
+
+
+
+# [START main]
+if __name__ == '__main__':
+	unittest.main()
+# [END main]
+

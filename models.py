@@ -1,7 +1,5 @@
 import os
 
-import webapp2
-
 from google.appengine.ext import ndb
 
 class Badge(ndb.Model):
