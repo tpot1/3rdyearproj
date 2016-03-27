@@ -52,11 +52,11 @@ class User(ndb.Model):
 	streak=ndb.IntegerProperty()
 	count=ndb.IntegerProperty()
 	history=ndb.StructuredProperty(Lecture, repeated=True)
-
 	info=ndb.BooleanProperty()
 	consent=ndb.BooleanProperty()
 	questionnaire=ndb.StructuredProperty(Questionnaire)
 	username=ndb.StringProperty()
+	email=ndb.StringProperty()
 
 class CheckIn(ndb.Model):
 	student=ndb.StructuredProperty(User)

@@ -443,6 +443,9 @@ class HomePage(webapp2.RequestHandler):
 				userEntity = thisUser
 				formCheck(self, user)
 				missedLectureCheck(user)
+				if userEntity.email is None:
+					userEntity.email = user.email()
+					userEntity.put()
 
 			if userEntity is None:
 				userEntity = User(
@@ -450,7 +453,8 @@ class HomePage(webapp2.RequestHandler):
 					score=0,
 					streak=0,
 					count=0,
-					history=[])
+					history=[],
+					email = user.email())
 
 				module1Query = Module.query(Module.code == 'GENG0013')
 				for module in module1Query:
