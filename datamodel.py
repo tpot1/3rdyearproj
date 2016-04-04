@@ -5,39 +5,74 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 from plotly.graph_objs import *
 
-# Bounds of attendance rate of each category
-disAtt = [0.05, 0.25]
-sampAtt = [0.25, 0.65]
-attAtt = [0.65, 1.0]
-
-
-numberWeeks = 30
-
-# Dampening value representing how imperfect application is
-effect = 0.2
-
-# value representing the number of students still using the system by the end of term
-percentageUninterested = 0.4
-
-# Category Effect Values - Disengaged, Sampling, Attending
-# represent the maximum effect of application on attendance for each category
-effectValues = [0.4/numberWeeks, 0.264/numberWeeks, 0.1/numberWeeks]
-
-# Value representing effect increased attendance has on grades
-# so going to 100% more lectures increases your grade by gradeEffect
-gradeEffect = 5
-
+#i = open('interestValues.txt', 'r')
+# for ii in range(0, 167):
+# 	i.write(str(random.uniform(0, 1)))
+# 	i.write("\n")
 
 #list of grades using values obtained from COMP1202 class of 2013/14
 engagedGrades = [100,98,96,95,94,93,91,90,89,88,86,85,84,82,81,80,79,79,79,78,78,78,77,77,76,76,75,75,74,74,73,73,72,72,72,71,71,71,70,70,70,69,69,69,68,68,68,67,67,67,66,66,66,65,65,65,64,64,64,63,63,63,62,62,62,61,61,61,60,60,60]
-#engagedGrades = list(reversed(engagedGrades))
-random.shuffle(engagedGrades)
 samplingGrades = [79,78,78,77,77,76,76,75,75,74,74,73,73,72,72,71,71,70,70,69,68,67,66,65,64,63,62,62,61,61,60,60,59,59,58,58,57,57,56,56,55,55,54,54,53,53,52,52,52,51,51,51,50,50,50,49,49,48,48,47,47,46,46,45,45,44,43,42,41,40,39,37,35,33,31]
-#samplingGrades = list(reversed(samplingGrades))
-random.shuffle(samplingGrades)
 disengagedGrades = [47,46,45,44,43,42,41,40,39,36,33,30,27,24,21,20,19,18,17,16,15,14,13,12,11]
-#disengagedGrades = list(reversed(disengagedGrades))
-random.shuffle(disengagedGrades)
+
+
+# eg = open('engagedGradeOrder.txt', 'w+')
+# l = range(0, len(engagedGrades))
+# random.shuffle(l)
+# for i in range(0,len(l)):
+# 	eg.write(str(l[i]))
+# 	eg.write("\n")
+# eg.close()
+
+# dg = open('disengagedGradeOrder.txt', 'w+')
+# l = range(0, len(disengagedGrades))
+# random.shuffle(l)
+# for i in range(0,len(l)):
+# 	dg.write(str(l[i]))
+# 	dg.write("\n")
+# dg.close()
+
+# sg = open('samplingGradeOrder.txt', 'w+')
+# l = range(0, len(samplingGrades))
+# random.shuffle(l)
+# for i in range(0,len(l)):
+# 	sg.write(str(l[i]))
+# 	sg.write("\n")
+# sg.close()
+
+with open("interestValues.txt") as f:
+    interestValues = f.readlines()
+interestCounter = 0
+
+with open("engagedGradeOrder.txt") as f:
+	engagedGradeOrder = f.readlines()
+
+with open("disengagedGradeOrder.txt") as f:
+	disengagedGradeOrder = f.readlines()
+
+with open("samplingGradeOrder.txt") as f:
+	samplingGradeOrder = f.readlines()
+
+gradeCounter = 0
+
+# Bounds of attendance rate of each category
+disAtt = [0.005, 0.25]
+sampAtt = [0.25, 0.65]
+attAtt = [0.65, 1.0]
+
+# Number of weeks which the system models
+numberWeeks = 12
+
+
+# Dampening value representing how imperfect application is
+effect = 0.1
+
+# value representing the number of students still using the system by the end of term
+percentageUninterested = 0.6
+
+# Value representing effect increased attendance has on grades
+# so going to 100% more lectures increases your grade by gradeEffect
+gradeEffect = 1.68
 
 students = []
 attendances = []
@@ -52,25 +87,33 @@ class Student:
 
 # generates students - uses random value between 0 and 1 for effect of gamification on that student
 for i in range(0, len(disengagedGrades)):
-	grade = disengagedGrades[i]
+	grade = disengagedGrades[int(disengagedGradeOrder[gradeCounter])]
 	attendance = disAtt[0] + (((disAtt[1]-disAtt[0])/len(disengagedGrades))*i)
-	s = Student(0, random.uniform(0, 1), attendance, grade)
+	s = Student(0, interestValues[interestCounter], attendance, grade)
+	interestCounter += 1
+	gradeCounter += 1
 	students.append(s)
 	attendances.append(attendance)
 	grades.append(grade)
 
+gradeCounter = 0
 for i in range(0, len(samplingGrades)):
-	grade = samplingGrades[i]
+	grade = samplingGrades[int(samplingGradeOrder[gradeCounter])]
 	attendance = sampAtt[0] + (((sampAtt[1]-sampAtt[0])/len(samplingGrades))*i)
-	s = Student(1, random.uniform(0, 1), attendance, grade)
+	s = Student(1, interestValues[interestCounter], attendance, grade)
+	interestCounter += 1
+	gradeCounter += 1
 	students.append(s)
 	attendances.append(attendance)
 	grades.append(grade)
 
+gradeCounter = 0
 for i in range(0, len(engagedGrades)):
-	grade = engagedGrades[i]
+	grade = engagedGrades[int(engagedGradeOrder[gradeCounter])]
 	attendance = attAtt[0] + (((attAtt[1]-attAtt[0])/len(engagedGrades))*i)
-	s = Student(2, random.uniform(0, 1), attendance, grade)
+	s = Student(2, interestValues[interestCounter], attendance, grade)
+	interestCounter += 1
+	gradeCounter += 1
 	students.append(s)
 	attendances.append(attendance)
 	grades.append(grade)
@@ -142,8 +185,9 @@ def timestep(time):
 				uninterestedStudents.append(student)
 			else:
 				oldAttendance = student.attendance
-				# calculates new attendance rate by adding the product of the base effect value, the student's category effect value, and the students interest
-				newAttendance = student.attendance + (effect * effectValues[student.category])
+
+				# calculates new attendance rate by adding the product of the base effect value and the maximum effect of the application on the student (i.e. the effect required to reduce optional absenses to 0)
+				newAttendance = student.attendance + (effect * ((0.6*(1.0-oldAttendance))/numberWeeks))
 				if newAttendance > 1:
 					newAttendance = 1
 				newAttendances.append(newAttendance)
@@ -174,8 +218,8 @@ for i in range(0, numberWeeks):
 	timestep(i)
 
 
-# Plot and embed in ipython notebook
-# py.iplot(data, filename='expected attendance vs exam results')
+#Plot and embed in ipython notebook
+py.iplot(data, filename='expected attendance vs exam results')
 
 agradeSum = 0
 aattendanceSum = 0
