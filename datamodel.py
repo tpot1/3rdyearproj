@@ -71,8 +71,8 @@ effect = 0.1
 percentageUninterested = 0.6
 
 # Value representing effect increased attendance has on grades
-# so going to 100% more lectures increases your grade by gradeEffect
-gradeEffect = 1.68
+# 1% increase in attendance = 0.09% improvement in grade, so 0.01 * 9 = 0.09%
+gradeEffect = 9
 
 students = []
 attendances = []
@@ -89,7 +89,7 @@ class Student:
 for i in range(0, len(disengagedGrades)):
 	grade = disengagedGrades[int(disengagedGradeOrder[gradeCounter])]
 	attendance = disAtt[0] + (((disAtt[1]-disAtt[0])/len(disengagedGrades))*i)
-	s = Student(0, interestValues[interestCounter], attendance, grade)
+	s = Student(0, float(interestValues[interestCounter]), attendance, grade)
 	interestCounter += 1
 	gradeCounter += 1
 	students.append(s)
@@ -100,7 +100,7 @@ gradeCounter = 0
 for i in range(0, len(samplingGrades)):
 	grade = samplingGrades[int(samplingGradeOrder[gradeCounter])]
 	attendance = sampAtt[0] + (((sampAtt[1]-sampAtt[0])/len(samplingGrades))*i)
-	s = Student(1, interestValues[interestCounter], attendance, grade)
+	s = Student(1, float(interestValues[interestCounter]), attendance, grade)
 	interestCounter += 1
 	gradeCounter += 1
 	students.append(s)
@@ -111,7 +111,7 @@ gradeCounter = 0
 for i in range(0, len(engagedGrades)):
 	grade = engagedGrades[int(engagedGradeOrder[gradeCounter])]
 	attendance = attAtt[0] + (((attAtt[1]-attAtt[0])/len(engagedGrades))*i)
-	s = Student(2, interestValues[interestCounter], attendance, grade)
+	s = Student(2, float(interestValues[interestCounter]), attendance, grade)
 	interestCounter += 1
 	gradeCounter += 1
 	students.append(s)
@@ -194,7 +194,8 @@ def timestep(time):
 				student.attendance = newAttendance
 
 				# percentage increase in lecture attendance - so students with lower original attendance benefit more
-				difference = (newAttendance / oldAttendance) - 1.0
+				#difference = (newAttendance / oldAttendance) - 1.0
+				difference = newAttendance - oldAttendance
 
 				#calculates new grade by adding the product of the increase in the students attendance rate by the grade effect value
 				newGrade = student.grade + (difference * gradeEffect)
@@ -218,7 +219,7 @@ for i in range(0, numberWeeks):
 	timestep(i)
 
 
-#Plot and embed in ipython notebook
+# Plot and embed in ipython notebook
 py.iplot(data, filename='expected attendance vs exam results')
 
 agradeSum = 0
